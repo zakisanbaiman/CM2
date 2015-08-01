@@ -13,5 +13,18 @@
 
 Route::get('/', function()
 {
-	return View::make('hello');
+	return View::make('index');
 });
+
+
+// user
+Route::get('/home', array('as' => 'home', 'uses' => function()
+{
+	return redirect::to('/');
+}));
+Route::get('/user/signup', array('as' => 'signup', 'uses' => 'AuthController@showSignUp'));
+Route::get('/autu/signup', 'AuthController@showSignUp');
+Route::post('/user/signup', 'AuthController@execSignUp');
+Route::get('/user/login', array('as' => 'login', 'uses' => 'AuthController@showLogin'));
+Route::post('/user/login', 'AuthController@execLogin');
+Route::get('/user/logout', 'AuthController@logout');
