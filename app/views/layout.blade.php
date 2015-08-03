@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="jp">
+<html lang="jp" ng-app="myApp">
 <head>
 <meta charset="UTF-8">
 <link href="/css/base.css" rel="stylesheet" />
@@ -13,6 +13,7 @@
 <link href="/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" />
 <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 <script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/js/lib/angular.min.js"></script>
 
 <link href="/css/style.css" rel="stylesheet" />
 

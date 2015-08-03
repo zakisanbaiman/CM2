@@ -16,13 +16,13 @@ class AuthController extends BaseController
 	public function execSignUp()
 	{
 		
-		$validation_rule = array(
+		$validationule = array(
  				'email' => 'required|unique:users',
 				'password' => 'required|min:4'
 		);
 		$validator = Validator::make(Input::all(), $validation_rule);
 
-		// バリデーション判定
+		// バリデーシ
 		if ($validator->fails())
 		{
 			// 失敗
@@ -34,7 +34,6 @@ class AuthController extends BaseController
 			// ユーザーの追加
 			$register = Sentry::register(array(
 			'email' => Input::get('email'),
-			'user_name' => Input::get('email'),
 			'password' => Input::get('password'),
 			), true);
 

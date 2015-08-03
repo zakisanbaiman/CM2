@@ -5,6 +5,7 @@
 	<main>
 		<section>
 			<a href="/user/login">ログイン</a>
+			<a href="/manage">構成管理</a>
 		</section>
 	</main>
 </body>

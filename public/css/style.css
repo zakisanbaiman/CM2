@@ -9,3 +9,8 @@
     margin-top:5px;
     margin-bottom:15px;
 }
+
+.container{
+    width:1280px;
+    margin: auto;
+}

@@ -28,3 +28,11 @@ Route::post('/user/signup', 'AuthController@execSignUp');
 Route::get('/user/login', array('as' => 'login', 'uses' => 'AuthController@showLogin'));
 Route::post('/user/login', 'AuthController@execLogin');
 Route::get('/user/logout', 'AuthController@logout');
+
+// manage
+Route::get('/manage', 'ManageController@getManage');
+Route::get('/manage/getManageObj', 'ManageController@getManageObj');
+Route::post('/manage/updateManageObj', 'ManageController@updateManageObj');
+
+
+
