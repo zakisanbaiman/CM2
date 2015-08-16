@@ -15,9 +15,8 @@
             {{$errors->has('email') ? $errors->first('email', '<p><span class="label label-danger">:message</span></p>') : ''}}
             <label>パスワード</label><input type="password" name="password" class="form-control form-input">
             {{$errors->has('password') ? $errors->first('password','<p><span class="label label-danger">:message</span></p>') : ''}}
-            <input type="submit" class="btn btn-default" value="ログイン" data-ajax="false"><br><br>
+            <input type="submit" class="btn btn-default" value="ログイン" data-ajax="false">
             <a href="/user/signup" class="btn btn-default" data-ajax="false">会員登録</a>
-            <a href="/" class="btn btn-default" data-ajax="false">トップページへ戻る</a>
         </form>
 </div>
 </body>

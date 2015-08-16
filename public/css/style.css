@@ -1,3 +1,9 @@
+body {
+    padding-top: 70px;
+    margin-bottom: 60px;
+    padding-bottom: 0;
+    background-color: #E6E6E6;
+}
 
 #login-wrap{
     width:320px;
@@ -11,6 +17,58 @@
 }
 
 .container{
-    width:1280px;
     margin: auto;
+}
+
+.footer {
+    /*position: absolute;*/
+    background-color: #333;
+    color:white;
+    bottom: 0;
+    margin-bottom: 0;
+    width: 100%;
+
+    /* フッタの高さ */
+    height: 60px;
+}
+
+p#copyright {
+    margin:25px;
+    text-align: right;
+    font-family: verdana ,arial ,sans-serif;
+}
+
+/* manage */
+.box {
+    width:200px;
+    height:340px;
+    background-color: white;
+    float:left;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.box-p {
+    margin: 5px 5px;
+}
+
+.box-img {
+    width: 200px;
+    height: 200px;
+}
+
+/* file upload module */
+.file-upload-area {
+    padding: 20px;
+    border: 2px #DDD dashed;
+    text-align: center;
+    color: #DDD;
+    margin-bottom: 20px;
+}
+.file-upload-area input[type="file"] {
+    display: none;
+}
+.file-upload-dragover {
+    background-color: #F9F9F9;
+    opacity: 0.8;
 }
