@@ -33,6 +33,16 @@ Route::get('/user/logout', 'AuthController@logout');
 Route::get('/manage', 'ManageController@getManage');
 Route::get('/manage/getManageObj', 'ManageController@getManageObj');
 Route::post('/manage/updateManageObj', 'ManageController@updateManageObj');
+Route::post('/manage/deleteManageObj', 'ManageController@deleteManageObj');
+Route::post('/manage/insertManageObj', 'ManageController@insertManageObj');
+
+// manage list（削除するかも）
+Route::get('/manage/list', 'ManageController@getManageList');
+Route::get('/manage/getManageObj', 'ManageController@getManageObj');
+Route::post('/manage/updateManageObj', 'ManageController@updateManageObj');
+Route::post('/manage/deleteManageObj', 'ManageController@deleteManageObj');
+Route::post('/manage/insertManageObj', 'ManageController@insertManageObj');
+Route::post('/manage/updateModelImage', 'ManageController@updateModelImage');
 
 
 
