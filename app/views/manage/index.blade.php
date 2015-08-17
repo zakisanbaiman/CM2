@@ -20,6 +20,7 @@
 					</p>
 				</li>
 			</ul>
+
 		</section>
 		<div>
 		</div>
@@ -35,7 +36,8 @@
 				<li><span>色:</span><input type="text" ng-model="manage.color"></li>
 				<li><span>購入日:</span><input type="text" ng-model="manage.buy_date"></li>
 				<li><span>その他:</span><input type="text" ng-model="manage.etc"></li>
-				<li><a class="btn btn-default">画像アップロード</a></li>
+				{{--<li><a class="btn btn-default">画像アップロード</a></li>--}}
+				<li><input type="file" ng-file-select="fileSelect($files)"></li>
 				<div class="manageModalBoxFooter">
 					<a class="btn btn-default" ng-click="updateManageModalOk()">Ok</a>
 					<a class="btn btn-default" ng-click="updateManageModalCancel()">Cancel</a>
@@ -166,6 +168,29 @@
 //				}).error(function(data, status, headers, config) {
 //				});
 			}
+
+				// 画像アップロード
+//				$scope.$watch('file', function (file) {
+//					$scope.upload($scope.file);
+//				});
+//
+//				/* optional: set default directive values */
+//				//Upload.setDefaults( {ngf-keep:false ngf-accept:'image/*', ...} );
+//
+//				$scope.upload = function (file) {
+//					Upload.upload({
+//						url: 'upload/url',
+//						fields: {'username': $scope.username},
+//						file: file
+//					}).progress(function (evt) {
+//						var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+//						console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+//					}).success(function (data, status, headers, config) {
+//						console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+//					}).error(function (data, status, headers, config) {
+//						console.log('error status: ' + status);
+//					})
+//				};
 
 		}]);
 
