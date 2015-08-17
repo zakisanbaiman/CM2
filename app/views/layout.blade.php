@@ -15,6 +15,7 @@
 <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 <script src="/bootstrap/js/bootstrap.min.js"></script>
 
+
 {{--<link href="/css/lib/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />--}}
 {{--<script src="/js/lib/jquery-ui-1.10.4.custom.min.js"></script>--}}
 {{--<script src="/js/lib/jquery.ui.datepicker-ja.js"></script>--}}
@@ -22,8 +23,12 @@
 <script src="/js/lib/angular.min.js"></script>
 <script src="/js/lib/ui-bootstrap-tpls-0.13.2.min.js"></script>
 
-    <script src="/packages/ng-file-upload-bower-6.0.4/ng-file-upload-shim.min.js"></script> <!-- for no html5 browsers support -->
-    <script src="/packages/ng-file-upload-bower-6.0.4/ng-file-upload.min.js"></script>
+    {{--<script src="./bower_components/angular/angular.js"></script>--}}
+    <script src="/packages/ng-file-upload/ng-file-upload.js"></script>
+    <script src="/packages/ng-file-upload/ng-file-upload-shim.js"></script>
+
+    {{--<script src="/packages/ng-file-upload-bower-6.0.4/ng-file-upload-shim.min.js"></script> <!-- for no html5 browsers support -->--}}
+    {{--<script src="/packages/ng-file-upload-bower-6.0.4/ng-file-upload.min.js"></script>--}}
 
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-animate.js"></script>
     <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.3.js"></script>
