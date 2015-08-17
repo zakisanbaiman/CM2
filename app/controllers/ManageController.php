@@ -20,8 +20,13 @@ class ManageController extends BaseController
 		return Response::json($manage);
 	}
 
+	public function getManageOneObj() {
+		$manage = Manage::where('id', '=', Input::get('id'))->get();
+		return Response::json($manage);
+	}
+
 	public function updateManageObj() {
-		Manage::where('id', Input::get('id'))
+		Manage::where('id', '=', Input::get('id'))
 			->update(array(
 				'model_name' => Input::get('model_name'),
 				'maker' => Input::get('maker'),
@@ -33,7 +38,7 @@ class ManageController extends BaseController
 	}
 
 	public function deleteManageObj() {
-		Manage::where('id', Input::get('id'))->delete();
+		Manage::where('id', '=', Input::get('id'))->delete();
 	}
 
 	public function insertManageObj() {
