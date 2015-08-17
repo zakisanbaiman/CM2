@@ -41,7 +41,7 @@ p#copyright {
 /* manage */
 .box {
     width:200px;
-    height:340px;
+    height:380px;
     background-color: white;
     float:left;
     margin-right: 15px;
@@ -71,4 +71,13 @@ p#copyright {
 .file-upload-dragover {
     background-color: #F9F9F9;
     opacity: 0.8;
+}
+
+/* manage modal box */
+.manageModalBox {
+    margin: 20px;
+}
+
+.manageModalBoxFooter {
+    margin: 10px;
 }

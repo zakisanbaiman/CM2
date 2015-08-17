@@ -36,6 +36,8 @@ Route::post('/manage/updateManageObj', 'ManageController@updateManageObj');
 Route::post('/manage/deleteManageObj', 'ManageController@deleteManageObj');
 Route::post('/manage/insertManageObj', 'ManageController@insertManageObj');
 
+Route::get('/manage/getManageOneObj', 'ManageController@getManageOneObj');
+
 // manage list（削除するかも）
 Route::get('/manage/list', 'ManageController@getManageList');
 Route::get('/manage/getManageObj', 'ManageController@getManageObj');
