@@ -15,8 +15,8 @@ class AuthController extends BaseController
 	// 登録処理
 	public function execSignUp()
 	{
-		
-		$validationule = array(
+
+		$validation_rule = array(
  				'email' => 'required|unique:users',
 				'password' => 'required|min:4'
 		);
@@ -83,9 +83,9 @@ class AuthController extends BaseController
 			$group = UsersGroup::where('user_id', '=', $user->id)->get();
 
 			if("1" == $group[0]['group_id']) {
-//				return Redirect::action('');
+				return Redirect::action('ManageController@getManage');
 			} else if ("2" == $group[0]['group_id']) {
-//				return Redirect::action('');
+				return Redirect::action('');
 			}
 			
 		} catch (Cartalyst\Sentry\Throttling\UserSuspendedException $e) {
