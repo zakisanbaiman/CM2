@@ -7,32 +7,31 @@
 		<section class="container">
 			<table class="table table-bordered">
 				<thead>
+				<th class="info">画像</th>
 				<th class="info">型番</th>
 				<th class="info">メーカー</th>
 				<th class="info">サイズ</th>
 				<th class="info">色</th>
 				<th class="info">購入日</th>
 				<th class="info">備考</th>
-				<th class="info">画像</th>
 				<th class="info">更新</th>
 				<th class="info">削除</th>
 				</thead>
 				<tbody>
-				<tr class="active" ng-repeat="manage in manages">
-					{{--<span>{{manage.model_name}}</span>--}}
-					<td><input type="text" class="form-control" ng-model="manage.model_name"></td>
-					<td><input type="text" class="form-control" ng-model="manage.maker"></td>
-					<td><input type="text" class="form-control" ng-model="manage.size"></td>
-					<td><input type="text" class="form-control" ng-model="manage.color"></td>
-					<td><input type="text" class="form-control" ng-model="manage.buy_date" class="buy_date"></td>
-					<td><input type="text" class="form-control" ng-model="manage.etc"></td>
-					<td>
-						{{Form::open(array('url' => '/manage/updateModelImage', 'files' => true, 'id'=>'model_image'))}}
-						<input type="file" name="model_image">
-						<input type="submit">
-						{{Form::close()}}
-
-					</td>
+				<tr class="active" ng-repeat="manage in manages | filter : search">
+					<td><img src="/upload/@{{ manage.model_image }}" alt="" class="box-list-img" width="193" height="130"></td>
+					<td>@{{ manage.model_name }}</td>
+					<td>@{{ manage.maker }}</td>
+					<td>@{{ manage.size }}</td>
+					<td>@{{ manage.color }}</td>
+					<td>@{{ manage.buy_date }}</td>
+					<td>@{{ manage.etc }}</td>
+					{{--<td>--}}
+						{{--{{Form::open(array('url' => '/manage/updateModelImage', 'files' => true, 'id'=>'model_image'))}}--}}
+						{{--<input type="file" name="model_image">--}}
+						{{--<input type="submit">--}}
+						{{--{{Form::close()}}--}}
+					{{--</td>--}}
 					<td><a class="btn btn-default" ng-click="updateManageObj($index)">更新</a></td>
 					<td><a class="btn btn-default" ng-click="deleteManageObj($index)">削除</a></td>
 				</tr>

@@ -5,23 +5,20 @@
 <body ng-controller="ManageController">
 	<main>
 		<section class="container">
-			<ul>
-				<li class="box" ng-repeat="manage in manages | filter : search">
-					<p><img src="/upload/@{{ manage.model_image }}" alt="" class="box-img"></p>
-					<p class="box-p"><span>型番:</span>@{{ manage.model_name }}</p>
-					<p class="box-p"><span>メーカー:</span>@{{ manage.maker }}</p>
-					<p class="box-p"><span>サイズ:</span>@{{ manage.size }}</p>
-					<p class="box-p"><span>色:</span>@{{ manage.color }}</p>
-					<p class="box-p"><span>購入日:</span>@{{ manage.buy_date }}</p>
-					<p class="box-p"><span>その他:</span>@{{ manage.etc }}</p>
-					<p class="box-p">
-						<a class="btn btn-default" ng-click="openManageDetail(manage.id)">詳細</a>
-						<a class="btn btn-default" ng-click="openUpdateManageDialog(manage.id)">更新</a>
-						<a class="btn btn-default" ng-click="openDeleteManageDialog(manage.id)">削除</a>
-					</p>
-				</li>
-			</ul>
-			<a class="btn btn-default" ng-click="insertManageObj()">挿入</a>
+			<div class="box-detail">
+				<p><img src="/upload/@{{ manage.model_image }}" alt="" class="box-img"></p>
+				<p class="box-p"><span>型番:</span>@{{ manage.model_name }}</p>
+				<p class="box-p"><span>メーカー:</span>@{{ manage.maker }}</p>
+				<p class="box-p"><span>サイズ:</span>@{{ manage.size }}</p>
+				<p class="box-p"><span>色:</span>@{{ manage.color }}</p>
+				<p class="box-p"><span>購入日:</span>@{{ manage.buy_date }}</p>
+				<p class="box-p"><span>その他:</span>@{{ manage.etc }}</p>
+				<p class="box-p">
+					<a class="btn btn-default" ng-click="openUpdateManageDialog(manage.id)">更新</a>
+					<a class="btn btn-default" ng-click="openDeleteManageDialog(manage.id)">削除</a>
+				</p>
+				<p><a class="btn btn-default" ng-click="openProfileObj(manage.create_user_id)">プロフィール</a></p>
+			</div>
 		</section>
 		<div>
 		</div>
@@ -36,12 +33,7 @@
 				<li><span>サイズ:</span><input type="text" ng-model="manage.size"></li>
 				<li><span>色:</span><input type="text" ng-model="manage.color"></li>
 				<li><span>購入日:</span><input type="text" ng-model="manage.buy_date"></li>
-				<li><span>その他:</span><textarea cols="60" rows="25" ng-model="manage.etc"></textarea></li>
-
-				<form id="upload-form" ng-submit="uploadModelImage(manage.id)" method="post" enctype="multipart/form-data">
-				{{Form::file('modelImage')}}
-				<input type="submit" id="update" value="送信" />
-				{{Form::close()}}
+				<li><span>その他:</span><input type="text" ng-model="manage.etc"></li>
 
 				<div class="manageModalBoxFooter">
 					<a class="btn btn-default" ng-click="updateManageModalOk()">Ok</a>
@@ -67,9 +59,6 @@
 <script>
 
 
-//	$.datepicker.setDefaults($.datepicker.regional['ja']);
-//	$('#buy_date').datepicker();
-//    angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
 	angular.module('myApp', ['ui.bootstrap','ngFileUpload'])
 		.config(function() {
 			//...
@@ -83,28 +72,40 @@
 			controller('ManageController',
 			['$scope','$modal','$http','Upload', '$timeout', function($scope,$modal,$http,Upload, $timeout) {
 
-			getManageObj = function() {
+			getURL = function() {
+				var arg = {};
+				var pair=location.search.substring(1).split('&');
+				for(var i=0;pair[i];i++) {
+					var kv = pair[i].split('=');
+					arg[kv[0]]=kv[1];
+				}
+				return arg;
+			}
+
+			$scope.openProfileObj = function($index) {
+				var $url = "/user/profile?id=" + $index;
+				location.href=$url;
+			}
+
+			getManageDetailObj = function() {
+				var url = getURL();
 				$http({
 					method : 'get',
-					url : '/manage/getManageObj',
+					url : '/manage/getManageDetailObj',
+					params : url
 				}).success(function(data, status, headers, config) {
-					$scope.manages = data;
+					$scope.manage = data[0];
 				}).error(function(data, status, headers, config) {
 				});
 			}
 
-			getManageObj();
-
-			$scope.openManageDetail = function($index) {
-				var $url = "/manage/detail?id=" + $index;
-				location.href=$url;
-			}
+			getManageDetailObj();
 
 			$scope.updateManageObj = function($index) {
 				$http({
 					method : 'post',
 					url : '/manage/updateManageObj',
-					params : $scope.manages[$index]
+					params : $scope.manage[$index]
 				}).success(function(data, status, headers, config) {
 				}).error(function(data, status, headers, config) {
 				});
@@ -114,9 +115,9 @@
 				$http({
 					method : 'post',
 					url : '/manage/deleteManageObj',
-					params : $scope.manages[$index]
+					params : $scope.manage[$index]
 				}).success(function(data, status, headers, config) {
-					getManageObj();
+					getManageDetailObj();
 				}).error(function(data, status, headers, config) {
 				});
 			}
@@ -126,7 +127,7 @@
 					method: 'post',
 					url: '/manage/insertManageObj',
 				}).success(function (data, status, headers, config) {
-					getManageObj();
+					getManageDetailObj();
 				}).error(function (data, status, headers, config) {
 				});
 			}
@@ -149,6 +150,7 @@
 //					size: size,
 						resolve: {
 							manage: function () {
+//								return $scope.manages;
 								return data[0];
 							}
 						}
@@ -166,6 +168,7 @@
 						controller: 'DeleteManageModalController',
 						resolve: {
 							manage: function () {
+//								return $scope.manages;
 								return dataObj;
 							}
 						}
@@ -184,39 +187,13 @@
 					url : '/manage/updateManageObj',
 					params : $scope.manage
 				}).success(function(data, status, headers, config) {
-					getManageObj();
+					getManageDetailObj();
 				});
 				$modalInstance.close();
 			};
 
 			$scope.updateManageModalCancel = function () {
 				$modalInstance.dismiss('cancel');
-			};
-
-			// image upload
-			$scope.uploadModelImage = function(id) {
-
-				var fd = new FormData($('#upload-form').get(0));
-				fd.append('id', id);
-
-//				$http({
-//					method : 'post',
-//					url : '/manage/updateModelImage',
-//					params : fd,
-//					headers:{"Content-type":undefined},
-//					transformRequest: null
-//				}).success(function(data, status, headers, config) {
-//					getManageObj();
-//				});
-
-				$http.post('/manage/updateModelImage',fd,{
-						headers:{"Content-type":undefined}
-						,transformRequest: null
-					})
-					.success(function(res){
-						getManageObj();
-					});
-
 			};
 		});
 
@@ -231,7 +208,7 @@
 					url : '/manage/deleteManageObj',
 					params : $scope.manage
 				}).success(function(data, status, headers, config) {
-					getManageObj();
+					getManageDetailObj();
 				});
 				$modalInstance.close();
 			};
@@ -240,6 +217,8 @@
 				$modalInstance.dismiss('cancel');
 			};
 		});
+
+
 
 </script>
 @stop

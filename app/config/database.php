@@ -54,8 +54,10 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
+//			'host'      => '192.168.128.102',
+//			'host'      => '192.168.11.11',
 			'host'      => 'localhost',
-			'database'  => 'ConfigurationManagement',
+			'database'  => 'cm',
 			'username'  => 'view',
 			'password'  => 'view1239',
 			'charset'   => 'utf8',

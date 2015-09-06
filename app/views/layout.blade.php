@@ -27,6 +27,12 @@
     <script src="/packages/ng-file-upload/ng-file-upload.js"></script>
     <script src="/packages/ng-file-upload/ng-file-upload-shim.js"></script>
 
+    {{--<!-- concatenated flow.js + ng-flow libraries -->--}}
+    {{--<script src="/js/lib/ng-flow/dist/ng-flow-standalone.min.js"></script>--}}
+    {{--<!-- or include the files separately -->--}}
+    {{--<script src="/js/lib/flow.js/dist/flow.min.js"></script>--}}
+    {{--<script src="/js/lib/ng-flow/dist/ng-flow.min.js"></script>--}}
+
     {{--<script src="/packages/ng-file-upload-bower-6.0.4/ng-file-upload-shim.min.js"></script> <!-- for no html5 browsers support -->--}}
     {{--<script src="/packages/ng-file-upload-bower-6.0.4/ng-file-upload.min.js"></script>--}}
 

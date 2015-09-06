@@ -46,5 +46,22 @@ Route::post('/manage/deleteManageObj', 'ManageController@deleteManageObj');
 Route::post('/manage/insertManageObj', 'ManageController@insertManageObj');
 Route::post('/manage/updateModelImage', 'ManageController@updateModelImage');
 
+Route::get('/manage/detail', 'ManageController@getManageDetail');
+Route::get('/manage/getManageDetailObj', 'ManageController@getManageDetailObj');
+
+// profile
+Route::get('/user/list', 'UserController@getUserList');
+Route::get('/user/getUserListObj', 'UserController@getUserListObj');
+Route::get('/user/profile', 'UserController@getProfile');
+Route::get('/user/getProfileObj', 'UserController@getProfileObj');
+Route::post('/user/updateProfileObj', 'UserController@updateProfileObj');
+Route::post('/user/deleteProfileObj', 'UserController@deleteProfileObj');
+
+
+
+
+
+
+
 
 
