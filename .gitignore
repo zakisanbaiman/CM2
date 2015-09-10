@@ -2,3 +2,4 @@
 Thumbs.db
 public/upload/
 app/storage/
+#app/config/database.php
