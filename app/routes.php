@@ -57,6 +57,10 @@ Route::get('/user/getProfileObj', 'UserController@getProfileObj');
 Route::post('/user/updateProfileObj', 'UserController@updateProfileObj');
 Route::post('/user/deleteProfileObj', 'UserController@deleteProfileObj');
 
+// csv
+Route::get('/csv/import', 'CsvController@getCsvImport');
+Route::post('/csv/updateCsvImage', 'CsvController@updateCsvImage');
+
 
 
 
