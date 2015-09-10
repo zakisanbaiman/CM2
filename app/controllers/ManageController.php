@@ -6,17 +6,11 @@ class ManageController extends BaseController
 {
 
 	public function getManage() {
-//		$manage = Manage::all();
-//		return View::make('manage.index')
-//			->with('manage',$manage);
 		return View::make('manage.index');
 	}
 
 	// manage list
 	public function getManageList() {
-//		$manage = Manage::all();
-//		return View::make('manage.list')
-//			->with('manage',$manage);
 		return View::make('manage.list');
 	}
 
@@ -58,11 +52,18 @@ class ManageController extends BaseController
 			$setPath = public_path('upload/');
 			$file = Input::file('modelImage');
 
+			if(!file_exists($setPath)) {
+				\File::makeDirectory($setPath, 0775, true);
+			}
+
 			$fileExtension = $file->getClientOriginalExtension();
 
-			// チェック処理
 			$upload = new Upload();
-			$upload->fileExtensionCheck($fileExtension);
+			// 拡張子チェック
+			$upload->fileImgExtensionCheck($fileExtension);
+
+			// サイズチェック
+			$upload->fileSizeCheck($file->getSize());
 
 			$filePath = $file->getRealPath();
 			$fileName = $file->getClientOriginalName();
@@ -81,11 +82,7 @@ class ManageController extends BaseController
 
 	}
 
-
 	public function getManageDetail() {
-//		$manage = Manage::where('id', '=', Input::get('id'))->get();
-//		return View::make('manage.detail')
-//			->with('manage',$manage);
 		return View::make('manage.detail');
 	}
 

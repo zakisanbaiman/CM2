@@ -199,16 +199,6 @@
 				var fd = new FormData($('#upload-form').get(0));
 				fd.append('id', id);
 
-//				$http({
-//					method : 'post',
-//					url : '/manage/updateModelImage',
-//					params : fd,
-//					headers:{"Content-type":undefined},
-//					transformRequest: null
-//				}).success(function(data, status, headers, config) {
-//					getManageObj();
-//				});
-
 				$http.post('/manage/updateModelImage',fd,{
 						headers:{"Content-type":undefined}
 						,transformRequest: null
