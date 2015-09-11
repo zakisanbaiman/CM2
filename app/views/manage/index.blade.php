@@ -8,12 +8,12 @@
 			<ul>
 				<li class="box" ng-repeat="manage in manages | filter : search">
 					<p><img src="/upload/@{{ manage.model_image }}" alt="" class="box-img"></p>
-					<p class="box-p"><span>型番:</span>@{{ manage.model_name }}</p>
-					<p class="box-p"><span>メーカー:</span>@{{ manage.maker }}</p>
-					<p class="box-p"><span>サイズ:</span>@{{ manage.size }}</p>
-					<p class="box-p"><span>色:</span>@{{ manage.color }}</p>
-					<p class="box-p"><span>購入日:</span>@{{ manage.buy_date }}</p>
-					<p class="box-p"><span>その他:</span>@{{ manage.etc }}</p>
+					<p class="box-p"><span class="box-label">型番</span>@{{ manage.model_name }}</p>
+					<p class="box-p"><span class="box-label">メーカー</span>@{{ manage.maker }}</p>
+					<p class="box-p"><span class="box-label">サイズ</span>@{{ manage.size }}</p>
+					<p class="box-p"><span class="box-label">色</span>@{{ manage.color }}</p>
+					<p class="box-p"><span class="box-label">購入日</span>@{{ manage.buy_date }}</p>
+					<p class="box-p"><span class="box-label">その他</span>@{{ manage.etc }}</p>
 					<p class="box-p">
 						<a class="btn btn-default" ng-click="openManageDetail(manage.id)">詳細</a>
 						<a class="btn btn-default" ng-click="openUpdateManageDialog(manage.id)">更新</a>
@@ -31,12 +31,12 @@
 	<div ng-controller="UpdateManageModalController">
 		<script type="text/ng-template" id="updateManageModal.html">
 			<div class="manageModalBox">
-				<li><span>型番:</span><input type="text" ng-model="manage.model_name"></li>
-				<li><span>メーカー:</span><input type="text" ng-model="manage.maker"></li>
-				<li><span>サイズ:</span><input type="text" ng-model="manage.size"></li>
-				<li><span>色:</span><input type="text" ng-model="manage.color"></li>
-				<li><span>購入日:</span><input type="text" ng-model="manage.buy_date"></li>
-				<li><span>その他:</span><textarea cols="60" rows="25" ng-model="manage.etc"></textarea></li>
+				<li><span class="box-label">型番</span><input type="text" ng-model="manage.model_name"></li>
+				<li><span class="box-label">メーカー</span><input type="text" ng-model="manage.maker"></li>
+				<li><span class="box-label">サイズ</span><input type="text" ng-model="manage.size"></li>
+				<li><span class="box-label">色</span><input type="text" ng-model="manage.color"></li>
+				<li><span class="box-label">購入日</span><input type="text" ng-model="manage.buy_date"></li>
+				<li><span class="box-label">その他</span><textarea cols="60" rows="25" ng-model="manage.etc"></textarea></li>
 
 				<form id="upload-form" ng-submit="uploadModelImage(manage.id)" method="post" enctype="multipart/form-data">
 				{{Form::file('modelImage')}}
@@ -81,7 +81,7 @@
 //				function($scope,$http,$modal) {
 	angular.module('myApp').
 			controller('ManageController',
-			['$scope','$modal','$http','Upload', '$timeout', function($scope,$modal,$http,Upload, $timeout) {
+			['$scope','$modal','$http','$timeout', function($scope,$modal,$http,$timeout) {
 
 			getManageObj = function() {
 				$http({

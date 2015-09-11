@@ -8,8 +8,8 @@
 			<ul>
 				<li class="box" ng-repeat="userList in userLists | filter : search">
 					<p><img src="/upload/@{{ userList.profile_image }}" alt="" class="box-img"></p>
-					<p class="box-p"><span>ニックネーム:</span>@{{ userList.nickname }}</p>
-					<p class="box-p"><span>一言:</span>@{{ userList.etc }}</p>
+					<p class="box-p"><span class="box-label">名前</span>@{{ userList.nickname }}</p>
+					<p class="box-p"><span class="box-label">一言</span>@{{ userList.etc }}</p>
 					<p class="box-p">
 						<a class="btn btn-default" ng-click="openUserProfile(userList.id)">詳細</a>
 						{{--<a class="btn btn-default" ng-click="openUpdateProfileDialog(userDetail.id)">更新</a>--}}
