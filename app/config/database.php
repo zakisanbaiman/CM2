@@ -55,8 +55,8 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 //			'host'      => '192.168.128.101',
-//			'host'      => '192.168.11.11',
-			'host'      => 'localhost',
+			'host'      => '192.168.11.11',
+//			'host'      => 'localhost',
 			'database'  => 'cm',
 			'username'  => 'view',
 			'password'  => 'view1239',

@@ -41,7 +41,7 @@ p#copyright {
 /* manage */
 .box {
     width:200px;
-    height:380px;
+    height:400px;
     background-color: white;
     float:left;
     margin-right: 15px;
@@ -63,9 +63,52 @@ p#copyright {
     margin: 5px 5px;
 }
 
+.box-label {
+    width: 60px;
+    margin-right: 5px;
+    padding: 2px;
+    display: inline-block;
+    background-color: #c8c8c8;
+}
+
+.box-label-m {
+    width: 110px;
+    margin-right: 5px;
+    padding: 2px;
+    display: inline-block;
+    background-color: #c8c8c8;
+}
+
+.btn-group-vertical>.btn{
+    padding: 0px;
+    border:0px;
+    line-height:1;
+}
+
+.btn-group-vertical>.btn:hover{
+    color: #3476be;
+}
+
+.table>thead>tr>th.info{
+    background-color: #c8c8c8;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+    color: #FFFFFF;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover {
+    color: #9d9d9d;
+}
+
 .box-img {
     width: 200px;
     height: 200px;
+}
+
+.box-img-big {
+    /*width: 500px;*/
+    /*height: 500px;*/
 }
 
 .box-list-img {

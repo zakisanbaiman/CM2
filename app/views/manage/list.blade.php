@@ -7,15 +7,60 @@
 		<section class="container">
 			<table class="table table-bordered">
 				<thead>
-				<th class="info">画像</th>
-				<th class="info">型番</th>
-				<th class="info">メーカー</th>
-				<th class="info">サイズ</th>
-				<th class="info">色</th>
-				<th class="info">購入日</th>
-				<th class="info">備考</th>
-				<th class="info">更新</th>
-				<th class="info">削除</th>
+				<th class="info">画像
+					<div class="btn-group-vertical">
+					<span class="glyphicon glyphicon-triangle-top btn" ng-click="orderChange('desc', 'model_name')"></span>
+					<span class="glyphicon glyphicon-triangle-bottom btn"></span>
+					</div>
+				</th>
+				<th class="info">型番
+					<div class="btn-group-vertical aa">
+						<span class="glyphicon glyphicon-triangle-top btn"></span>
+						<span class="glyphicon glyphicon-triangle-bottom btn"></span>
+					</div>
+				</th>
+				<th class="info">メーカー
+					<div class="btn-group-vertical">
+						<span class="glyphicon glyphicon-triangle-top btn"></span>
+						<span class="glyphicon glyphicon-triangle-bottom btn"></span>
+					</div>
+				</th>
+				<th class="info">サイズ
+					<div class="btn-group-vertical">
+						<span class="glyphicon glyphicon-triangle-top btn"></span>
+						<span class="glyphicon glyphicon-triangle-bottom btn"></span>
+					</div>
+				</th>
+				<th class="info">色
+					<div class="btn-group-vertical">
+						<span class="glyphicon glyphicon-triangle-top btn"></span>
+						<span class="glyphicon glyphicon-triangle-bottom btn"></span>
+					</div>
+				</th>
+				<th class="info">購入日
+					<div class="btn-group-vertical">
+						<span class="glyphicon glyphicon-triangle-top btn"></span>
+						<span class="glyphicon glyphicon-triangle-bottom btn"></span>
+					</div>
+				</th>
+				<th class="info">備考
+					<div class="btn-group-vertical">
+						<span class="glyphicon glyphicon-triangle-top btn"></span>
+						<span class="glyphicon glyphicon-triangle-bottom btn"></span>
+					</div>
+				</th>
+				<th class="info">更新
+					<div class="btn-group-vertical">
+						<span class="glyphicon glyphicon-triangle-top btn"></span>
+						<span class="glyphicon glyphicon-triangle-bottom btn"></span>
+					</div>
+				</th>
+				<th class="info">削除
+					<div class="btn-group-vertical">
+						<span class="glyphicon glyphicon-triangle-top btn"></span>
+						<span class="glyphicon glyphicon-triangle-bottom btn"></span>
+					</div>
+				</th>
 				</thead>
 				<tbody>
 				<tr class="active" ng-repeat="manage in manages | filter : search">
@@ -26,16 +71,9 @@
 					<td>@{{ manage.color }}</td>
 					<td>@{{ manage.buy_date }}</td>
 					<td>@{{ manage.etc }}</td>
-					{{--<td>--}}
-						{{--{{Form::open(array('url' => '/manage/updateModelImage', 'files' => true, 'id'=>'model_image'))}}--}}
-						{{--<input type="file" name="model_image">--}}
-						{{--<input type="submit">--}}
-						{{--{{Form::close()}}--}}
-					{{--</td>--}}
 					<td><a class="btn btn-default" ng-click="updateManageObj($index)">更新</a></td>
 					<td><a class="btn btn-default" ng-click="deleteManageObj($index)">削除</a></td>
 				</tr>
-				{{--<input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="fromDate" is-open="fromDateOpened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" show-weeks="false" close-text="Close" />--}}
 				</tbody>
 			</table>
 			<a class="btn btn-default" ng-click="insertManageObj()">挿入</a>
@@ -46,8 +84,6 @@
 	</main>
 	</body>
 	<script>
-		//	$.datepicker.setDefaults($.datepicker.regional['ja']);
-		//	$('#buy_date').datepicker();
 
 		angular.module('myApp', [])
 				.controller('ManageController', ['$scope','$http', function($scope,$http) {
@@ -63,6 +99,20 @@
 					}
 
 					getManageObj();
+
+					$scope.orderChange = function($order, $val) {
+						var obj = {};
+						obj.order = $order;
+						obj.val = $val;
+						$http({
+							method : 'get',
+							url : '/manage/getManageOrderObj',
+							params: obj
+						}).success(function(data, status, headers, config) {
+							$scope.manages = data;
+						}).error(function(data, status, headers, config) {
+						});
+					}
 
 					$scope.updateManageObj = function($index) {
 						$http({
@@ -99,35 +149,16 @@
 						$form = $('#model_image');
 						fd = new FormData($form[0]);
 
-//						$http.post('/manage/updateModelImage',fd,
-//								{
-//									headers:{"Content-type":undefined}
-//									,transformRequest: null
-//								})
-//								.success(function(data) {
-//									getManageObj();
-//								});
-
 						$http({
 							method: 'post',
 							url: '/manage/updateModelImage',
 							data: fd
 						}).success(function (data, status, headers, config) {
 							getManageObj();
-//							preventDefault();
-//							return false;
-//						}).error(function (data, status, headers, config) {
 						});
 					}
 
-
-
 				}]);
-
-		//$(function() {
-		//	$(".buy_date").datepicker();
-		//	$("#buy_date").datepicker();
-		//});
 
 	</script>
 @stop

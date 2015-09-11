@@ -7,13 +7,13 @@
 		<section class="container">
 			<div class="box-detail">
 				<p><img src="/upload/profile/@{{ profile.profile_image }}" alt="" class="box-img"></p>
-				<p class="box-p"><span>ニックネーム:</span>@{{ profile.nickname }}</p>
-				<p class="box-p"><span>メールアドレス:</span>@{{ profile.mail_adress }}</p>
-				<p class="box-p"><span>twitter:</span>@{{ profile.twitter }}</p>
-				<p class="box-p"><span>facebook:</span>@{{ profile.facebook }}</p>
-				<p class="box-p"><span>住所:</span>@{{ profile.adress }}</p>
-				<p class="box-p"><span>電話番号:</span>@{{ profile.tel }}</p>
-				<p class="box-p"><span>一言:</span>@{{ profile.etc }}</p>
+				<p class="box-p"><span class="box-label-m">ニックネーム</span>@{{ profile.nickname }}</p>
+				<p class="box-p"><span class="box-label-m">メールアドレス</span>@{{ profile.mail_adress }}</p>
+				<p class="box-p"><span class="box-label-m">twitter</span>@{{ profile.twitter }}</p>
+				<p class="box-p"><span class="box-label-m">facebook</span>@{{ profile.facebook }}</p>
+				<p class="box-p"><span class="box-label-m">住所</span>@{{ profile.adress }}</p>
+				<p class="box-p"><span class="box-label-m">電話番号</span>@{{ profile.tel }}</p>
+				<p class="box-p"><span class="box-label-m">一言</span>@{{ profile.etc }}</p>
 				<p class="box-p">
 					<a class="btn btn-default" ng-click="openUpdateProfileDialog(profile.id)">更新</a>
 					{{--<a class="btn btn-default" ng-click="openDeleteProfileDialog(profile.id)">削除</a>--}}
@@ -28,13 +28,13 @@
 	<div ng-controller="UpdateProfileModalController">
 		<script type="text/ng-template" id="updateProfileModal.html">
 			<div class="manageModalBox">
-				<li><span>ニックネーム:</span><input type="text" ng-model="profile.nickname"></li>
-				<li><span>メールアドレス:</span><input type="text" ng-model="profile.mail_adress"></li>
-				<li><span>twitter:</span><input type="text" ng-model="profile.twitter"></li>
-				<li><span>facebook:</span><input type="text" ng-model="profile.facebook"></li>
-				<li><span>住所:</span><input type="text" ng-model="profile.adress"></li>
-				<li><span>電話番号:</span><input type="text" ng-model="profile.tel"></li>
-				<li><span>一言:</span><textarea cols="60" rows="25" ng-model="profile.etc"></textarea></li>
+				<li><span class="box-label-m">ニックネーム</span><input type="text" ng-model="profile.nickname"></li>
+				<li><span class="box-label-m">メールアドレス</span><input type="text" ng-model="profile.mail_adress"></li>
+				<li><span class="box-label-m">twitter</span><input type="text" ng-model="profile.twitter"></li>
+				<li><span class="box-label-m">facebook</span><input type="text" ng-model="profile.facebook"></li>
+				<li><span class="box-label-m">住所</span><input type="text" ng-model="profile.adress"></li>
+				<li><span class="box-label-m">電話番号</span><input type="text" ng-model="profile.tel"></li>
+				<li><span class="box-label-m">一言</span><textarea cols="60" rows="25" ng-model="profile.etc"></textarea></li>
 
 				<div class="manageModalBoxFooter">
 					<a class="btn btn-default" ng-click="updateProfileModalOk()">Ok</a>
