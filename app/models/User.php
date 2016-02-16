@@ -1,26 +1,40 @@
 <?php
 
-use Illuminate\Auth\UserTrait;
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
-use Illuminate\Auth\Reminders\RemindableInterface;
+use Cartalyst\Sentry\Users\Eloquent\User as SentryUserModel;
 
-class User extends Eloquent implements UserInterface, RemindableInterface {
-
-	use UserTrait, RemindableTrait;
+class User extends SentryUserModel {
 
 	/**
-	 * The database table used by the model.
+	 * Indicates if the model should soft delete.
 	 *
-	 * @var string
+	 * @var bool
 	 */
-	protected $table = 'users';
+	protected $softDelete = true;
 
 	/**
-	 * The attributes excluded from the model's JSON form.
+	 * Returns the user full name, it simply concatenates
+	 * the user first and last name.
 	 *
-	 * @var array
+	 * @return string
 	 */
-	protected $hidden = array('password', 'remember_token');
+	public function fullName()
+	{
+		return "{$this->first_name} {$this->last_name}";
+	}
+
+	/**
+	 * Returns the user Gravatar image url.
+	 *
+	 * @return string
+	 *
+	public function gravatar()
+	{
+		// Generate the Gravatar hash
+		$gravatar = md5(strtolower(trim($this->gravatar)));
+
+		// Return the Gravatar url
+		return "//gravatar.org/avatar/{$gravatar}";
+	}
+	 */
 
 }

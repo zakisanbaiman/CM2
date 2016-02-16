@@ -2,7 +2,7 @@
 
 {{-- Page title --}}
 @section('title')
-User Management ::
+ユーザー管理 ::
 @parent
 @stop
 
@@ -10,16 +10,16 @@ User Management ::
 @section('content')
 <div class="page-header">
 	<h3>
-		User Management
+		ユーザー管理
 
 		<div class="pull-right">
-			<a href="{{ route('create/user') }}" class="btn btn-small btn-info"><i class="icon-plus-sign icon-white"></i> Create</a>
+			<a href="{{ route('create/user') }}" class="btn btn-small btn-info"><i class="icon-plus-sign icon-white"></i> 新規作成</a>
 		</div>
 	</h3>
 </div>
 
-<a class="btn btn-medium" href="{{ URL::to('admin/users?withTrashed=true') }}">Include Deleted Users</a>
-<a class="btn btn-medium" href="{{ URL::to('admin/users?onlyTrashed=true') }}">Include Only Deleted Users</a>
+<a class="btn btn-medium" href="{{ URL::to('admin/users?withTrashed=true') }}">削除済みユーザーを含む</a>
+<a class="btn btn-medium" href="{{ URL::to('admin/users?onlyTrashed=true') }}">削除済みユーザのみ</a>
 
 {{ $users->links() }}
 

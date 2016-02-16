@@ -2,7 +2,7 @@
 
 {{-- Web site Title --}}
 @section('title')
-Group Management ::
+グループ管理 ::
 @parent
 @stop
 
@@ -10,10 +10,10 @@ Group Management ::
 @section('content')
 <div class="page-header">
 	<h3>
-		Group Management
+		グループ管理
 
 		<div class="pull-right">
-			<a href="{{ route('create/group') }}" class="btn btn-small btn-info"><i class="icon-plus-sign icon-white"></i> Create</a>
+			<a href="{{ route('create/group') }}" class="btn btn-small btn-info"><i class="icon-plus-sign icon-white"></i> 新規作成</a>
 		</div>
 	</h3>
 </div>

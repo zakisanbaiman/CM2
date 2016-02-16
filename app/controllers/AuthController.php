@@ -112,7 +112,7 @@ class AuthController extends BaseController {
  				'email'             => 'required|email|unique:users',
 				'email_confirm'     => 'required|email|same:email',
 				'password'          => 'required|min:4',
-				'password_confirm'  => 'required|min:4'
+				'password_confirm'  => 'required|same:password',
 		);
 
 		$validator = Validator::make(Input::all(), $rules);

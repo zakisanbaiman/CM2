@@ -1,6 +1,6 @@
 @extends('backend/layouts/default')
 @section('content')
 
-	Page Intentionally Left Blank :)
+    サイト管理のページです。
 
 @stop

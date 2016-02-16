@@ -9,9 +9,9 @@
 			サイト管理
 			@show
 		</title>
-		<meta name="keywords" content="your, awesome, keywords, here" />
-		<meta name="author" content="Jon Doe" />
-		<meta name="description" content="Lorem ipsum dolor sit amet, nihil fabulas et sea, nam posse menandri scripserit no, mei." />
+		<meta name="keywords" content="ナンダコレ" />
+		<meta name="author" content="Mango Uchida" />
+		<meta name="description" content="なんだろ" />
 
 		<!-- Mobile Specific Metas
 		================================================== -->
@@ -65,21 +65,23 @@
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
 						<li{{ (Request::is('admin') ? ' class="active"' : '') }}><a href="{{ URL::to('admin') }}"><i class="icon-home icon-white"></i> Home</a></li>
+						<!--
 						<li{{ (Request::is('admin/blogs*') ? ' class="active"' : '') }}><a href="{{ URL::to('admin/blogs') }}"><i class="icon-list-alt icon-white"></i> Blogs</a></li>
+						-->
 						<li class="dropdown{{ (Request::is('admin/users*')||Request::is('admin/groups*')) ? ' active' : '' }}">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="{{ URL::to('admin/users') }}">
-								<i class="icon-user icon-white"></i> Users <span class="caret"></span>
+								<i class="icon-user icon-white"></i> アカウント管理 <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li{{ (Request::is('admin/users*') ? ' class="active"' : '') }}><a href="{{ URL::to('admin/users') }}"><i class="icon-user"></i> Users</a></li>
-								<li{{ (Request::is('admin/groups*') ? ' class="active"' : '') }}><a href="{{ URL::to('admin/groups') }}"><i class="icon-user"></i> Groups</a></li>
+								<li{{ (Request::is('admin/users*') ? ' class="active"' : '') }}><a href="{{ URL::to('admin/users') }}"><i class="icon-user"></i> ユーザー</a></li>
+								<li{{ (Request::is('admin/groups*') ? ' class="active"' : '') }}><a href="{{ URL::to('admin/groups') }}"><i class="icon-user"></i> グループ</a></li>
 							</ul>
 						</li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li><a href="{{ URL::to('/') }}" target="_blank">View Homepage</a></li>
 						<li class="divider-vertical"></li>
-						<li><a href="{{ route('logout') }}">Logout</a></li>
+						<li><a href="{{ route('logout') }}">ログアウト</a></li>
 					</ul>
 			    </div><!-- /.navbar-collapse -->
 			  </div><!-- /.container-fluid -->
