@@ -18,6 +18,7 @@
  * @link       http://cartalyst.com
  */
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Illuminate\Database\Eloquent\Model;
 use Cartalyst\Sentry\Groups\GroupInterface;
 use Cartalyst\Sentry\Hashing\HasherInterface;
@@ -29,6 +30,9 @@ use Cartalyst\Sentry\Users\UserInterface;
 
 class User extends Model implements UserInterface {
 
+	use SoftDeletingTrait;
+
+	protected $dates = ['deleted_at'];
 	/**
 	 * The table associated with the model.
 	 *
