@@ -27,6 +27,14 @@
 		</div>
 	</main>
 
+	<div class="container">
+    <?php foreach ($manages as $manage): ?>
+        <?php echo $manage->model_image; ?>
+    <?php endforeach; ?>
+	</div>
+
+	<?php echo $manages->links(); ?>
+
 	<!-- 更新ダイアログ -->
 	<div ng-controller="UpdateManageModalController">
 		<script type="text/ng-template" id="updateManageModal.html">

@@ -1,12 +1,24 @@
 <?php
 
 use app\lib\image\Upload;
+use Cartalyst\Sentry\Users\Eloquent\User;
 
 class ManageController extends BaseController
 {
 
 	public function getManage() {
-		return View::make('manage.index');
+/*
+		$manages = DB::table('manages')->paginate(2);
+
+		return View::make('manage.index')->;
+
+		return View::make('pagination', [
+				'manages' => Manage::paginate(3)
+		]);
+	*/
+		$manages = DB::table('manages')->paginate(3);
+
+		return View::make('manage.index')->with('manages', $manages);
 	}
 
 	// manage list
