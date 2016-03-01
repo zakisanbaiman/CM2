@@ -3,6 +3,27 @@
 @extends('layout')
 @section('content')
 <body ng-controller="ManageController">
+	<?php foreach ($manages as $manage): ?>
+    	<p><img src="/upload/@{{ manage.model_image }}" alt="" class="box-img"></p>
+		<p class="box-p"><span class="box-label">型番</span>@{{ manage.model_name }}</p>
+		<p class="box-p"><span class="box-label">メーカー</span>@{{ manage.maker }}</p>
+		<p class="box-p"><span class="box-label">サイズ</span>@{{ manage.size }}</p>
+		<p class="box-p"><span class="box-label">色</span>@{{ manage.color }}</p>
+		<p class="box-p"><span class="box-label">購入日</span>@{{ manage.buy_date }}</p>
+		<p class="box-p"><span class="box-label">その他</span>@{{ manage.etc }}</p>
+		<p class="box-p">
+        <?php echo $manage->id; ?>
+        <?php echo $manage->model_image; ?>
+        <?php echo $manage->model_name; ?>
+        <?php echo $manage->maker; ?>
+        <?php echo $manage->size; ?>
+        <?php echo $manage->buy_date; ?>
+        <?php echo $manage->etc; ?>
+    <?php endforeach; ?>
+	</div>
+
+	<?php echo $manages->links(); ?>
+
 	<main>
 		<section class="container">
 			<ul>
@@ -28,12 +49,7 @@
 	</main>
 
 	<div class="container">
-    <?php foreach ($manages as $manage): ?>
-        <?php echo $manage->model_image; ?>
-    <?php endforeach; ?>
-	</div>
 
-	<?php echo $manages->links(); ?>
 
 	<!-- 更新ダイアログ -->
 	<div ng-controller="UpdateManageModalController">
