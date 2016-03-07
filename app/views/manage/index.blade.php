@@ -2,6 +2,27 @@
 <h1></h1>
 @extends('layout')
 @section('content')
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+
+<!DOCTYPE html>
+<html ng-app = 'App'>
+  <head>
+...
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+   <script type="text/javascript" src="controller.js"></script>
+  </head>
+  <body ng-controller="AppController">
+...
+  </body>
+</html>
+
+<body ng-controller="AppController">
+      <input type = "text" ng-model="displayText">
+      <input type="button" value="Go" ng-click="display()">
+	  <h1>@{{text}}</h1>
+</body>
+
 <body ng-controller="ManageController">
 	<?php foreach ($manages as $manage): ?>
     	<p><img src="/upload/@{{ manage.model_image }}" alt="" class="box-img"></p>
@@ -20,6 +41,8 @@
         <?php echo $manage->buy_date; ?>
         <?php echo $manage->etc; ?>
     <?php endforeach; ?>
+
+
 	</div>
 
 	<?php echo $manages->links(); ?>
@@ -254,6 +277,17 @@
 				$modalInstance.dismiss('cancel');
 			};
 		});
+
+
+		var app = angular.module('App', []);
+
+		angular.module('myApp').
+			controller('AppController', function($scope){
+			  $scope.display = function(){
+			    var str = $scope.displayText;
+			      $scope.text = str;
+			  }
+			});
 
 </script>
 @stop
