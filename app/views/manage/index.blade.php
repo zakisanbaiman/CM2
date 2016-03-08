@@ -3,20 +3,6 @@
 @extends('layout')
 @section('content')
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
-
-<!DOCTYPE html>
-<html ng-app = 'App'>
-  <head>
-...
-   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
-   <script type="text/javascript" src="controller.js"></script>
-  </head>
-  <body ng-controller="AppController">
-...
-  </body>
-</html>
-
 <body ng-controller="AppController">
       <input type = "text" ng-model="displayText">
       <input type="button" value="Go" ng-click="display()">
@@ -24,55 +10,32 @@
 </body>
 
 <body ng-controller="ManageController">
-	<?php foreach ($manages as $manage): ?>
-    	<p><img src="/upload/@{{ manage.model_image }}" alt="" class="box-img"></p>
-		<p class="box-p"><span class="box-label">型番</span>@{{ manage.model_name }}</p>
-		<p class="box-p"><span class="box-label">メーカー</span>@{{ manage.maker }}</p>
-		<p class="box-p"><span class="box-label">サイズ</span>@{{ manage.size }}</p>
-		<p class="box-p"><span class="box-label">色</span>@{{ manage.color }}</p>
-		<p class="box-p"><span class="box-label">購入日</span>@{{ manage.buy_date }}</p>
-		<p class="box-p"><span class="box-label">その他</span>@{{ manage.etc }}</p>
-		<p class="box-p">
-        <?php echo $manage->id; ?>
-        <?php echo $manage->model_image; ?>
-        <?php echo $manage->model_name; ?>
-        <?php echo $manage->maker; ?>
-        <?php echo $manage->size; ?>
-        <?php echo $manage->buy_date; ?>
-        <?php echo $manage->etc; ?>
-    <?php endforeach; ?>
-
-
-	</div>
-
-	<?php echo $manages->links(); ?>
-
 	<main>
 		<section class="container">
 			<ul>
-				<li class="box" ng-repeat="manage in manages | filter : search">
-					<p><img src="/upload/@{{ manage.model_image }}" alt="" class="box-img"></p>
-					<p class="box-p"><span class="box-label">型番</span>@{{ manage.model_name }}</p>
-					<p class="box-p"><span class="box-label">メーカー</span>@{{ manage.maker }}</p>
-					<p class="box-p"><span class="box-label">サイズ</span>@{{ manage.size }}</p>
-					<p class="box-p"><span class="box-label">色</span>@{{ manage.color }}</p>
-					<p class="box-p"><span class="box-label">購入日</span>@{{ manage.buy_date }}</p>
-					<p class="box-p"><span class="box-label">その他</span>@{{ manage.etc }}</p>
-					<p class="box-p">
-						<a class="btn btn-default" ng-click="openManageDetail(manage.id)">詳細</a>
-						<a class="btn btn-default" ng-click="openUpdateManageDialog(manage.id)">更新</a>
-						<a class="btn btn-default" ng-click="openDeleteManageDialog(manage.id)">削除</a>
-					</p>
-				</li>
+						<?php foreach ($manages as $manage): ?>
+					    	<p><img src="/upload/<?php echo $manage->model_image; ?>" alt="" class="box-img"></p>
+							<p class="box-p"><span class="box-label">型番</span><?php echo $manage->model_name; ?></p>
+							<p class="box-p"><span class="box-label">メーカー</span><?php echo $manage->maker; ?></p>
+							<p class="box-p"><span class="box-label">サイズ</span><?php echo $manage->size; ?></p>
+							<p class="box-p"><span class="box-label">色</span><?php echo $manage->color; ?></p>
+							<p class="box-p"><span class="box-label">購入日</span><?php echo $manage->buy_date; ?></p>
+							<p class="box-p"><span class="box-label">その他</span><?php echo $manage->etc; ?></p>
+							<p class="box-p">
+								<a class="btn btn-default" ng-click="openManageDetail(manage.id)">詳細</a>
+								<a class="btn btn-default" ng-click="openUpdateManageDialog(manage.id)">更新</a>
+								<a class="btn btn-default" ng-click="openDeleteManageDialog(manage.id)">削除</a>
+							</p>
+					    <?php endforeach; ?>
+
+						<?php echo $manages->links(); ?>
+
 			</ul>
 			<a class="btn btn-default" ng-click="insertManageObj()">挿入</a>
 		</section>
 		<div>
 		</div>
 	</main>
-
-	<div class="container">
-
 
 	<!-- 更新ダイアログ -->
 	<div ng-controller="UpdateManageModalController">
