@@ -2,39 +2,35 @@
 <h1></h1>
 @extends('layout')
 @section('content')
-
-<body ng-controller="AppController">
-      <input type = "text" ng-model="displayText">
-      <input type="button" value="Go" ng-click="display()">
-	  <h1>@{{text}}</h1>
-</body>
-
 <body ng-controller="ManageController">
 	<main>
 		<section class="container">
 			<ul>
-						<?php foreach ($manages as $manage): ?>
-					    	<p><img src="/upload/<?php echo $manage->model_image; ?>" alt="" class="box-img"></p>
-							<p class="box-p"><span class="box-label">型番</span><?php echo $manage->model_name; ?></p>
-							<p class="box-p"><span class="box-label">メーカー</span><?php echo $manage->maker; ?></p>
-							<p class="box-p"><span class="box-label">サイズ</span><?php echo $manage->size; ?></p>
-							<p class="box-p"><span class="box-label">色</span><?php echo $manage->color; ?></p>
-							<p class="box-p"><span class="box-label">購入日</span><?php echo $manage->buy_date; ?></p>
-							<p class="box-p"><span class="box-label">その他</span><?php echo $manage->etc; ?></p>
-							<p class="box-p">
-								<a class="btn btn-default" ng-click="openManageDetail(manage.id)">詳細</a>
-								<a class="btn btn-default" ng-click="openUpdateManageDialog(manage.id)">更新</a>
-								<a class="btn btn-default" ng-click="openDeleteManageDialog(manage.id)">削除</a>
-							</p>
-					    <?php endforeach; ?>
-
-						<?php echo $manages->links(); ?>
-
+				<li class="box" ng-repeat="manage in manages | filter : search | limitTo: num: begin">
+					<p><img src="/upload/@{{ manage.model_image }}" alt="" class="box-img"></p>
+					<p class="box-p"><span class="box-label">型番</span>@{{ manage.model_name }}</p>
+					<p class="box-p"><span class="box-label">メーカー</span>@{{ manage.maker }}</p>
+					<p class="box-p"><span class="box-label">サイズ</span>@{{ manage.size }}</p>
+					<p class="box-p"><span class="box-label">色</span>@{{ manage.color }}</p>
+					<p class="box-p"><span class="box-label">購入日</span>@{{ manage.buy_date }}</p>
+					<p class="box-p"><span class="box-label">その他</span>@{{ manage.etc }}</p>
+					<p class="box-p">
+						<a class="btn btn-default" ng-click="openManageDetail(manage.id)">詳細</a>
+						<a class="btn btn-default" ng-click="openUpdateManageDialog(manage.id)">更新</a>
+						<a class="btn btn-default" ng-click="openDeleteManageDialog(manage.id)">削除</a>
+					</p>
+				</li>
 			</ul>
 			<a class="btn btn-default" ng-click="insertManageObj()">挿入</a>
 		</section>
 		<div>
 		</div>
+
+		<input type="button" value="1" ng-click="onpaging(0)">
+		<input type="button" value="2" ng-click="onpaging(1)">
+		<input type="button" value="3" ng-click="onpaging(2)">
+		<input type="button" value="4" ng-click="onpaging(3)">
+
 	</main>
 
 	<!-- 更新ダイアログ -->
@@ -73,9 +69,9 @@
 			</div>
 		</script>
 	</div>
+
 </body>
 <script>
-
 
 //	$.datepicker.setDefaults($.datepicker.regional['ja']);
 //	$('#buy_date').datepicker();
@@ -93,15 +89,30 @@
 			controller('ManageController',
 			['$scope','$modal','$http','$timeout', function($scope,$modal,$http,$timeout) {
 
+			//start 2016/3/29 suzaki ページネーション範囲を指定
+			$scope.num = 3;
+			$scope.begin = 0;
+			//end
+
 			getManageObj = function() {
 				$http({
 					method : 'get',
 					url : '/manage/getManageObj',
 				}).success(function(data, status, headers, config) {
 					$scope.manages = data;
+
 				}).error(function(data, status, headers, config) {
 				});
+
 			}
+
+			//start 2016/3/29 ページングボタン
+			$scope.onpaging = function(page){
+				$scope.begin = $scope.num * page;
+
+				    };
+			//end
+
 
 			getManageObj();
 
@@ -240,17 +251,6 @@
 				$modalInstance.dismiss('cancel');
 			};
 		});
-
-
-		var app = angular.module('App', []);
-
-		angular.module('myApp').
-			controller('AppController', function($scope){
-			  $scope.display = function(){
-			    var str = $scope.displayText;
-			      $scope.text = str;
-			  }
-			});
 
 </script>
 @stop
