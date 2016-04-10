@@ -6,7 +6,7 @@
 	<main>
 		<section class="container">
 			<ul>
-				<li class="box" ng-repeat="manage in manages | filter : search | limitTo: num: begin">
+				<li class="box" ng-repeat="manage in manages | filter : search | limitTo: pagenation.num: pagenation.begin">
 					<p><img src="/upload/@{{ manage.model_image }}" alt="" class="box-img"></p>
 					<p class="box-p"><span class="box-label">型番</span>@{{ manage.model_name }}</p>
 					<p class="box-p"><span class="box-label">メーカー</span>@{{ manage.maker }}</p>
@@ -90,8 +90,10 @@
 			['$scope','$modal','$http','$timeout', function($scope,$modal,$http,$timeout) {
 
 			//start 2016/3/29 suzaki ページネーション範囲を指定
-			$scope.num = 3;
-			$scope.begin = 0;
+			$scope.pagenation = {
+					num : 5,
+					begin: 0
+			}
 			//end
 
 			getManageObj = function() {
