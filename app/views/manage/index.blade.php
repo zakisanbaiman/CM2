@@ -25,18 +25,19 @@
         <div>
         </div>
 
-        <ul class="pagination">
-		  <li>
-		    <a href="#" ng-click="prevPage()">≪ 前へ</a>
-		  </li>
-		  <li ng-repeat="n in range()" ng-class="{active: n == paging.currentPage}" ng-click="setPage(n)">
-		    <a href="#">@{{n}}</a>
-		  </li>
-		  <li>
-		    <a href="#" ng-click="nextPage()">次へ ≫</a>
-		  </li>
-		</ul>
-
+		<center>
+	      <ul class="pagination">
+            <li>
+		      <a href="#" ng-click="prevPage()">≪ 前へ</a>
+		    </li>
+		    <li ng-repeat="n in range()" ng-class="{active: n == paging.currentPage}" ng-click="setPage(n)">
+		      <a href="#">@{{n}}</a>
+		    </li>
+		    <li>
+		      <a href="#" ng-click="nextPage()">次へ ≫</a>
+		    </li>
+		  </ul>
+		</center>
     </main>
 
     <!-- 更新ダイアログ -->
@@ -96,13 +97,11 @@
             controller('ManageController',
             ['$scope','$modal','$http','$timeout', function($scope,$modal,$http,$timeout) {
 
-            //start 2016/3/29 ページネーション範囲を指定
             $scope.paging = {
-                                 num: 3,
+                                 num: 5,
                                  begin: 0,
                                  currentPage: 1
                             }
-			//end
 
             getManageObj = function() {
                 $http({
