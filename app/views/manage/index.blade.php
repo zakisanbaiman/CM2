@@ -6,7 +6,7 @@
 	<main>
 		<section class="container">
 			<ul>
-				<li class="box" ng-repeat="manage in manages | filter : search">
+				<li class="box" ng-repeat="manage in manages | filter : search | limitTo: num: begin">
 					<p><img src="/upload/@{{ manage.model_image }}" alt="" class="box-img"></p>
 					<p class="box-p"><span class="box-label">型番</span>@{{ manage.model_name }}</p>
 					<p class="box-p"><span class="box-label">メーカー</span>@{{ manage.maker }}</p>
@@ -25,6 +25,12 @@
 		</section>
 		<div>
 		</div>
+
+		<input type="button" value="1" ng-click="onpaging(0)">
+		<input type="button" value="2" ng-click="onpaging(1)">
+		<input type="button" value="3" ng-click="onpaging(2)">
+		<input type="button" value="4" ng-click="onpaging(3)">
+
 	</main>
 
 	<!-- 更新ダイアログ -->
@@ -63,9 +69,9 @@
 			</div>
 		</script>
 	</div>
+
 </body>
 <script>
-
 
 //	$.datepicker.setDefaults($.datepicker.regional['ja']);
 //	$('#buy_date').datepicker();
@@ -83,15 +89,30 @@
 			controller('ManageController',
 			['$scope','$modal','$http','$timeout', function($scope,$modal,$http,$timeout) {
 
+			//start 2016/3/29 suzaki ページネーション範囲を指定
+			$scope.num = 3;
+			$scope.begin = 0;
+			//end
+
 			getManageObj = function() {
 				$http({
 					method : 'get',
 					url : '/manage/getManageObj',
 				}).success(function(data, status, headers, config) {
 					$scope.manages = data;
+
 				}).error(function(data, status, headers, config) {
 				});
+
 			}
+
+			//start 2016/3/29 ページングボタン
+			$scope.onpaging = function(page){
+				$scope.begin = $scope.num * page;
+
+				    };
+			//end
+
 
 			getManageObj();
 
