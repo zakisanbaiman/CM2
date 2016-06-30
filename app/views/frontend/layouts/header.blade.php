@@ -4,6 +4,7 @@
         <div class="container">
             <ul class="nav navbar-nav navbar-left">
                 <li><a class="navbar-brand" href="/">ホーム</a></li>
+                <li><a class="navbar-brand" href="/article">記事</a></li>
                 <li><a class="navbar-brand" href="/manage">構成管理</a></li>
                 <li><a class="navbar-brand" href="/manage/list">構成管理リスト</a></li>
                 <li><input type="search" id="search" name="search" class="form-control" ng-model="search"></li>
