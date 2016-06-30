@@ -126,6 +126,8 @@ Route::group(array('prefix' => 'admin'), function()
 
 });
 
+// article
+Route::get('/article', 'ArticleController@getArticle');
 
 // manage
 Route::get('/manage', 'ManageController@getManage');
