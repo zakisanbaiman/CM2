@@ -8,12 +8,8 @@
 			<ul>
 				<li class="box" ng-repeat="manage in manages | filter : search | limitTo: num: begin">
 					<p><img src="/upload/@{{ manage.model_image }}" alt="" class="box-img"></p>
-					<p class="box-p"><span class="box-label">型番</span>@{{ manage.model_name }}</p>
-					<p class="box-p"><span class="box-label">メーカー</span>@{{ manage.maker }}</p>
-					<p class="box-p"><span class="box-label">サイズ</span>@{{ manage.size }}</p>
-					<p class="box-p"><span class="box-label">色</span>@{{ manage.color }}</p>
-					<p class="box-p"><span class="box-label">購入日</span>@{{ manage.buy_date }}</p>
-					<p class="box-p"><span class="box-label">その他</span>@{{ manage.etc }}</p>
+					<p class="box-p">@{{ manage.model_name }}</p>
+					<p class="box-p"></span>@{{ manage.etc }}</p>
 					<p class="box-p">
 						<a class="btn btn-default" ng-click="openManageDetail(manage.id)">詳細</a>
 						<a class="btn btn-default" ng-click="openUpdateManageDialog(manage.id)">更新</a>
