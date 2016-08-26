@@ -2,7 +2,7 @@ body {
     padding-top: 70px;
     margin-bottom: 60px;
     padding-bottom: 0;
-    background-color: #E6E6E6;
+    background-color: #f0f0f0;
 }
 
 #login-wrap{
@@ -40,12 +40,12 @@ p#copyright {
 
 /* manage */
 .box {
-    width:200px;
+    width:250px;
     height:400px;
     background-color: white;
     float:left;
-    margin-right: 15px;
-    margin-bottom: 15px;
+    margin-right: 20px;
+    margin-bottom: 20px;
 }
 
 .box-detail {
@@ -102,8 +102,8 @@ p#copyright {
 }
 
 .box-img {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
 }
 
 .box-img-big {
