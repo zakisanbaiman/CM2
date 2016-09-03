@@ -57,6 +57,16 @@ Route::group(array('prefix' => 'auth'), function()
 });
 
 /*
+Route::group(array('prefix' => 'article'), function()
+{
+	# Article
+	//Route::get('index', array('as' => 'index'));
+	Route::get('index', array('as' => 'index', 'uses' => 'ArticleController@setArticleObj'));
+	Route::post('index', 'ArticleController@setArticleObj');
+});
+*/
+
+/*
 |--------------------------------------------------------------------------
 | Account Routes
 |--------------------------------------------------------------------------
@@ -128,6 +138,15 @@ Route::group(array('prefix' => 'admin'), function()
 
 // article
 Route::get('/article', 'ArticleController@getArticle');
+
+Route::get('/article/getArticleObj', 'ArticleController@getArticleObj');
+Route::post('/article/updateArticleObj', 'ArticleController@updateArticleObj');
+Route::post('/article/deleteArticleObj', 'ArticleController@deleteArticleObj');
+Route::post('/article/insertArticleObj', 'ArticleController@insertArticleObj');
+
+Route::get('/article/getArticleOneObj', 'ArticleController@getArticleOneObj');
+Route::post('/article/setArticleObj', 'ArticleController@setArticleObj');
+Route::post('/article/loadmore', 'ArticleController@loadmore');
 
 // manage
 Route::get('/manage', 'ManageController@getManage');
