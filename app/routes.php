@@ -147,6 +147,7 @@ Route::post('/article/insertArticleObj', 'ArticleController@insertArticleObj');
 Route::get('/article/getArticleOneObj', 'ArticleController@getArticleOneObj');
 Route::post('/article/setArticleObj', 'ArticleController@setArticleObj');
 Route::post('/article/loadmore', 'ArticleController@loadmore');
+Route::post('/article/getArticleAppendObj', 'ArticleController@getArticleAppendObj');
 
 // manage
 Route::get('/manage', 'ManageController@getManage');
