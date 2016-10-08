@@ -139,7 +139,7 @@ Route::group(array('prefix' => 'admin'), function()
 // article
 Route::get('/article', 'ArticleController@getArticle');
 
-Route::get('/article/getArticleObj', 'ArticleController@getArticleObj');
+Route::post('/article/getArticleObj', 'ArticleController@getArticleObj');
 Route::post('/article/updateArticleObj', 'ArticleController@updateArticleObj');
 Route::post('/article/deleteArticleObj', 'ArticleController@deleteArticleObj');
 Route::post('/article/insertArticleObj', 'ArticleController@insertArticleObj');
@@ -148,6 +148,8 @@ Route::get('/article/getArticleOneObj', 'ArticleController@getArticleOneObj');
 Route::post('/article/setArticleObj', 'ArticleController@setArticleObj');
 Route::post('/article/loadmore', 'ArticleController@loadmore');
 Route::post('/article/getArticleAppendObj', 'ArticleController@getArticleAppendObj');
+Route::post('/article/setLikeObj', 'ArticleController@setLikeObj');
+Route::post('/article/getCommentObj', 'ArticleController@getCommentObj');
 
 // manage
 Route::get('/manage', 'ManageController@getManage');

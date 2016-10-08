@@ -6,93 +6,168 @@ use Symfony\Component\Translation\Tests\String;
 
 class ArticleController extends BaseController
 {
-
+	
 	public function getArticle() {
-
-		//$articles = DB::table('articles');
-
-		//$articles = DB::table('articles')->paginate(3);
-
 		return View::make('frontend.article.index');
-		//return View::make('article.index')->with('articles', $articles);
 	}
-
+	
+	//初期表示分取得
 	public function getArticleObj() {
-		/*
-		$article = DB::table('articles')
-		->select(DB::raw('*'))
-		->orderBy('created_at', 'desc')
-		//->take(3)
-		->get();
-		*/
-		
-		//select @i:=@i+1 as rownum,user_id from (select @i:=0) as dummy,user;
-		$article = DB::table('articles')
-			->select(DB::raw('*'))
-			->orderBy('created_at', 'desc')
-			//->take(3)
-			->get();
-		
-		return Response::json($article);
+	    $user_id = Input::get('user_id');
+	    
+		$articles = DB::table('articles')
+		    ->join('users', 'articles.user_id', '=', 'users.id')
+		    ->leftjoin('likes', function($join) use( $user_id ) 
+		    {
+		        $join->on('articles.ID', '=', 'likes.article_id')
+		        ->where('likes.user_id', '=', $user_id);
+		    })
+		    ->select('articles.ID', 'articles.user_id', 'articles.article', 'articles.like', 
+		          'articles.created_at', 'likes.ID as likesID', 'users.user_image')
+    		->orderBy('articles.created_at', 'desc')
+    		->take(10)
+    		->get();
+		 
+    for ($i = 0; $i < count($articles); $i++) { 
+    	    $comments = DB::table('comments')
+    		    ->where('article_id', '=', $articles[$i]->ID)
+    		    ->select(DB::raw('*'))
+    		    ->orderBy('created_at', 'desc')
+    		    ->get();
+    };
+    	    
+		    		
+		return Response::json($articles);
 	}
 	
+	//コメント取得
+// 	public function getCommentObj() {
+// // 	    $article_id = Input::get('article_id');
+// 	    $article_id = $_POST["articles"];
+// // 	    $article_id = Input::get('article_id');
+	     
+//     	for ($i = 0; $i < count($articles); $i++) { 
+//     	    $comments = DB::table('comments')
+//     		    ->where('article_id', '=', $articles[$i][])
+//     		    ->select(DB::raw('*'))
+//     		    ->orderBy('created_at', 'desc')
+//     		    ->get();
+        		    
+//     	    $user_id = Input::get('user_id');
+// // 	        $articles[i].comment = 1;
+// 		}
+	
+//         return Response::json($comment);
+// 	}
+	
+	//いいね件数取得
+	public function getCountLikes($article_id) {
+		$like_count = DB::table('like')
+			->select(DB::raw('count(*) as like_count'))
+            ->where('article_id', '=', $article_id)
+            ->groupBy('like_count')
+            ->get();
+		
+        return Response::json($like_count);
+	}
+	
+	//無限スクロール　リスト追加用
 	public function getArticleAppendObj() {
-		$index = Input::get('index');
+		$skip = $_POST["skip"];
+		$take = $_POST["take"];
+		$user_id = $_POST["user_id"];
 		
-		//if ( $a !== null ){
-			$index = $index + 2;
-		//}else{
-		//	$a = 3;
-		//}
-	
 		$article = DB::table('articles')
-		->select(DB::raw('*'))
-		->orderBy('created_at', 'desc')
-		->take($index)
+		->join('users', 'articles.user_id', '=', 'users.id')
+		->leftjoin('likes', function($join) use( $user_id )
+		{
+		    $join->on('articles.ID', '=', 'likes.article_id')
+		    ->where('likes.user_id', '=', $user_id);
+		})
+		->select('articles.ID', 'articles.user_id', 'articles.article', 'articles.like', 
+		          'articles.created_at', 'likes.ID as likesID', 'users.user_image')
+		        ->orderBy('articles.created_at', 'desc')
+		->orderBy('articles.created_at', 'desc')
+		->skip($skip)
+		->take($take)
 		->get();
 		return Response::json($article);
 	}
-
+	
+	//記事投稿機能
 	public function setArticleObj()	{
-
 		$submit_text = $_POST["submit_text"];
+		$user_id = $_POST["user_id"];
 
 		DB::beginTransaction();
 			$article = new article;
 			$article->article=$submit_text;
+			$article->user_id=$user_id;
 			$article->save();
 		DB::commit();
 
 		$this->getArticle();
 	}
-
-	public function loadmore() {
-		//PDOでDB接続
-		$dsn = 'mysql:dbname=cm;host=localhost';
-		$user = 'homestead';
-		$password = 'suzaki';
-		global $pdo;
-		$pdo = new PDO($dsn, $user, $password);
-
-		//SQLを作成し実行
-		$sql = "select * from articles limit " . $_POST['index'] . ", 1";
-		$st = $pdo->prepare($sql);
-		$st->execute();
-		$row = $st->fetch(PDO::FETCH_ASSOC);
-
-		//結果行が取得できたらliタグに埋め込んで表示
-		if($row){
-		?>
-		<p class="box-p">@{{ row.user_id }}</p>
-		<p class="article-box">@{{ row.article }}</p>
-		<p class="article-box">いいね！@{{ row.like }}人</p>
-		<p class="article-box">いいね！@{{ row.like }}人</p>
-		<p class="box-p">
-		<a class="btn btn-default" ng-click="openArticleDetail(article.id)">いいね！</a>
-		<a class="btn btn-default" ng-click="openUpdateArticleDialog(article.id)">コメントする</a>
-		<a class="btn btn-default" ng-click="openDeleteArticleDialog(article.id)">シェアする</a>
-		<?php
+	
+	//いいねボタン押下時
+	public function setLikeObj()	{
+		$user_id = $_POST["user_id"];
+		$article_id = $_POST["article_id"];
+		
+		$likes = DB::table('likes')
+			->select(DB::raw('*'))
+			->where('user_id', '=', $user_id)
+			->where('article_id', '=', $article_id)
+			->get();
+		
+		$count_like = count($likes); 
+		$article_id = $_POST["article_id"];
+		
+		DB::beginTransaction();
+		
+		if ($count_like == 0){
+		    //いいね未実行の場合
+			DB::table('likes')->insert(
+					array('user_id' => $user_id, 'article_id' => $article_id)
+					);
+			
+			DB::table('articles')
+				->where('ID', '=', $article_id)
+				->increment('like',1);
+				
+		}else{
+		    //いいね済みの場合
+			DB::table('likes')
+				->where('user_id', '=', $user_id)
+				->where('article_id', '=', $article_id)
+				->delete();
+			
+			DB::table('articles')
+				->where('ID', '=', $article_id)
+				->decrement('like');
 		}
+		
+		DB::commit();
+		
+		$skip = $_POST["skip"];
+		$take = $_POST["take"];
+		$user_id = $_POST["user_id"];
+		$article = DB::table('articles')
+		->join('users', 'articles.user_id', '=', 'users.id')
+		->leftjoin('likes', function($join) use( $user_id )
+		{
+		    $join->on('articles.ID', '=', 'likes.article_id')
+		    ->where('likes.user_id', '=', $user_id);
+		})
+		->select('articles.ID', 'articles.user_id', 'articles.article', 'articles.like', 
+		          'articles.created_at', 'likes.ID as likesID', 'users.user_image')
+		        ->orderBy('articles.created_at', 'desc')
+		        ->orderBy('articles.created_at', 'desc')
+		        ->skip($skip)
+		        ->take($take)
+		        ->get();
+	    return Response::json($article);
+		        
 	}
 }
 ?>
