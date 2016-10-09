@@ -143,7 +143,6 @@ Route::post('/article/getArticleObj', 'ArticleController@getArticleObj');
 Route::post('/article/updateArticleObj', 'ArticleController@updateArticleObj');
 Route::post('/article/deleteArticleObj', 'ArticleController@deleteArticleObj');
 Route::post('/article/insertArticleObj', 'ArticleController@insertArticleObj');
-
 Route::get('/article/getArticleOneObj', 'ArticleController@getArticleOneObj');
 Route::post('/article/setArticleObj', 'ArticleController@setArticleObj');
 Route::post('/article/loadmore', 'ArticleController@loadmore');

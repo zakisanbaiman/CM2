@@ -80,37 +80,6 @@
             }
             getArticleObj();
 
-            //コメント取得
-//             $scope.comments = [];
-//             getCommentsObj = function(){
-//             	$.ajax({
-//           			url: '/article/getCommentObj',
-//                     type:'POST',
-//                     data : {
-//                         articles : $scope.articles
-//                     },
-//                     success: function(data) {
-//                     	$scope.articles = data;
-//     	  			},
-//           			error: function(XMLHttpRequest, textStatus, errorThrown) {
-//           			}
-//             	})
-//             };
-
-//             getCommentObj = function() {
-//             	var dataObj = {};
-//             	dataObj.push($scope.articles);
-// // 	            var articles = $scope.articles;
-//             	$http({
-//                    	method : 'post',
-//                    	url : '/article/getCommentObj',
-//                    	params : dataObj
-//                 }).success(function(data, status, headers, config) {
-// 	                $scope.articles = data;
-// 	            }).error(function(data, status, headers, config) {
-// 	            });
-//             }
-
 			//投稿ボタン押下時
             $('#submit-form').submit(function(event) {
                 // ここでsubmitをキャンセルします。

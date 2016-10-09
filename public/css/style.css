@@ -251,6 +251,6 @@ input[type=search] {
 
 .side-memu{
 	z-index:0 ;
-	position: fixed; /* スクロールしても位置を固定 */
+	position: fixed;
 }
 

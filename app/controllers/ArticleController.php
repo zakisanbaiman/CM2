@@ -28,37 +28,16 @@ class ArticleController extends BaseController
     		->take(10)
     		->get();
 		 
-    for ($i = 0; $i < count($articles); $i++) { 
-    	    $comments = DB::table('comments')
-    		    ->where('article_id', '=', $articles[$i]->ID)
-    		    ->select(DB::raw('*'))
-    		    ->orderBy('created_at', 'desc')
-    		    ->get();
-    };
-    	    
+        for ($i = 0; $i < count($articles); $i++) { 
+        	    $comments = DB::table('comments')
+        		    ->where('article_id', '=', $articles[$i]->ID)
+        		    ->select(DB::raw('*'))
+        		    ->orderBy('created_at', 'desc')
+        		    ->get();
+        };
 		    		
 		return Response::json($articles);
 	}
-	
-	//コメント取得
-// 	public function getCommentObj() {
-// // 	    $article_id = Input::get('article_id');
-// 	    $article_id = $_POST["articles"];
-// // 	    $article_id = Input::get('article_id');
-	     
-//     	for ($i = 0; $i < count($articles); $i++) { 
-//     	    $comments = DB::table('comments')
-//     		    ->where('article_id', '=', $articles[$i][])
-//     		    ->select(DB::raw('*'))
-//     		    ->orderBy('created_at', 'desc')
-//     		    ->get();
-        		    
-//     	    $user_id = Input::get('user_id');
-// // 	        $articles[i].comment = 1;
-// 		}
-	
-//         return Response::json($comment);
-// 	}
 	
 	//いいね件数取得
 	public function getCountLikes($article_id) {
