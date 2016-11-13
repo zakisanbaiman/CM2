@@ -11,31 +11,30 @@ class ArticleController extends BaseController
 		return View::make('frontend.article.index');
 	}
 	
+	public function getTimeLine() {
+	    return View::make('frontend.article.timeline');
+	}
+	
 	//初期表示分取得
 	public function getArticleObj() {
 	    $user_id = Input::get('user_id');
 	    
 		$articles = DB::table('articles')
-		    ->join('users', 'articles.user_id', '=', 'users.id')
+		    ->leftjoin('users', 'articles.user_id', '=', 'users.id')
+		    ->leftjoin('comments', 'articles.ID', '=', 'comments.article_id')
+		    ->leftjoin('users as u2', 'comments.user_id', '=', 'u2.id')
 		    ->leftjoin('likes', function($join) use( $user_id ) 
 		    {
 		        $join->on('articles.ID', '=', 'likes.article_id')
 		        ->where('likes.user_id', '=', $user_id);
 		    })
 		    ->select('articles.ID', 'articles.user_id', 'articles.article', 'articles.like', 
-		          'articles.created_at', 'likes.ID as likesID', 'users.user_image')
+		          'articles.created_at', 'likes.ID as likesID', 'users.user_image', 'comments.comment',
+		          'u2.user_image as commenter_img', 'u2.nickname as commenter_nickname', 'users.nickname')
     		->orderBy('articles.created_at', 'desc')
     		->take(10)
     		->get();
-		 
-        for ($i = 0; $i < count($articles); $i++) { 
-        	    $comments = DB::table('comments')
-        		    ->where('article_id', '=', $articles[$i]->ID)
-        		    ->select(DB::raw('*'))
-        		    ->orderBy('created_at', 'desc')
-        		    ->get();
-        };
-		    		
+    		
 		return Response::json($articles);
 	}
 	
