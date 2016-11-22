@@ -21,6 +21,7 @@ Route::get('/home', array('as' => 'home', 'uses' => function()
 	return Redirect::to('/');
 }));
 
+
 /*
 |--------------------------------------------------------------------------
 | Authentication and Authorization Routes
@@ -32,29 +33,49 @@ Route::get('/home', array('as' => 'home', 'uses' => function()
 
 Route::group(array('prefix' => 'auth'), function()
 {
-	# Login
+	// Login
 	Route::get('login', array('as' => 'login', 'uses' => 'AuthController@getLogin'));
 	Route::post('login', 'AuthController@postLogin');
 
-	# Register
+	// Register
 	Route::get('signup', array('as' => 'signup', 'uses' => 'AuthController@getSignup'));
 	Route::post('signup', 'AuthController@postSignup');
 
-	# Account Activation
+	// Account Activation
 	Route::get('activate/{activationCode}', array('as' => 'activate', 'uses' => 'AuthController@getActivate'));
 
-	# Forgot Password
+	// Forgot Password
 	Route::get('forgot-password', array('as' => 'forgot-password', 'uses' => 'AuthController@getForgotPassword'));
 	Route::post('forgot-password', 'AuthController@postForgotPassword');
 
-	# Forgot Password Confirmation
+	// Forgot Password Confirmation
 	Route::get('forgot-password/{passwordResetCode}', array('as' => 'forgot-password-confirm', 'uses' => 'AuthController@getForgotPasswordConfirm'));
 	Route::post('forgot-password/{passwordResetCode}', 'AuthController@postForgotPasswordConfirm');
 
-	# Logout
+	// Logout
 	Route::get('logout', array('as' => 'logout', 'uses' => 'AuthController@getLogout'));
 
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| Oauth-4-laravel
+|--------------------------------------------------------------------------
+|
+|
+|
+*/
+// Register with Oauth
+Route::get('register/fb', array('as' => 'register/fb', 'uses' => 'OauthRegisterController@registerWithFacebook'));
+Route::get('register/gp', array('as' => 'register/gp', 'uses' => 'OauthRegisterController@registerWithGoogle'));
+Route::get('register/tw', array('as' => 'register/tw', 'uses' => 'OauthRegisterController@registerWithTwitter'));
+
+// Login with Oauth
+Route::get('login/fb', array('as' => 'login/fb', 'uses' => 'OauthLoginController@loginWithFacebook'));
+Route::get('login/gp', array('as' => 'login/gp', 'uses' => 'OauthLoginController@loginWithGoogle'));
+Route::get('login/tw', array('as' => 'login/tw', 'uses' => 'OauthLoginController@loginWithTwitter'));
+
 
 /*
 |--------------------------------------------------------------------------
@@ -64,22 +85,21 @@ Route::group(array('prefix' => 'auth'), function()
 |
 |
 */
-
 Route::group(array('prefix' => 'account'), function()
 {
 
-	# Account Dashboard
+	// Account Dashboard
 	Route::get('/', array('as' => 'account', 'uses' => 'Controllers\Account\DashboardController@getIndex'));
 
-	# Profile
+	// Profile
 	Route::get('profile', array('as' => 'profile', 'uses' => 'Controllers\Account\ProfileController@getIndex'));
 	Route::post('profile', 'Controllers\Account\ProfileController@postIndex');
 
-	# Change Password
+	// Change Password
 	Route::get('change-password', array('as' => 'change-password', 'uses' => 'Controllers\Account\ChangePasswordController@getIndex'));
 	Route::post('change-password', 'Controllers\Account\ChangePasswordController@postIndex');
 
-	# Change Email
+	// Change Email
 	Route::get('change-email', array('as' => 'change-email', 'uses' => 'Controllers\Account\ChangeEmailController@getIndex'));
 	Route::post('change-email', 'Controllers\Account\ChangeEmailController@postIndex');
 
@@ -97,10 +117,10 @@ Route::group(array('prefix' => 'account'), function()
 Route::group(array('prefix' => 'admin'), function()
 {
 
-	# Dashboard
+	// Dashboard
 	Route::get('/', array('as' => 'admin', 'uses' => 'Controllers\Admin\DashboardController@getIndex'));
 
-	# User Management
+	// User Management
 	Route::group(array('prefix' => 'users'), function()
 	{
 		Route::get('/', array('as' => 'users', 'uses' => 'Controllers\Admin\UsersController@getIndex'));
@@ -112,7 +132,7 @@ Route::group(array('prefix' => 'admin'), function()
 		Route::get('{userId}/restore', array('as' => 'restore/user', 'uses' => 'Controllers\Admin\UsersController@getRestore'));
 	});
 
-	# Group Management
+	// Group Management
 	Route::group(array('prefix' => 'groups'), function()
 	{
 		Route::get('/', array('as' => 'groups', 'uses' => 'Controllers\Admin\GroupsController@getIndex'));

@@ -2,7 +2,7 @@
 
 {{-- Page title --}}
 @section('title')
-ユーザ登録です ::
+会員登録です ::
 @parent
 @stop
 
@@ -10,7 +10,7 @@
 @section('content')
 
 <div id="login-wrap">
-    <h1>ユーザ登録</h1>
+    <h1>会員登録</h1>
 
     <form method="post" action="{{ route('signup') }}" class="form-group login-form">
 
@@ -41,6 +41,19 @@
         <input type="submit" value="登録" class="btn btn-default" data-ajax="false" />
         <a href="/home" class="btn btn-default" data-ajax="false">キャンセル</a>
     </form>
+
+        {{-- OAuthで新規会員登録 --}}
+        <p class="text-center">
+            <a class="btn btn-lg btn-primary" href="{{url('register/fb')}}">
+                <i class="icon-facebook"></i>Facebookで会員登録</a>
+            <br><br>
+            <a class="btn btn-lg btn-danger" href="{{url('register/gp')}}">
+                <i class="icon-google-plus"></i>Googleで会員登録</a>
+            <br><br>
+            <a class="btn btn-lg btn-success" href="{{url('register/tw')}}">
+                <i class="icon-twitter"></i>Twitterで会員登録</a>
+        </p>
+
 </div>
 </body>
 </html>

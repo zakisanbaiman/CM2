@@ -30,7 +30,7 @@
                     </li>
                 @else
                     <li {{ (Request::is('auth/login') ? 'class="active"' : '') }}><a href="{{ route('login') }}">ログイン</a></li>
-                    <li {{ (Request::is('auth/signup') ? 'class="active"' : '') }}><a href="{{ route('signup') }}">登録</a></li>
+                    <li {{ (Request::is('auth/signup') ? 'class="active"' : '') }}><a href="{{ route('signup') }}">会員登録</a></li>
                 @endif
 
             </ul>
