@@ -15,17 +15,17 @@
 
                     <li class="dropdown{{ (Request::is('account*') ? ' active' : '') }}">
                         <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="{{ route('account') }}">
-                            ログイン中: {{ Sentry::getUser()->email }}
+                            {{ Sentry::getUser()->email }}
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                             @if(Sentry::getUser()->hasAccess('admin'))
-                                <li><a href="{{ route('admin') }}"><i class="icon-cog"></i> サイト管理</a></li>
+                                <li><a href="{{ route('admin') }}"><i class="icon-cog"></i>サイト管理</a></li>
                             @endif
                             <li{{ (Request::is('account/profile') ? ' class="active"' : '') }}>
-                                <a href="{{ route('profile') }}"><i class="icon-user"></i> アカウント管理</a></li>
+                                <a href="{{ route('profile') }}"><i class="icon-user"></i>アカウント管理</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{ route('logout') }}"><i class="icon-off"></i> ログアウト</a></li>
+                            <li><a href="{{ route('logout') }}"><i class="icon-off"></i>ログアウト</a></li>
                         </ul>
                     </li>
                 @else
