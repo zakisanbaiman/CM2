@@ -22,8 +22,8 @@ body {
 
 .footer {
     /*position: absolute;*/
-    background-color: #333;
-    color:white;
+    background-color: #fff;
+    color: #777;
     bottom: 0;
     margin-bottom: 0;
     width: 100%;
@@ -93,13 +93,18 @@ p#copyright {
     background-color: #c8c8c8;
 }
 
-.navbar-inverse .navbar-nav>li>a {
-    color: #FFFFFF;
-}
+/*.navbar-inverse .navbar-nav>li>a {*/
+    /*color: #FFFFFF;*/
+/*}*/
 
-.navbar-inverse .navbar-nav>li>a:hover {
-    color: #9d9d9d;
-}
+/*.navbar-inverse .navbar-nav>li>a:hover {*/
+    /*color: #9d9d9d;*/
+/*}*/
+
+/*.navbar-default {*/
+    /*background-color: white;*/
+    /*border-color: white;*/
+/*}*/
 
 .box-img {
     width: 250px;
