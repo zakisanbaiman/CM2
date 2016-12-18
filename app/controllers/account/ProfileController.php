@@ -32,8 +32,8 @@ class ProfileController extends AuthorizedController {
 	{
 		// Declare the rules for the form validation
 		$rules = array(
-			'first_name' => 'required|min:3',
-			'last_name'  => 'required|min:3',
+			//'first_name' => 'required|min:3',
+			//'last_name'  => 'required|min:3',
 			//'website'    => 'url',
 			//'gravatar'   => 'email',
 		);
