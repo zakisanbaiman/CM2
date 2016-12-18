@@ -15,27 +15,63 @@ class ArticleController extends BaseController
 	    return View::make('frontend.article.timeline');
 	}
 	
-	//初期表示分取得
+	public function getSettingProfile() {
+	    return View::make('frontend.article.setting-profile');
+	}
+	
+	//初期表示分の記事を取得
 	public function getArticleObj() {
 	    $user_id = Input::get('user_id');
 	    
 		$articles = DB::table('articles')
 		    ->leftjoin('users', 'articles.user_id', '=', 'users.id')
-		    ->leftjoin('comments', 'articles.ID', '=', 'comments.article_id')
-		    ->leftjoin('users as u2', 'comments.user_id', '=', 'u2.id')
+// 		    ->leftjoin('comments', 'articles.ID', '=', 'comments.article_id')
+// 		    ->leftjoin('users as u2', 'comments.user_id', '=', 'u2.id')
 		    ->leftjoin('likes', function($join) use( $user_id ) 
 		    {
 		        $join->on('articles.ID', '=', 'likes.article_id')
 		        ->where('likes.user_id', '=', $user_id);
 		    })
-		    ->select('articles.ID', 'articles.user_id', 'articles.article', 'articles.like', 
-		          'articles.created_at', 'likes.ID as likesID', 'users.user_image', 'comments.comment',
-		          'u2.user_image as commenter_img', 'u2.nickname as commenter_nickname', 'users.nickname')
-    		->orderBy('articles.created_at', 'desc')
+		    ->select('articles.id', 'articles.user_id', 'articles.article', 'articles.like', 
+		          'articles.created_at', 'likes.ID as likesID', 'users.user_image','users.nickname'
+// 		          ,'comments.comment','u2.user_image as commenter_img', 'u2.nickname as commenter_nickname'
+		          )
+    		->orderBy('articles.updated_at', 'desc')
     		->take(10)
     		->get();
     		
+    		// コメントを取得
+//     		$comments = DB::table('comments')
+//     		->select('*')
+//     		->join('articles', 'comments.article_id', '=', 'articles.id')
+//     		->where('articles.user_id', '=', $user_id)
+//     		->get();
+    		
+//     		$countArticles = count($articles);
+//     		$countComments = count($comments);
+//     		for ($i = 0; $i < $countArticles; $i++) {
+//     		    for ($k = 0; $k < $countComments; $k++) {
+//         		    if ($articles[$i]->id == $comments[$k]->article_id) {
+// //         		        $articles[$i].push($comments[$k]);
+//         		        $articles[$i] = $comments[$k];
+//         		    }  
+//     		    }
+//     		}
+    		
 		return Response::json($articles);
+	}
+	
+	//初期表示分のコメントを取得
+	public function getCommentObj() {
+	    $user_id = Input::get('user_id');
+	     
+	    $comments = DB::table('comments')
+	    ->select('*')
+	    ->join('articles', 'comments.article_id', '=', 'articles.id')
+	    ->where('articles.user_id', '=', $user_id)
+	    ->get();
+
+	    return Response::json($comments);
 	}
 	
 	//いいね件数取得
