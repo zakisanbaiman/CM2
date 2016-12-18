@@ -1,8 +1,8 @@
 <?php
 
-class Article extends Eloquent {
+class Comment extends Eloquent {
     
-    protected $table = 'articles';
+    protected $table = 'comments';
     
     /**
      * createメソッド実行時に、入力を許可するカラムの指定

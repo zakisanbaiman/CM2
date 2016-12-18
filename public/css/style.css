@@ -264,6 +264,10 @@ input[type=search] {
 }
 
 .parent {
- width: 100%;
- display: flex;
+	width: 100%;
+	display: flex;
+}
+
+.setting-table {
+	max-width: 50%;
 }
