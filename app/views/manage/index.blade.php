@@ -80,10 +80,6 @@
 </body>
 <script>
 
-
-//    $.datepicker.setDefaults($.datepicker.regional['ja']);
-//    $('#buy_date').datepicker();
-//    angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
     angular.module('myApp', ['ui.bootstrap','ngFileUpload'])
         .config(function() {
             //...
