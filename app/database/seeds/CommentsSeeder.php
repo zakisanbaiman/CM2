@@ -20,7 +20,7 @@ class CommentsSeeder extends Seeder
         // 2
         Comment::create(array(
                 'article_id'        => '69',
-                'comment'        => 'テストコメント２ ',
+                'comment'        => 'テストコメント２',
                 'user_id'        => '7010',
                 'like'        => '5',
                 'parent_id'        => NULL,

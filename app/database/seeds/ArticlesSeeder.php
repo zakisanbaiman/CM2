@@ -622,7 +622,7 @@ class ArticlesSeeder extends Seeder
         Article::create(array(
                 'article'        => 'testarticle069',
                 'user_id'        => '7018',
-                'like'        => '14',
+                'like'        => '13',
                 'created_at'        => '2015-08-04 12:58:15',
                 'updated_at'        => '2015-08-04 12:59:15',
         ));
