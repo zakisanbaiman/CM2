@@ -9,7 +9,7 @@ class Article extends Eloquent {
      *
      * @var array
      */
-//     protected $fillable = array('email','login_name');
+    // protected $fillable = array('id');
     
     /**
      * createメソッド実行時に、入力を禁止するカラムの指定
