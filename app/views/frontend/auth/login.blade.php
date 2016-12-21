@@ -1,4 +1,4 @@
-@extends('frontend/layouts/default')
+@extends('layout')
 
 {{-- Page title --}}
 @section('title')
@@ -37,8 +37,6 @@ Account Log in ::
 			</label>
 		</div>
 
-		<hr>
-
 		<!-- Form actions -->
 		<div class="control-group">
 			<div class="controls">
@@ -48,5 +46,17 @@ Account Log in ::
 			</div>
 		</div>
 	</form>
+
+	{{-- OAuthでログイン --}}
+	<p class="text-center">
+		<a class="btn btn-lg btn-primary" href="{{url('login/fb')}}">
+			<i class="icon-facebook"></i>Facebookでログイン</a>
+		<br><br>
+		<a class="btn btn-lg btn-danger" href="{{url('login/gp')}}">
+			<i class="icon-google-plus"></i>Googleでログイン</a>
+		<br><br>
+		<a class="btn btn-lg btn-success" href="{{url('login/tw')}}">
+			<i class="icon-twitter"></i>Twitterでログイン</a>
+	</p>
 </div>
 @stop
