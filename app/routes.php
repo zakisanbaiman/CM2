@@ -59,6 +59,16 @@ Route::group(array('prefix' => 'auth'), function()
 
 
 /*
+Route::group(array('prefix' => 'article'), function()
+{
+	# Article
+	//Route::get('index', array('as' => 'index'));
+	Route::get('index', array('as' => 'index', 'uses' => 'ArticleController@setArticleObj'));
+	Route::post('index', 'ArticleController@setArticleObj');
+});
+*/
+
+/*
 |--------------------------------------------------------------------------
 | Account Routes
 |--------------------------------------------------------------------------
@@ -178,6 +188,20 @@ Route::group(array('prefix' => 'admin'), function()
 
 // article
 Route::get('/article', 'ArticleController@getArticle');
+Route::get('/article/timeline', 'ArticleController@getTimeline');
+Route::get('/timeline/', 'ArticleController@getTimeLine');
+Route::get('/setting-profile/', 'ArticleController@getSettingProfile');
+
+Route::post('/article/getArticleObj', 'ArticleController@getArticleObj');
+Route::post('/article/updateArticleObj', 'ArticleController@updateArticleObj');
+Route::post('/article/deleteArticleObj', 'ArticleController@deleteArticleObj');
+Route::post('/article/insertArticleObj', 'ArticleController@insertArticleObj');
+Route::get('/article/getArticleOneObj', 'ArticleController@getArticleOneObj');
+Route::post('/article/setArticleObj', 'ArticleController@setArticleObj');
+Route::post('/article/loadmore', 'ArticleController@loadmore');
+Route::post('/article/getArticleAppendObj', 'ArticleController@getArticleAppendObj');
+Route::post('/article/setLikeObj', 'ArticleController@setLikeObj');
+Route::post('/article/getCommentObj', 'ArticleController@getCommentObj');
 
 // manage
 Route::get('/manage', 'ManageController@getManage');

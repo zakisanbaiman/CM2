@@ -10,25 +10,54 @@
                 </div>
                 <!-- <div class="panel-body"> -->
                 <ul class="nav nav-pills nav-stacked">
-                    <li class="active"><a href="#/fromView/"><i class="glyphicon glyphicon-pencil"></i>fromView</a></li>
-        			<li><a href="/timeline/"><i class="glyphicon glyphicon-pencil"></i>タイムライン</a></li>
-                    <li><a href=""><i class="glyphicon glyphicon-pencil"></i> メッセージ</a></li>
-                    <li><a href="/setting-profile/"><i class="glyphicon glyphicon-cog"></i> プロフィール設定(画面遷移)</a></li>
+                	<li class="active"><a href=""><i class="glyphicon glyphicon-pencil"></i> タイムライン</a></li>
+                    <li class="active"><a href=""><i class="glyphicon glyphicon-pencil"></i> メッセージ</a></li>
                     <li><a href=""><i class="glyphicon glyphicon-cog" ng-click="settingProfile()"></i> プロフィール設定</a></li>
                     <li><a href=""><i class="glyphicon glyphicon-user"></i> フレンド検索</a></li>
                     <li><a href=""><i class="glyphicon glyphicon-question-sign"></i> ヘルプ</a></li>
-                    <li><a ng-href="#/contents">記事を読む</a></li>
-                </ul>  
+                </ul> 
                 <!-- </div> -->
             </div>
         </div>
     			
-        <div ng-view></div>
+      	<div id="fixed" when-scrolled="loadMore()">
+        <section class="container">
+        	<form id="submit-form" method="post" class="submit-box" onsubmit="return setArticleObj()" style="display:inline-flex">
+				<textarea type="text" class="submit-textbox" id="submit_text" placeholder='今なにしてる？'/></textarea>
+				<button id="submit" type="submit" class="glyphicon glyphicon-open submit-btn"></button>
+        	</form>
+			<li id="list" class="timeline-box" ng-repeat="article in articles track by $index" ng-show="show">
+				<div class="parent">
+        			<p><img src="/images/users/@{{ article.user_image }}" alt="" class="user-img" ng-class="(isDuplicated($first,$index,article))"></p>
+        			<p class="box-p">@{{ article.ID }}</p>
+        			<p class="box-p">@{{ article.nickname }}</p>
+    			</div>
+				<p class="article-box">@{{ article.article }}</p>
+				<p class="article-box">いいね！@{{ article.like }}人</p>
+				<p class="box-p">
+				<a id="btn_like" class="btn btn-default" ng-click="setLike(article.ID)" ng-class="(isLiked(article))">いいね！</a>
+				<a class="btn btn-default" ng-click="openUpdateArticleDialog(article.id)">コメントする</a>
+				<a class="btn btn-default" ng-click="openDeleteArticleDialog(article.id)">シェアする</a>
+
+                <!--コメント出力用ボックス-->
+                <div id="comment_list" ng-repeat="comment in comments_stack" ng-class="(isAri(article))">
+                	<div id="comment_box" class="comment-box">
+                		<div class="parent">
+                    		<p class="box-p"><img src="/images/users/@{{ comment.commenter_img }}" alt="" class="commenter-img"></p>
+                    		<p class="box-p">@{{ comment.commenter_nickname }}</p>
+    					</div>
+    					<p class="comment-text">@{{ comment.comment }}</p>
+  					</div>
+                </div>
+            </li>
+            <div id="loading"><img src="/images/gif/gif-load.gif"></div>
+            <div id="container"></div>     
+        </section>
+        </div>
 	</main>
 </body>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.13/angular-route.min.js"></script>
 
 <script>
 	$("#loading").hide();
@@ -41,9 +70,12 @@
     angular.module('myApp')
             .controller('ArticleController',
             ['$scope','$modal','$http','$timeout', function($scope,$modal,$http,$timeout) {
-
-            //初期表示分を取得
-            $scope.articles = [];
+            	
+    		// 初期処理
+			$scope.articles = [];
+			$scope.comments = [];
+            //初期表示分の記事を取得
+            
             getArticleObj = function() {
             	var dataObj = {};
 	            dataObj.user_id = '7010';
@@ -53,12 +85,33 @@
                    	params : dataObj
                 }).success(function(data, status, headers, config) {
 	                $scope.articles = data;
-// 	                getCommentObj();
+
+		            // 各記事にコメントを追加
+// 	                var listcount = $scope.articles.length; 
+// 	                for (var i = 0; i < listcount; i++) {
+// 	    				document.write (i);
+// 	    				$scope.articles[i].push(comment);
+// 	    			}
 	            }).error(function(data, status, headers, config) {
 	            });
             }
             getArticleObj();
 
+            // 初期表示分のコメントを取得
+            getCommentObj = function() {
+            	var dataObj = {};
+	            dataObj.user_id = '7010';
+            	$http({
+                   	method : 'post',
+                   	url : '/article/getCommentObj',
+                   	params : dataObj
+                }).success(function(data, status, headers, config) {
+	                $scope.comments = data;
+	            }).error(function(data, status, headers, config) {
+	            });
+            }
+            getCommentObj();
+            
 			//投稿ボタン押下時
             $('#submit-form').submit(function(event) {
                 // ここでsubmitをキャンセルします。
@@ -137,7 +190,7 @@
             //ユーザが対象記事にいいねを押しているか判断
             $scope.isLiked = function(article){
                 if(article.likesID != null){
-					return "btn-primary";            
+					return "btn-primary";
                 }
             }
 
@@ -158,24 +211,25 @@
             //記事が重複する場合は非表示にする
             $scope.isDuplicated = function(first,index,article){
                 //前の記事と異なる場合はコメントスタックを初期化
-                if(first == false){
-                	if(article.ID != $scope.articles[index-1].ID){
-                		$scope.comments_stack = [];
-                	}
-                }
+//                 if(first == false){
+//                 	if(article.ID != $scope.articles[index-1].ID){
+//                 		$scope.comments_stack = [];
+//                 	}
+//                 }
                 //コメントが存在する場合のみコメント欄に追加
-                if(article.comment != null){
-                	$scope.comments_stack.push(article);
-            	}
+//                 if(article.comment != null){
+// //                 	$scope.comments_stack.push(article);
+//                 	$scope.article.push(comment);
+//             	}
 
                 //次の記事と等しい場合は記事を非表示
-                if(article.ID == $scope.articles[index+1].ID){
+//                 if(article.ID == $scope.articles[index+1].ID){
 //                 	$("#list").hide();
                 	
 //                 	$("#list:has(#comment_list)").hide();
 // 					$('list').css('display', 'none');
 //                 	$scope.show = false;
-            	}
+//             	}
 //                 $("article.ID == $scope.articles[index+1].ID","#list").hide();
 //                 $("#list").hide();
             }
@@ -225,47 +279,6 @@
                 }
             });
         };
-    });
-    
-    angular.module('myApp', [ 'ngRoute' ])
-    	.config(function($routeProvider){ // ngRouteの$routeProviderが使える。
-        $routeProvider.
-        when('/', { // '/'にアクセスされたときは
-            controller: 'mainsCtrl',  // mainsCtrlを使って
-            templateUrl: 'view1.html', // view1.htmlの中身をng-viewの中に入れる。
-        }).
-        when('/timeline',{ // 以下同様につなげられる。
-            controller: 'ArticleControler',
-            templateUrl: 'timeline.blade.php',
-        }).
-        otherwise({ // 上のものに該当しなかった場合は
-            redirectTo: '/' // '/'にリダイレクト
-        });
-    });
-
-    angular.module('myApp', [ 'ngRoute' ])
-    // 1configメソッドに$routeProviderプロバイダーを注入
-    .config(['$routeProvider', function($routeProvider){
-      $routeProvider
-        .when('/', {
-          templateUrl: 'views/home.html',
-          controller: 'HomeController'
-        })
-        .when('/contents', {
-          templateUrl: 'views/frontend/article/timeline.blade.php',
-          controller: 'ArticleController'
-        })
-        .when('/timeline/', {
-          templateUrl: 'views/frontend/article/timeline.blade.php',
-          controller: 'ArticleController'
-        })
-        .otherwise({
-          redirectTo: '/'
-        });
-    }]);
-    
-    MainApp.controller('mainsCtrl', function($http, $scope){
-        // いい感じの処理。
     });
 </script>
 
