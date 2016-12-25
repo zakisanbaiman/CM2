@@ -40,23 +40,29 @@ class ArticleController extends BaseController
     		->take(10)
     		->get();
     		
-    		// コメントを取得
-//     		$comments = DB::table('comments')
-//     		->select('*')
-//     		->join('articles', 'comments.article_id', '=', 'articles.id')
-//     		->where('articles.user_id', '=', $user_id)
-//     		->get();
-    		
-//     		$countArticles = count($articles);
-//     		$countComments = count($comments);
-//     		for ($i = 0; $i < $countArticles; $i++) {
-//     		    for ($k = 0; $k < $countComments; $k++) {
-//         		    if ($articles[$i]->id == $comments[$k]->article_id) {
-// //         		        $articles[$i].push($comments[$k]);
-//         		        $articles[$i] = $comments[$k];
-//         		    }  
-//     		    }
-//     		}
+    		$countArticles = count($articles);
+
+//     		$articles->commentsArray = array("foo", "bar", "hello", "world");
+    		for ($i = 0; $i < $countArticles; $i++) {
+    		    // コメントを取得
+    		    $comments = DB::table('comments')
+    		    ->select('*')
+//     		    ->join('articles', 'comments.article_id', '=', $articles[$i]->id)
+//     		    ->where('articles.user_id', '=', $user_id)
+    		    ->leftjoin('users', 'comments.user_id', '=', 'users.id')
+    		    ->where('comments.article_id', '=', $articles[$i]->id)
+    		    ->get();
+
+    		    $countComments = count($comments);
+    		    $articles[$i]->commentArray = array();
+    		    
+    		    for ($k = 0; $k < $countComments; $k++) {
+        		    if ($articles[$i]->id == $comments[$k]->article_id) {
+//         		        $articles[$i].push($comments[$k]);
+        		        array_push($articles[$i]->commentArray, $comments[$k]);
+        		    }  
+    		    }
+    		}
     		
 		return Response::json($articles);
 	}

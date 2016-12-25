@@ -120,6 +120,35 @@ class UsersSeeder extends Seeder
             'activated'  => true,
         ]);
         $user->addGroup($usersGroup);
+        
+        //12
+        $user = Sentry::createUser([
+                'email'      => 'saboten@gmail.com',
+                'password'   => '1234',
+                'activated'  => true,
+                'user_image'  => 'saboten.jpg',
+                'nickname'  => 'サボテン',
+        ]);
+        $user->addGroup($usersGroup);
+        
+        //13
+        $user = Sentry::createUser([
+                'email'      => 'arupaka@gmail.com',
+                'password'   => '1234',
+                'activated'  => true,
+                'user_image'  => 'arupaka.jpg',
+                'nickname'  => 'アルパカ',
+        ]);
+        $user->addGroup($usersGroup);
 
+        //14
+        $user = Sentry::createUser([
+                'email'      => 'rolex@gmail.com',
+                'password'   => '1234',
+                'activated'  => true,
+                'user_image'  => 'rolex.jpg',
+                'nickname'  => 'ロレックス',
+        ]);
+        $user->addGroup($usersGroup);
     }
 }
