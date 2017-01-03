@@ -9,6 +9,10 @@ class ArticleController extends BaseController {
     public function getSettingProfile() {
         return View::make ( 'frontend.article.setting-profile' );
     }
+    
+    public function getSearchFriends() {
+        return View::make ( 'frontend.article.search-friends' );
+    }
 
     // 初期表示分の記事を取得
     public function getArticleObj() {

@@ -141,6 +141,7 @@ Route::get('/article', 'ArticleController@getArticle');
 Route::get('/article/timeline', 'ArticleController@getTimeline');
 Route::get('/timeline/', 'ArticleController@getTimeLine');
 Route::get('/setting-profile/', 'ArticleController@getSettingProfile');
+Route::get('/search-friends/', 'ArticleController@getSearchFriends');
 
 Route::post('/article/getArticleObj', 'ArticleController@getArticleObj');
 Route::post('/article/updateArticleObj', 'ArticleController@updateArticleObj');
