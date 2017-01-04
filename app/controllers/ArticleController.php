@@ -4,12 +4,11 @@ class ArticleController extends BaseController {
         return View::make ( 'frontend.article.index' );
     }
     public function getTimeLine() {
-        return View::make ( 'frontend.article.timeline' );
+        return View::make ( 'frontend.article.index' );
     }
     public function getSettingProfile() {
         return View::make ( 'frontend.article.setting-profile' );
     }
-    
     public function getSearchFriends() {
         return View::make ( 'frontend.article.search-friends' );
     }
@@ -131,6 +130,30 @@ class ArticleController extends BaseController {
         }
 
         return $articles;
+    }
+    
+    public function getFriendObj() {
+        
+        $user_id = $_GET["user_id"];
+        
+        $friends_from = array();
+        $friends_from = DB::table ( 'friends' )
+            ->select ( 'users.nickname','users.user_image','friends.approval','friends.updated_at')
+            ->join ( 'users', 'friends.user_request_from', '=', 'users.id' )
+            ->where ( 'friends.user_request_from', '=', $user_id )
+            ->get ();
+        
+        $friends_to = array();
+        $friends_to = DB::table ( 'friends' )
+            ->select ( 'users.nickname','users.user_image','friends.approval','friends.updated_at')
+            ->join ( 'users', 'friends.user_request_to', '=', 'users.id' )
+            ->where ( 'friends.user_request_to', '=', $user_id )
+//             ->orWhere('friends.user_request_to', $user_id)
+            ->union($friends_from)
+            ->orderBy ( 'friends.updated_at', 'desc' )
+            ->get ();
+        
+        return Response::json ( $friends_from );
     }
 }
 ?>

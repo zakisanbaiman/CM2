@@ -153,6 +153,7 @@ Route::post('/article/loadmore', 'ArticleController@loadmore');
 Route::post('/article/getArticleAppendObj', 'ArticleController@getArticleAppendObj');
 Route::post('/article/setLikeObj', 'ArticleController@setLikeObj');
 Route::post('/article/getCommentObj', 'ArticleController@getCommentObj');
+Route::post('/friend/getFriendObj', 'ArticleController@getFriendObj');
 
 // manage
 Route::get('/manage', 'ManageController@getManage');
