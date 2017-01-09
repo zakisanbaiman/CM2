@@ -6,8 +6,10 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Menu</div>
 			<ul class="nav nav-pills nav-stacked">
-				<li class="active"><a href="//"><i class="glyphicon glyphicon-pencil"></i>タイムライン</a></li>
-				<li><a href="/search-friends/"><i class="glyphicon glyphicon-user"></i> フレンド検索</a></li>
+				<li class="active"><a><i class="glyphicon glyphicon-list-alt"></i>
+						タイムライン</a></li>
+				<li><a href="/search-friends/"><i class="glyphicon glyphicon-user"></i>
+						フレンド検索</a></li>
 				<li><a href=""><i class="glyphicon glyphicon-question-sign"></i> ヘルプ</a></li>
 			</ul>
 		</div>
@@ -22,40 +24,39 @@
 				<button id="submit" type="submit"
 					class="glyphicon glyphicon-open submit-btn"></button>
 			</form>
-			<ol>
-    			<li id="list" class="timeline-box" ng-repeat="article in articles track by $index">
-    				<div class="parent">
-    					<p>
-    						<img src="/images/users/@{{ article.user_image }}" alt=""
-    							class="user-img" ng-class="(isDuplicated($first,$index,article))">
-    					</p>
-    					<p class="box-p">@{{ article.id }}</p>
-    					<p class="box-p">@{{ article.nickname }}</p>
-    				</div>
-    				<p class="article-box">@{{ article.article }}</p>
-    				<p class="article-box">いいね！@{{ article.like }}人</p>
-    				<p class="box-p">
-    					<a id="btn_like" class="btn btn-default"
-    						ng-click="setLike(article.id)" ng-class="(isLiked(article))">いいね！</a>
-    					<a class="btn btn-default"
-    						ng-click="openUpdateArticleDialog(article.id)">コメントする</a> <a
-    						class="btn btn-default"
-    						ng-click="openDeleteArticleDialog(article.id)">シェアする</a>
-    				</p> <!--コメント出力用ボックス-->
-    				<div id="comment_list" ng-repeat="comment in article.commentArray">
-    					<div id="comment_box" class="comment-box">
-    						<div class="parent">
-    							<p class="box-p">
-    								<img src="/images/users/@{{ comment.user_image }}" alt=""
-    									class="commenter-img">
-    							</p>
-    							<p class="box-p">@{{ comment.nickname }}</p>
-    						</div>
-    						<p class="comment-text">@{{ comment.comment }}</p>
-    					</div>
-    				</div>
-    			</li>
-			</ol>
+			<li id="list" class="timeline-box"
+				ng-repeat="article in articles track by $index">
+				<div class="parent">
+					<p>
+						<img src="/images/users/@{{ article.user_image }}" alt=""
+							class="user-img" ng-class="(isDuplicated($first,$index,article))">
+					</p>
+					<p class="box-p">@{{ article.id }}</p>
+					<p class="box-p">@{{ article.nickname }}</p>
+				</div>
+				<p class="article-box">@{{ article.article }}</p>
+				<p class="article-box">いいね！@{{ article.like }}人</p>
+				<p class="box-p">
+					<a id="btn_like" class="btn btn-default"
+						ng-click="setLike(article.id)" ng-class="(isLiked(article))">いいね！</a>
+					<a class="btn btn-default"
+						ng-click="openUpdateArticleDialog(article.id)">コメントする</a> <a
+						class="btn btn-default"
+						ng-click="openDeleteArticleDialog(article.id)">シェアする</a>
+				</p> <!--コメント出力用ボックス-->
+				<div id="comment_list" ng-repeat="comment in article.commentArray">
+					<div id="comment_box" class="comment-box">
+						<div class="parent">
+							<p class="box-p">
+								<img src="/images/users/@{{ comment.user_image }}" alt=""
+									class="commenter-img">
+							</p>
+							<p class="box-p">@{{ comment.nickname }}</p>
+						</div>
+						<p class="comment-text">@{{ comment.comment }}</p>
+					</div>
+				</div>
+			</li>
 			<div id="loading">
 				<img src="/images/gif/gif-load.gif">
 			</div>

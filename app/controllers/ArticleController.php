@@ -106,9 +106,16 @@ class ArticleController extends BaseController {
      * @return 取得結果
      */
     public function getArticles($user_id, $skip, $take) {
-        $articles = DB::table ( 'articles' )->select ( 'articles.id', 'articles.user_id', 'articles.article', 'articles.like', 'articles.created_at', 'likes.id as likesID', 'users.user_image', 'users.nickname' )->leftjoin ( 'users', 'articles.user_id', '=', 'users.id' )->leftjoin ( 'likes', function ($join) use ($user_id) {
-            $join->on ( 'articles.id', '=', 'likes.article_id' )->where ( 'likes.user_id', '=', $user_id );
-        } )->orderBy ( 'articles.updated_at', 'desc' )->skip ( $skip )->take ( $take )->get ();
+        $articles = DB::table ( 'articles' )
+            ->select ( 'articles.id', 'articles.user_id', 'articles.article', 'articles.like', 'articles.created_at', 'likes.id as likesID', 'users.user_image', 'users.nickname' )->leftjoin ( 'users', 'articles.user_id', '=', 'users.id' )
+            ->leftjoin ( 'likes', function ($join) use ($user_id) {
+                $join->on ( 'articles.id', '=', 'likes.article_id' )
+                ->where ( 'likes.user_id', '=', $user_id );
+            } )
+            ->orderBy ( 'articles.updated_at', 'desc' )
+            ->skip ( $skip )
+            ->take ( $take )
+            ->get ();
 
         $countArticles = count ( $articles );
 
@@ -139,26 +146,13 @@ class ArticleController extends BaseController {
      */
     public function getFriendObj() {
         
-        $user_id = $_GET["user_id"];
+        // ログインセッションからユーザIDを取得
+        $user_id = Sentry::getUser()->id;
+        $submit_text = '';
         
-//         $friends_from = array();
-        $friends_from = DB::table ( 'friends' )
-            ->select ( 'users.nickname','users.user_image','friends.approval','friends.updated_at')
-            ->join ( 'users', 'friends.user_request_to', '=', 'users.id' )
-            ->where ( 'friends.user_request_from', '=', $user_id )
-            ->get ();
+        $users = ArticleController::getFriendCommonObj($user_id,$submit_text);
         
-//         $friends_to = array();
-        $friends_to = DB::table ( 'friends' )
-            ->select ( 'users.nickname','users.user_image','friends.approval','friends.updated_at')
-            ->join ( 'users', 'friends.user_request_from', '=', 'users.id' )
-            ->where ( 'friends.user_request_to', '=', $user_id )
-//             ->orWhere('friends.user_request_to', $user_id)
-//             ->union($friends_from)
-            ->orderBy ( 'friends.updated_at', 'desc' )
-            ->get ();
-        
-        return Response::json ( $friends_from );
+        return Response::json ( $users );
     }
     
     /**
@@ -167,17 +161,78 @@ class ArticleController extends BaseController {
      * @return 取得結果
      */
     public function getSearchFriendObj() {
+        
+        // ログインセッションからユーザIDを取得
+        $user_id = Sentry::getUser()->id;
         $submit_text = $_POST ["submit_text"];
         
-        $friends_from = DB::table ( 'friends' )
-            ->select ( 'users.nickname','users.user_image','friends.approval','friends.updated_at')
-            ->join ( 'users', 'friends.user_request_to', '=', 'users.id' )
-            ->where ( array('like', 'users.nickname', '%$submit_text%') )
-//             ->where ( 'users.nickname', '=', 'saboten' )
-            ->get ();
+        $users = ArticleController::getFriendCommonObj($user_id,$submit_text);
         
-        return Response::json ( $friends_from );
+        return Response::json ( $users );
     }
     
+    /**
+     * friends取得用
+     *
+     * @return 取得結果
+     */
+    public function getFriendCommonObj($user_id,$submit_text) {
+                
+        $users = DB::table ( 'users' )
+        ->select ( 'users.id','users.first_name','users.last_name','users.nickname'
+                ,'users.user_image','f1.approval as approval_1','f2.approval as approval_2'
+                ,'f1.updated_at')
+                ->leftjoin ( 'friends as f1', function ($join) use ($user_id) {
+                    $join->on ( 'users.id', '=', 'f1.friend_id' )
+                    ->where ( 'f1.user_id', '=', $user_id ); // f1:自分がリクエスト
+                } )
+                ->leftjoin ( 'friends as f2', function ($join) use ($user_id) {
+                    $join->on ( 'users.id', '=', 'f2.user_id' )
+                    ->where ( 'f2.friend_id', '=', $user_id ); // f2:自分にリクエスト
+                } )
+                ->where('users.id', '<>', $user_id)
+                ->where('users.nickname', 'LIKE', '%'.$submit_text.'%')
+                ->orWhere('users.first_name', 'LIKE', '%'.$submit_text.'%')
+                ->orWhere('users.last_name', 'LIKE', '%'.$submit_text.'%')
+                ->orderBy ( 'users.id', 'asc' )
+                ->get ();
+                
+        return $users;
+    }
+    
+    /**
+     * フレンド申請、リクエスト承認処理
+     *
+     * @return 取得結果
+     */
+    public function setFriendRequestObj() {
+        $user_id = Sentry::getUser()->id;
+        $friend_id = $_POST ["friend_id"];
+        
+        // friendsテーブルに登録
+        DB::beginTransaction ();
+        $friend = new friend ();
+        $friend->user_id = $user_id;
+        $friend->friend_id = $friend_id;
+        $friend->approval = '1';
+        $friend->save ();
+        DB::commit ();
+    }
+    
+    /**
+     * リクエスト取消、フレンド解消処理
+     */
+    public function cancelRequest() {
+        $user_id = Sentry::getUser()->id;
+        $friend_id = $_POST ["friend_id"];
+    
+        // 対象のfriendsテーブルを削除
+        DB::beginTransaction ();
+        DB::table ( 'friends' )
+            ->where ( 'user_id', '=', $user_id )
+            ->where ( 'friend_id', '=', $friend_id )
+            ->delete ();
+        DB::commit ();
+    }
 }
 ?>

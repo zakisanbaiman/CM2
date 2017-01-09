@@ -155,6 +155,9 @@ Route::post('/article/setLikeObj', 'ArticleController@setLikeObj');
 Route::post('/article/getCommentObj', 'ArticleController@getCommentObj');
 Route::post('/friend/getFriendObj', 'ArticleController@getFriendObj');
 Route::post('/friend/getSearchFriendObj', 'ArticleController@getSearchFriendObj');
+Route::post('/friend/setFriendRequestObj', 'ArticleController@setFriendRequestObj');
+Route::post('/friend/cancelRequest', 'ArticleController@cancelRequest');
+Route::post('/friend/approvalRequest', 'ArticleController@approvalRequest');
 
 // manage
 Route::get('/manage', 'ManageController@getManage');

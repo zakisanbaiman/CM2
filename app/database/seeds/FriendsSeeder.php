@@ -8,8 +8,8 @@ class FriendsSeeder extends Seeder
 
         // 1
         Friend::create(array(
-                'user_request_from'        => '12',
-                'user_request_to'        => '13',
+                'user_id'        => '12',
+                'friend_id'        => '13',
                 'approval'        => '0',
                 'created_at'        => '2015-08-04 12:58:07',
                 'updated_at'        => '2015-08-04 12:58:07'
@@ -17,8 +17,8 @@ class FriendsSeeder extends Seeder
         	
         // 2
         Friend::create(array(
-                'user_request_from'        => '13',
-                'user_request_to'        => '12',
+                'user_id'        => '13',
+                'friend_id'        => '12',
                 'approval'        => '1',
                 'created_at'        => '2015-08-04 12:58:07',
                 'updated_at'        => '2015-08-04 12:58:08'
@@ -26,8 +26,8 @@ class FriendsSeeder extends Seeder
 		
         // 3
         Friend::create(array(
-                'user_request_from'        => '12',
-                'user_request_to'        => '14',
+                'user_id'        => '12',
+                'friend_id'        => '14',
                 'approval'        => '0',
                 'created_at'        => '2015-08-04 12:58:07',
                 'updated_at'        => '2015-08-04 12:58:09'
@@ -35,11 +35,38 @@ class FriendsSeeder extends Seeder
         
         // 4
         Friend::create(array(
-                'user_request_from'        => '12',
-                'user_request_to'        => '15',
+                'user_id'        => '12',
+                'friend_id'        => '15',
                 'approval'        => '1',
                 'created_at'        => '2015-08-04 12:58:07',
                 'updated_at'        => '2015-08-04 12:58:10'
+        ));
+        
+        // 5
+        Friend::create(array(
+                'user_id'        => '15',
+                'friend_id'        => '12',
+                'approval'        => '1',
+                'created_at'        => '2015-08-04 12:58:07',
+                'updated_at'        => '2015-08-04 12:58:11'
+        ));
+        
+        // 6
+        Friend::create(array(
+                'user_id'        => '3',
+                'friend_id'        => '15',
+                'approval'        => '1',
+                'created_at'        => '2015-08-04 12:58:07',
+                'updated_at'        => '2015-08-04 12:58:12'
+        ));
+        
+        // 7
+        Friend::create(array(
+                'user_id'        => '7',
+                'friend_id'        => '15',
+                'approval'        => '1',
+                'created_at'        => '2015-08-04 12:58:07',
+                'updated_at'        => '2015-08-04 12:58:13'
         ));
     }
 }
