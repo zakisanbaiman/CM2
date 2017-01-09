@@ -47,6 +47,7 @@
 
 </head>
 @include('header')
+@include('frontend/notifications')
 @yield('content')
 @include('footer')
 </html>

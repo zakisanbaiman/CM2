@@ -80,19 +80,11 @@
 </body>
 <script>
 
-
-//    $.datepicker.setDefaults($.datepicker.regional['ja']);
-//    $('#buy_date').datepicker();
-//    angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
     angular.module('myApp', ['ui.bootstrap','ngFileUpload'])
         .config(function() {
             //...
         });
 
-
-//    angular.module('myApp', [])
-//        .controller('ManageController', ['$scope','$http',
-//                function($scope,$http,$modal) {
     angular.module('myApp').
             controller('ManageController',
             ['$scope','$modal','$http','$timeout', function($scope,$modal,$http,$timeout) {
@@ -115,12 +107,10 @@
 
             }
 
-            //start 2016/3/29 ページングボタン
             $scope.setPage = function(page){
                 $scope.paging.begin = $scope.paging.num * page - $scope.paging.num;
                 $scope.paging.currentPage = page;
             };
-            //end
 
         	$scope.prevPage = function() {
         		if ($scope.paging.begin > 0) {
@@ -129,14 +119,12 @@
         		}
             };
 
-
       		$scope.nextPage = function() {
       			if ($scope.paging.begin < $scope.manages.length - 1) {
             		$scope.paging.begin = $scope.paging.begin + $scope.paging.num;
             		$scope.paging.currentPage ++;
         		}
           	};
-
 
           	$scope.range = function() {
                 $scope.limitTo = Math.ceil($scope.manages.length/$scope.paging.num);
@@ -146,7 +134,6 @@
                 };
                 return ret;
             };
-
 
             getManageObj();
 
@@ -201,7 +188,6 @@
                         animation: $scope.animationsEnabled,
                         templateUrl: 'updateManageModal.html',
                         controller: 'UpdateManageModalController',
-//                    size: size,
                         resolve: {
                             manage: function () {
                                 return data[0];
