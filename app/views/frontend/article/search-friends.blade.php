@@ -71,7 +71,6 @@
 					</td>
 			
 			</tbody>
-			</tr>
 		</table>
 	</div>
 	</main>

@@ -1,5 +1,6 @@
 <?php
 class ArticleController extends BaseController {
+    
     public function getArticle() {
         return View::make ( 'frontend.article.index' );
     }
@@ -232,6 +233,23 @@ class ArticleController extends BaseController {
             ->where ( 'user_id', '=', $user_id )
             ->where ( 'friend_id', '=', $friend_id )
             ->delete ();
+        DB::commit ();
+    }
+    
+    /**
+     * コメント追加処理
+     */
+    public function setCommentObj() {
+        $user_id = Sentry::getUser()->id;
+        $submit_text $_POST ["submit_text"];
+        
+        // friendsテーブルに登録
+        DB::beginTransaction ();
+        $friend = new friend ();
+        $friend->user_id = $user_id;
+        $friend->friend_id = $friend_id;
+        $friend->approval = '1';
+        $friend->save ();
         DB::commit ();
     }
 }

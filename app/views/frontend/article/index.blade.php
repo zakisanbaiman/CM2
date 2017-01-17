@@ -1,7 +1,6 @@
 <h1></h1>
 @extends('layout') @section('content')
 <body ng-controller="ArticleController">
-	<main>
 	<div class="col-md-3">
 		<div class="panel panel-default">
 			<div class="panel-heading">Menu</div>
@@ -15,17 +14,22 @@
 		</div>
 	</div>
 
+	<main>
+
 	<div id="fixed" when-scrolled="loadMore()">
-		<section class="container">
-			<form id="submit-form" method="post" class="submit-box"
-				onsubmit="return setArticleObj()" style="display: inline-flex">
-				<textarea class="submit-textbox" id="submit_text"
-					placeholder='今なにしてる？' /></textarea>
-				<button id="submit" type="submit"
-					class="glyphicon glyphicon-open submit-btn"></button>
-			</form>
+        <!-- 記事投稿フォーム -->
+		<form id="submit-form" method="post" class="submit-box"
+			onsubmit="return setArticleObj()" style="display: inline-flex">
+			<textarea class="submit-textbox" id="submit_text"
+				placeholder='今なにしてる？' /></textarea>
+	        <button class="btn btn-default" type="submit" style="height: 30px;">
+				<i class='glyphicon glyphicon-pencil'></i>
+			</button>
+		</form>
+        <!-- 記事一覧 -->
+		<ol>
 			<li id="list" class="timeline-box"
-				ng-repeat="article in articles track by $index">
+					ng-repeat="article in articles track by $index">
 				<div class="parent">
 					<p>
 						<img src="/images/users/@{{ article.user_image }}" alt=""
@@ -40,10 +44,23 @@
 					<a id="btn_like" class="btn btn-default"
 						ng-click="setLike(article.id)" ng-class="(isLiked(article))">いいね！</a>
 					<a class="btn btn-default"
-						ng-click="openUpdateArticleDialog(article.id)">コメントする</a> <a
+						ng-click="openCommentForm($index)">コメントする</a> <a
 						class="btn btn-default"
 						ng-click="openDeleteArticleDialog(article.id)">シェアする</a>
-				</p> <!--コメント出力用ボックス-->
+				</p>
+				<!--コメント入力フォーム-->
+				<form id="comment-form" method="post" class="input-group"
+						style="width:340px; height: 34px; margin:10px 5px;">
+        			<input type="text" id="submit-comment" class="form-control"
+        					placeholder='コメントを入力してください。' />
+        			<span class="input-group-btn">
+            			<button class="btn btn-default" type="submit" style="height: 34px;">
+            				<i class='glyphicon glyphicon-pencil'></i>
+            			</button>
+        			</span>
+        		</form>
+				
+				<!--コメント出力用ボックス-->
 				<div id="comment_list" ng-repeat="comment in article.commentArray">
 					<div id="comment_box" class="comment-box">
 						<div class="parent">
@@ -57,11 +74,11 @@
 					</div>
 				</div>
 			</li>
-			<div id="loading">
-				<img src="/images/gif/gif-load.gif">
-			</div>
-			<div id="container"></div>
-		</section>
+		</ol>
+		<div id="loading">
+			<img src="/images/gif/gif-load.gif">
+		</div>
+		<div id="container"></div>
 	</div>
 	</main>
 </body>
@@ -71,6 +88,7 @@
 
 <script>
 	$("#loading").hide();
+// 	$("#comment-form").hide();
 
     angular.module('myApp', ['ui.bootstrap','ngFileUpload'])
         .config(function() {
@@ -122,6 +140,33 @@
                 });
             });
 
+            //コメント投稿ボタン押下時
+            $('#comment-form').submit(function(event) {
+                // ここでsubmitをキャンセルします。
+                event.preventDefault();
+
+                var submit_text = $('#submit-comment').val();
+
+                // Ajax処理
+                $.ajax({
+                  url: '/article/setCommentObj',
+                  type:'POST',
+                  data : {
+                      submit_text : submit_text
+                      },
+                  success: function(data) {
+                          document.getElementById("submit_comment").value="";
+                          getArticleObj();
+				  },
+                  error: function(XMLHttpRequest, textStatus, errorThrown) {
+                          alert("NG");
+
+                  }
+                });
+            });
+
+
+
 			//画面最下位までスクロール時
 	        $scope.loadMore = function() {
     			// Ajax処理
@@ -172,6 +217,12 @@
             	});
             };
 
+            // コメント入力欄を表示
+//             $scope.openCommentForm = function(index){
+// //             	$("#comment-form").toggle();
+// //             	article.push('comment_opened');
+//             };
+
             //ユーザが対象記事にいいねを押しているか判断
             $scope.isLiked = function(article){
                 if(article.likesID != null){
@@ -196,7 +247,7 @@
                     }
                 }
             });
-
+            
          	// プロフィール設定画面
             $scope.settingProfile = function() {
               $scope.msg = 'こんにちは、' + $scope.name + 'さん！';
