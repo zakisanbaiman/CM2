@@ -1,7 +1,7 @@
 <?php
 class ArticleController extends BaseController {
     
-    public function getArticle() {
+    function getArticle() {
         return View::make ( 'frontend.article.index' );
     }
     public function getTimeLine() {
@@ -241,7 +241,7 @@ class ArticleController extends BaseController {
      */
     public function setCommentObj() {
         $user_id = Sentry::getUser()->id;
-        $submit_text $_POST ["submit_text"];
+        // $submit_text $_POST ["submit_text"];
         
         // friendsテーブルに登録
         DB::beginTransaction ();

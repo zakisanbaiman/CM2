@@ -49,16 +49,17 @@
 						ng-click="openDeleteArticleDialog(article.id)">シェアする</a>
 				</p>
 				<!--コメント入力フォーム-->
-				<form id="comment-form" method="post" class="input-group"
-						style="width:340px; height: 34px; margin:10px 5px;">
-        			<input type="text" id="submit-comment" class="form-control"
-        					placeholder='コメントを入力してください。' />
-        			<span class="input-group-btn">
-            			<button class="btn btn-default" type="submit" style="height: 34px;">
-            				<i class='glyphicon glyphicon-pencil'></i>
-            			</button>
-        			</span>
-        		</form>
+    		    <form id="comment-form" method="post" class="input-group"
+                        style="width:340px; height: 34px; margin:10px 5px;">
+                    <input type="text" id="submit-comment@{{ article.id }}" name="submit-comment@{{ article.id }}"
+                    		class="form-control" placeholder='コメントを入力してください。' />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit" style="height: 34px;"
+                                ng-click="addComment(article.id)">
+                            <i class='glyphicon glyphicon-pencil'></i>
+                        </button>
+                    </span>
+                </form>
 				
 				<!--コメント出力用ボックス-->
 				<div id="comment_list" ng-repeat="comment in article.commentArray">
@@ -114,7 +115,7 @@
 	            });
             }
             getArticleObj();
-
+            
 			//投稿ボタン押下時
             $('#submit-form').submit(function(event) {
                 // ここでsubmitをキャンセルします。
@@ -140,6 +141,33 @@
                 });
             });
 
+			// naoto
+            $scope.addComment = function(article_id){
+
+				var controlId = "submit-comment" + article_id;
+//             	var submit_text = document.getElementById(controlId).value="";
+            	var submit_text = $(controlId).val();
+// 				var submit_text = $('#submit-comment').val();
+				
+                // Ajax処理
+                $.ajax({
+                  url: '/article/setCommentObj',
+                  type:'POST',
+                  data : {
+                      submit_text : submit_text
+                      },
+                  success: function(data) {
+                          document.getElementById("submit_comment").value="";
+                          getArticleObj();
+				  },
+                  error: function(XMLHttpRequest, textStatus, errorThrown) {
+                          alert("NG");
+
+                  }
+                });
+
+            };
+			
             //コメント投稿ボタン押下時
             $('#comment-form').submit(function(event) {
                 // ここでsubmitをキャンセルします。
