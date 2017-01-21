@@ -6,10 +6,10 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Menu</div>
 			<ul class="nav nav-pills nav-stacked">
-				<li class="active"><a href=""><i class="glyphicon glyphicon-pencil"></i>タイムライン</a></li>
-				<!--<li><a href=""><i class="glyphicon glyphicon-pencil"></i> メッセージ</a></li> -->
-				<!--<li><a href=""><i class="glyphicon glyphicon-cog" ng-click="settingProfile()"></i> プロフィール設定</a></li>-->
-				<li><a href=""><i class="glyphicon glyphicon-user"></i> フレンド検索</a></li>
+				<li class="active"><a><i class="glyphicon glyphicon-list-alt"></i>
+						タイムライン</a></li>
+				<li><a href="/search-friends/"><i class="glyphicon glyphicon-user"></i>
+						フレンド検索</a></li>
 				<li><a href=""><i class="glyphicon glyphicon-question-sign"></i> ヘルプ</a></li>
 			</ul>
 		</div>
@@ -19,7 +19,7 @@
 		<section class="container">
 			<form id="submit-form" method="post" class="submit-box"
 				onsubmit="return setArticleObj()" style="display: inline-flex">
-				<textarea type="text" class="submit-textbox" id="submit_text"
+				<textarea class="submit-textbox" id="submit_text"
 					placeholder='今なにしてる？' /></textarea>
 				<button id="submit" type="submit"
 					class="glyphicon glyphicon-open submit-btn"></button>
