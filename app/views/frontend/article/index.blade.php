@@ -1,7 +1,7 @@
 <h1></h1>
 @extends('layout') @section('content')
 <body ng-controller="ArticleController">
-	<div class="col-md-3">
+	<nav class="col-md-3">
 		<div class="panel panel-default">
 			<div class="panel-heading">Menu</div>
 			<ul class="nav nav-pills nav-stacked">
@@ -12,7 +12,7 @@
 				<li><a href=""><i class="glyphicon glyphicon-question-sign"></i> ヘルプ</a></li>
 			</ul>
 		</div>
-	</div>
+	</nav>
 
 	<main>
 
@@ -33,7 +33,6 @@
 			</table>
 		</form>
         <!-- 記事一覧 -->
-		<ol>
 			<!-- 投稿者プロフィール -->
 			<li id="list" class="timeline-box"
 					ng-repeat="article in articles track by $index">
@@ -101,7 +100,6 @@
 					</div>
 				</div>
 			</li>
-		</ol>
 		<div id="loading">
 			<img src="/images/gif/gif-load.gif">
 		</div>
