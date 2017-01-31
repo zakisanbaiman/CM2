@@ -158,8 +158,9 @@ Route::post('/friend/getSearchFriendObj', 'ArticleController@getSearchFriendObj'
 Route::post('/friend/setFriendRequestObj', 'ArticleController@setFriendRequestObj');
 Route::post('/friend/cancelRequest', 'ArticleController@cancelRequest');
 Route::post('/friend/approvalRequest', 'ArticleController@approvalRequest');
-Route::post('/friend/setCommentObj', 'ArticleController@setCommentObj');
-
+Route::post('/article/setCommentObj', 'ArticleController@setCommentObj');
+Route::post('/article/updateArticle', 'ArticleController@updateArticle');
+Route::post('/article/deleteArticle', 'ArticleController@deleteArticle');
 
 // manage
 Route::get('/manage', 'ManageController@getManage');
