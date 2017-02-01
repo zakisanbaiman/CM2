@@ -1,5 +1,6 @@
 <h1></h1>
-@extends('layout') @section('content')
+@extends('frontend/layouts/default')
+@section('content')
 <body ng-controller="ArticleController">
 	<nav class="col-md-3">
 		<div class="panel panel-default">

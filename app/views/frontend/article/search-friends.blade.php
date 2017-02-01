@@ -1,5 +1,5 @@
 <h1></h1>
-@extends('layout') @section('content')
+@extends('frontend/layouts/default') @section('content')
 <body>
 	<main>
 	<div class="col-md-3">
