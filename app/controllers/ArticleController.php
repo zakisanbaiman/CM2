@@ -112,11 +112,20 @@ class ArticleController extends BaseController {
                     'articles.created_at', 'likes.id as likesID', 'users.user_image',
                     'users.nickname'
                     )
-            ->leftjoin ( 'users', 'articles.user_id', '=', 'users.id' )
-            ->leftjoin ( 'likes', function ($join) use ($user_id) {
-                $join->on ( 'articles.id', '=', 'likes.article_id' )
-                ->where ( 'likes.user_id', '=', $user_id );
-            } )
+            ->leftjoin ( 'users', 'articles.user_id', '=', 'users.id' ) // 投稿者情報
+            ->leftjoin ( 'likes', // いいね取得
+                function ($join) use ($user_id) {
+                    $join->on ( 'articles.id', '=', 'likes.article_id' )
+                    ->where ( 'likes.user_id', '=', $user_id );
+            })
+            ->whereIn('articles.user_id', // フレンドの記事
+                function ($query) use ($user_id) {
+                    $query
+                        ->select('friend_id')
+                        ->from('friends')
+                        ->where ( 'user_id', '=', $user_id );
+            })
+            ->orWhere('articles.user_id', $user_id) // 自分の記事
             ->orderBy ( 'articles.updated_at', 'desc' )
             ->skip ( $skip )
             ->take ( $take )

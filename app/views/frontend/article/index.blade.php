@@ -75,7 +75,7 @@
 				</p>
 				<!--コメント入力フォーム-->
     		    <form id="comment-form" method="post" class="input-group"
-                        style="width:340px; height: 34px; margin:10px 5px;">
+                        style="width:360px; height: 34px; margin:10px 5px;">
                     <input type="text" id="submit-comment@{{ article.id }}" name="submit-comment@{{ article.id }}"
                     		class="form-control" placeholder='コメントを入力してください。' />
                     <span class="input-group-btn">
