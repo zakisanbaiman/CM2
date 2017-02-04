@@ -70,7 +70,7 @@
 						ng-show="article.my_article">更新
 					</button>
 					<button class="btn btn-default"
-						ng-click="deleteArticle(article.id)"
+						ng-click="openDeleteArticleDialog(article.id)"
 						ng-show="article.my_article">削除</button>
 					
 				</p>
@@ -107,6 +107,19 @@
 		<div id="container"></div>
 	</article>
 	</main>
+	
+	    <!-- 削除ダイアログ -->
+    <div ng-controller="DeleteArticleModalController">
+        <script type="text/ng-template" id="deleteArticleModal.html">
+            <div class="manageModalBox">
+                <p>本当に削除しますか？</p>
+                <div class="articleModalBoxFooter">
+                    <a class="btn btn-default" ng-click="deleteArticleModalOk()">Ok</a>
+                    <a class="btn btn-default" ng-click="deleteArticleModalCancel()">Cancel</a>
+                </div>
+            </div>
+        </script>
+    </div>
 </body>
 
 <script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -156,13 +169,17 @@
                       submit_text : submit_text
                       },
                   success: function(data) {
+                      if (data[0] != '1') {
                           document.getElementById("submit_text").value="";
                           getArticleObj();
+                      }else{
+                    	  alert(data[1]);
+                      }
 				  },
-                  error: function(XMLHttpRequest, textStatus, errorThrown) {
-                          alert("NG");
+                  error: function(data) {
+                          alert(data);
                   }
-                });
+                })
             });
 
 			// コメント追加
@@ -172,19 +189,23 @@
             	var submit_text = $(controlId).val();
 				
                 $.ajax({
-                  url: '/article/setCommentObj',
-                  type:'POST',
-                  data : {
+                    url: '/article/setCommentObj',
+                    type:'POST',
+                    data : {
                       submit_text : submit_text,
                       article_id : article_id
                       },
-                  success: function(data) {
-                          $(controlId).val("");
-                          getArticleObj();
-				  },
-                  error: function(XMLHttpRequest, textStatus, errorThrown) {
-                          alert("NG");
-                  }
+                    success: function(data) {
+                        if (data[0] != '1') {
+                            $(controlId).val("");
+                            getArticleObj();
+                        }else{
+                    	    alert(data[1]);
+                        }
+                    },
+                    error: function(data) {
+                        alert(data);
+                    }
                 });
             };
 
@@ -248,23 +269,32 @@
 			// 記事を更新
             $scope.updateArticle = function(article_id){
 
-				var controlId = "#submit-update" + article_id;
-            	var submit_text = $(controlId).val();
+            	var article_label = "#article_label" + article_id;
+            	var submit_update = "#submit-update" + article_id;
+            	var btn_update = "#btn_update" + article_id;
+            	var submit_text = $(submit_update).val();
 				
                 $.ajax({
                 	url: '/article/updateArticle',
-                  type:'POST',
-                  data : {
-                      submit_text : submit_text,
-                      article_id : article_id
-                      },
-                  success: function(data) {
-                          $(controlId).disabled = "true";
-                          getArticleObj();
-				  },
-                  error: function(XMLHttpRequest, textStatus, errorThrown) {
-                          alert("NG");
-                  }
+                    type:'POST',
+                    data : {
+                        submit_text : submit_text,
+                        article_id : article_id
+                        },
+				    success: function(data) {
+                        if (data[0] != '1') {
+                            getArticleObj();
+                            $(article_label).toggle();
+                        	$(submit_update).toggle();
+                        	$(btn_update).toggle();
+                        }else{
+                  	        alert(data[1]);
+                  	      	$(submit_update).val() = "";
+                        }
+                    },
+                    error: function(data) {
+                        alert(data);
+                    }
                 });
             };
             
@@ -297,11 +327,29 @@
             	$(submit_update).toggle();
             	$(btn_update).toggle();
             }
+
+            $scope.animationsEnabled = true;
+            
+            // 削除ダイアログ表示
+            $scope.openDeleteArticleDialog = function (article_id) {
+                var dataObj = {};
+                dataObj.id = article_id;
+                    var modalInstance = $modal.open({
+                        animation: $scope.animationsEnabled,
+                        templateUrl: 'deleteArticleModal.html',
+                        controller: 'DeleteArticleModalController',
+                        resolve: {
+                            article: function () {
+                                return dataObj;
+                            }
+                        }
+                    });
+            }
 	}]);
 
     var sending = 0;
 
-	//無限スクロール用ディレクティブ
+	// 無限スクロール用ディレクティブ
     angular.module('myApp')
     .directive('whenScrolled', function() {
         return function(scope, elm, attr) {
@@ -321,6 +369,37 @@
             });
         };
     });
+
+	// 削除用ディレクティブ
+    angular.module('myApp').
+		    controller('DeleteArticleModalController', function ($scope, $modalInstance, $http, article) {
+
+        $scope.article = article;
+    
+        // OKボタン押下時
+        $scope.deleteArticleModalOk = function () {
+        	var testlogic = '36';
+            $.ajax({
+                url: '/article/deleteArticle',
+                type:'POST',
+                data : {
+              	  article_id : article.id,
+                    },
+                success: function(data) {
+              	  getArticleObj();
+    			  },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                }
+          	});
+            $modalInstance.close();
+        };
+    
+        // Cancelボタン押下時
+        $scope.deleteArticleModalCancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    });
+    
 </script>
 
 @stop

@@ -49,6 +49,13 @@ class ArticleController extends BaseController {
     // 記事投稿機能
     public function setArticleObj() {
         $submit_text = $_POST ["submit_text"];
+       
+        // NGワードチェック
+        $response = BaseController::checkNgWords($submit_text);
+        if ($response[0] == '1') {
+            return $response;
+        }
+        
         $user_id = Sentry::getUser()->id;
 
         DB::beginTransaction ();
@@ -265,6 +272,12 @@ class ArticleController extends BaseController {
         $submit_text = $_POST ["submit_text"];
         $article_id = $_POST ["article_id"];
         
+        // NGワードチェック
+        $response = BaseController::checkNgWords($submit_text);
+        if ($response[0] == '1') {
+            return $response;
+        }
+        
         // friendsテーブルに登録
         DB::beginTransaction ();
         $comments = new comment();
@@ -282,6 +295,12 @@ class ArticleController extends BaseController {
         $article_id = $_POST ["article_id"];
         $submit_text = $_POST ["submit_text"];
     
+        // NGワードチェック
+        $response = BaseController::checkNgWords($submit_text);
+        if ($response[0] == '1') {
+            return $response;
+        }
+        
         // 対象のarticlesテーブルを更新
         DB::beginTransaction ();
 //         $articles = new Article();
