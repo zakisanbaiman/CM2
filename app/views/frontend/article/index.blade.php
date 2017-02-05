@@ -1,8 +1,8 @@
 <h1></h1>
-@extends('layout') @section('content')
+@extends('frontend/layouts/default')
+@section('content')
 <body ng-controller="ArticleController">
-	<main>
-	<div class="col-md-3">
+	<nav class="col-md-3">
 		<div class="panel panel-default">
 			<div class="panel-heading">Menu</div>
 			<ul class="nav nav-pills nav-stacked">
@@ -13,19 +13,30 @@
 				<li><a href=""><i class="glyphicon glyphicon-question-sign"></i> ヘルプ</a></li>
 			</ul>
 		</div>
-	</div>
+	</nav>
 
-	<div id="fixed" when-scrolled="loadMore()">
-		<section class="container">
-			<form id="submit-form" method="post" class="submit-box"
-				onsubmit="return setArticleObj()" style="display: inline-flex">
-				<textarea class="submit-textbox" id="submit_text"
-					placeholder='今なにしてる？' /></textarea>
-				<button id="submit" type="submit"
-					class="glyphicon glyphicon-open submit-btn"></button>
-			</form>
+	<main>
+
+	<article id="fixed" when-scrolled="loadMore()">
+        <!-- 記事投稿フォーム -->
+		<form id="submit-form" method="post" class="submit-box"
+			onsubmit="return setArticleObj()" style="display: inline-flex">
+			<table>
+				<tr>
+					<td>
+    					<textarea id="submit_text" placeholder='今なにしてる？' class="form-control"
+    							rows="2" cols="50" onkeydown="textareaResize(event)" class="display:inline;"/></textarea>
+    	        	</td>
+    	        	<td valign="bottom" style="padding-left: 10px;">
+    	        		<button class="btn btn-primary" type="submit" class="display:inline;">投稿</button>
+    	        	</td>
+    	        </tr>
+			</table>
+		</form>
+        <!-- 記事一覧 -->
+			<!-- 投稿者プロフィール -->
 			<li id="list" class="timeline-box"
-				ng-repeat="article in articles track by $index">
+					ng-repeat="article in articles track by $index">
 				<div class="parent">
 					<p>
 						<img src="/images/users/@{{ article.user_image }}" alt=""
@@ -34,16 +45,49 @@
 					<p class="box-p">@{{ article.id }}</p>
 					<p class="box-p">@{{ article.nickname }}</p>
 				</div>
-				<p class="article-box">@{{ article.article }}</p>
-				<p class="article-box">いいね！@{{ article.like }}人</p>
+				<!-- 記事内容 -->
+				<article class="article-box">
+					<table>
+        				<tr>
+        					<td>
+        						<article id="article_label@{{ article.id }}">@{{ article.article }}</article>
+    							<textarea id="submit-update@{{ article.id }}" name="submit-update" class="form-control"
+                        				rows="2" cols="50">@{{ article.article }}</textarea>
+                        	</td>
+                        	<td valign="bottom" style="padding-left: 10px;">
+                                <button name="btn_update" id="btn_update@{{ article.id }}" class="btn btn-primary" type="submit" style="height: 34px;"
+                                        ng-click="updateArticle(article.id)"
+                                        >更新</button>
+                            </td>
+            	        </tr>
+        			</table>
+        		</article>
 				<p class="box-p">
-					<a id="btn_like" class="btn btn-default"
-						ng-click="setLike(article.id)" ng-class="(isLiked(article))">いいね！</a>
-					<a class="btn btn-default"
-						ng-click="openUpdateArticleDialog(article.id)">コメントする</a> <a
-						class="btn btn-default"
-						ng-click="openDeleteArticleDialog(article.id)">シェアする</a>
-				</p> <!--コメント出力用ボックス-->
+					<button id="btn_like" class="btn btn-default"
+						ng-click="setLike(article.id)" ng-class="(isLiked(article))">いいね！(@{{ article.like }})</button>
+					<button class="btn btn-default"
+						ng-click="changeEditMode(article.id)"
+						ng-show="article.my_article">更新
+					</button>
+					<button class="btn btn-default"
+						ng-click="openDeleteArticleDialog(article.id)"
+						ng-show="article.my_article">削除</button>
+					
+				</p>
+				<!--コメント入力フォーム-->
+    		    <form id="comment-form" method="post" class="input-group"
+                        style="width:360px; height: 34px; margin:10px 5px;">
+                    <input type="text" id="submit-comment@{{ article.id }}" name="submit-comment@{{ article.id }}"
+                    		class="form-control" placeholder='コメントを入力してください。' />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit" style="height: 34px;"
+                                ng-click="addComment(article.id)">
+                            <i class='glyphicon glyphicon-pencil'></i>
+                        </button>
+                    </span>
+                </form>
+				
+				<!--コメント出力用ボックス-->
 				<div id="comment_list" ng-repeat="comment in article.commentArray">
 					<div id="comment_box" class="comment-box">
 						<div class="parent">
@@ -57,20 +101,34 @@
 					</div>
 				</div>
 			</li>
-			<div id="loading">
-				<img src="/images/gif/gif-load.gif">
-			</div>
-			<div id="container"></div>
-		</section>
-	</div>
+		<div id="loading">
+			<img src="/images/gif/gif-load.gif">
+		</div>
+		<div id="container"></div>
+	</article>
 	</main>
+	
+	    <!-- 削除ダイアログ -->
+    <div ng-controller="DeleteArticleModalController">
+        <script type="text/ng-template" id="deleteArticleModal.html">
+            <div class="manageModalBox">
+                <p>本当に削除しますか？</p>
+                <div class="articleModalBoxFooter">
+                    <a class="btn btn-default" ng-click="deleteArticleModalOk()">Ok</a>
+                    <a class="btn btn-default" ng-click="deleteArticleModalCancel()">Cancel</a>
+                </div>
+            </div>
+        </script>
+    </div>
 </body>
 
-<script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 <script>
+	// 初期化
 	$("#loading").hide();
+	$("textarea[name=submit-update]").hide();
+	$("button[name=btn_update]").hide();
 
     angular.module('myApp', ['ui.bootstrap','ngFileUpload'])
         .config(function() {
@@ -81,11 +139,10 @@
             .controller('ArticleController',
             ['$scope','$modal','$http','$timeout', function($scope,$modal,$http,$timeout) {
 
-            //初期表示分の記事を取得
+            // 初期表示分の記事を取得
             $scope.articles = [];
             getArticleObj = function() {
             	var dataObj = {};
-	            dataObj.user_id = '12';
             	$http({
                    	method : 'post',
                    	url : '/article/getArticleObj',
@@ -96,7 +153,7 @@
 	            });
             }
             getArticleObj();
-
+            
 			//投稿ボタン押下時
             $('#submit-form').submit(function(event) {
                 // ここでsubmitをキャンセルします。
@@ -109,18 +166,48 @@
                   url: '/article/setArticleObj',
                   type:'POST',
                   data : {
-                      submit_text : submit_text,
-                      user_id : '12'
+                      submit_text : submit_text
                       },
                   success: function(data) {
+                      if (data[0] != '1') {
                           document.getElementById("submit_text").value="";
                           getArticleObj();
+                      }else{
+                    	  alert(data[1]);
+                      }
 				  },
-                  error: function(XMLHttpRequest, textStatus, errorThrown) {
-                          alert("NG");
+                  error: function(data) {
+                          alert(data);
                   }
-                });
+                })
             });
+
+			// コメント追加
+            $scope.addComment = function(article_id){
+
+				var controlId = "#submit-comment" + article_id;
+            	var submit_text = $(controlId).val();
+				
+                $.ajax({
+                    url: '/article/setCommentObj',
+                    type:'POST',
+                    data : {
+                      submit_text : submit_text,
+                      article_id : article_id
+                      },
+                    success: function(data) {
+                        if (data[0] != '1') {
+                            $(controlId).val("");
+                            getArticleObj();
+                        }else{
+                    	    alert(data[1]);
+                        }
+                    },
+                    error: function(data) {
+                        alert(data);
+                    }
+                });
+            };
 
 			//画面最下位までスクロール時
 	        $scope.loadMore = function() {
@@ -172,40 +259,97 @@
             	});
             };
 
-            //ユーザが対象記事にいいねを押しているか判断
+            // ユーザが対象記事にいいねを押しているか判断
             $scope.isLiked = function(article){
                 if(article.likesID != null){
 					return "btn-primary";
                 }
             }
 
-			//投稿フォームの縦幅自動調整
-            $("#submit_text").height(30);//init
-            $("#submit_text").css("lineHeight","20px");
-            $("#submit_text").on("input",function(evt){
-                if(evt.target.scrollHeight > evt.target.offsetHeight){
-                    $(evt.target).height(evt.target.scrollHeight);
-                }else{
-                    var lineHeight = Number($(evt.target).css("lineHeight").split("px")[0]);
-                    while (true){
-                        $(evt.target).height($(evt.target).height() - lineHeight);
-                        if(evt.target.scrollHeight > evt.target.offsetHeight){
-                            $(evt.target).height(evt.target.scrollHeight);
-                            break;
-                        }
-                    }
-                }
-            });
+			// 記事を更新
+            $scope.updateArticle = function(article_id){
 
-         	// プロフィール設定画面
-            $scope.settingProfile = function() {
-              $scope.msg = 'こんにちは、' + $scope.name + 'さん！';
+            	var article_label = "#article_label" + article_id;
+            	var submit_update = "#submit-update" + article_id;
+            	var btn_update = "#btn_update" + article_id;
+            	var submit_text = $(submit_update).val();
+				
+                $.ajax({
+                	url: '/article/updateArticle',
+                    type:'POST',
+                    data : {
+                        submit_text : submit_text,
+                        article_id : article_id
+                        },
+				    success: function(data) {
+                        if (data[0] != '1') {
+                            getArticleObj();
+                            $(article_label).toggle();
+                        	$(submit_update).toggle();
+                        	$(btn_update).toggle();
+                        }else{
+                  	        alert(data[1]);
+                  	      	$(submit_update).val() = "";
+                        }
+                    },
+                    error: function(data) {
+                        alert(data);
+                    }
+                });
             };
+            
+            // 記事を削除
+            $scope.deleteArticle = function(article_id){
+            	
+                $.ajax({
+                  url: '/article/deleteArticle',
+                  type:'POST',
+                  data : {
+                	  article_id : article_id,
+                	  skip : 0,
+                      take : $scope.articles.length
+                      },
+                  success: function(data) {
+                	  getArticleObj();
+				  },
+                  error: function(XMLHttpRequest, textStatus, errorThrown) {
+                  }
+            	});
+            }
+
+            // 編集モード切り替え
+            $scope.changeEditMode = function(article_id){
+            	var article_label = "#article_label" + article_id;
+            	var submit_update = "#submit-update" + article_id;
+            	var btn_update = "#btn_update" + article_id;
+            	
+            	$(article_label).toggle();
+            	$(submit_update).toggle();
+            	$(btn_update).toggle();
+            }
+
+            $scope.animationsEnabled = true;
+            
+            // 削除ダイアログ表示
+            $scope.openDeleteArticleDialog = function (article_id) {
+                var dataObj = {};
+                dataObj.id = article_id;
+                    var modalInstance = $modal.open({
+                        animation: $scope.animationsEnabled,
+                        templateUrl: 'deleteArticleModal.html',
+                        controller: 'DeleteArticleModalController',
+                        resolve: {
+                            article: function () {
+                                return dataObj;
+                            }
+                        }
+                    });
+            }
 	}]);
 
     var sending = 0;
 
-	//無限スクロール用ディレクティブ
+	// 無限スクロール用ディレクティブ
     angular.module('myApp')
     .directive('whenScrolled', function() {
         return function(scope, elm, attr) {
@@ -225,6 +369,37 @@
             });
         };
     });
+
+	// 削除用ディレクティブ
+    angular.module('myApp').
+		    controller('DeleteArticleModalController', function ($scope, $modalInstance, $http, article) {
+
+        $scope.article = article;
+    
+        // OKボタン押下時
+        $scope.deleteArticleModalOk = function () {
+        	var testlogic = '36';
+            $.ajax({
+                url: '/article/deleteArticle',
+                type:'POST',
+                data : {
+              	  article_id : article.id,
+                    },
+                success: function(data) {
+              	  getArticleObj();
+    			  },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                }
+          	});
+            $modalInstance.close();
+        };
+    
+        // Cancelボタン押下時
+        $scope.deleteArticleModalCancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    });
+    
 </script>
 
 @stop

@@ -1,5 +1,5 @@
 <h1></h1>
-@extends('layout')
+@extends('frontend/layouts/default')
 @section('content')
 <body ng-controller="ManageController">
     <main>

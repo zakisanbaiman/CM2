@@ -1,6 +1,7 @@
 <?php
 class ArticleController extends BaseController {
-    public function getArticle() {
+    
+    function getArticle() {
         return View::make ( 'frontend.article.index' );
     }
     public function getTimeLine() {
@@ -15,7 +16,7 @@ class ArticleController extends BaseController {
 
     // 初期表示分の記事を取得
     public function getArticleObj() {
-        $user_id = Input::get ( 'user_id' );
+        $user_id = Sentry::getUser()->id;
 
         $skip = 0; // 取得開始行
         $take = 10; // 取得行数
@@ -37,7 +38,7 @@ class ArticleController extends BaseController {
     public function getArticleAppendObj() {
         $skip = $_POST ["skip"];
         $take = $_POST ["take"];
-        $user_id = $_POST ["user_id"];
+        $user_id = Sentry::getUser()->id;
 
         // ページに追加するarticlesを取得
         $articles = ArticleController::getArticles ( $user_id, $skip, $take );
@@ -48,7 +49,14 @@ class ArticleController extends BaseController {
     // 記事投稿機能
     public function setArticleObj() {
         $submit_text = $_POST ["submit_text"];
-        $user_id = $_POST ["user_id"];
+       
+        // NGワードチェック
+        $response = BaseController::checkNgWords($submit_text);
+        if ($response[0] == '1') {
+            return $response;
+        }
+        
+        $user_id = Sentry::getUser()->id;
 
         DB::beginTransaction ();
         $article = new article ();
@@ -63,7 +71,7 @@ class ArticleController extends BaseController {
     // いいねボタン押下時
     public function setLikeObj() {
         $article_id = $_POST ["article_id"];
-        $user_id = $_POST ["user_id"];
+        $user_id = Sentry::getUser()->id;
         $skip = $_POST ["skip"];
         $take = $_POST ["take"];
 
@@ -107,16 +115,37 @@ class ArticleController extends BaseController {
      */
     public function getArticles($user_id, $skip, $take) {
         $articles = DB::table ( 'articles' )
-            ->select ( 'articles.id', 'articles.user_id', 'articles.article', 'articles.like', 'articles.created_at', 'likes.id as likesID', 'users.user_image', 'users.nickname' )->leftjoin ( 'users', 'articles.user_id', '=', 'users.id' )
-            ->leftjoin ( 'likes', function ($join) use ($user_id) {
-                $join->on ( 'articles.id', '=', 'likes.article_id' )
-                ->where ( 'likes.user_id', '=', $user_id );
-            } )
+            ->select ( 'articles.id', 'articles.user_id', 'articles.article', 'articles.like',
+                    'articles.created_at', 'likes.id as likesID', 'users.user_image',
+                    'users.nickname'
+                    )
+            ->leftjoin ( 'users', 'articles.user_id', '=', 'users.id' ) // 投稿者情報
+            ->leftjoin ( 'likes', // いいね取得
+                function ($join) use ($user_id) {
+                    $join->on ( 'articles.id', '=', 'likes.article_id' )
+                    ->where ( 'likes.user_id', '=', $user_id );
+            })
+            ->whereIn('articles.user_id', // フレンドの記事
+                function ($query) use ($user_id) {
+                    $query
+                        ->select('friend_id')
+                        ->from('friends')
+                        ->where ( 'user_id', '=', $user_id );
+            })
+            ->orWhere('articles.user_id', $user_id) // 自分の記事
             ->orderBy ( 'articles.updated_at', 'desc' )
             ->skip ( $skip )
             ->take ( $take )
             ->get ();
 
+         $countArticles = count ( $articles );
+         for($i = 0; $i < $countArticles; $i++) {
+             $articles[$i]->my_article = false;
+             if ($articles[$i]->user_id == $user_id) {
+                 $articles [$i]->my_article = true;
+             }
+         }
+            
         $countArticles = count ( $articles );
 
         // 各記事にコメントを追加
@@ -233,6 +262,79 @@ class ArticleController extends BaseController {
             ->where ( 'friend_id', '=', $friend_id )
             ->delete ();
         DB::commit ();
+    }
+    
+    /**
+     * コメント追加処理
+     */
+    public function setCommentObj() {
+        $user_id = Sentry::getUser()->id;
+        $submit_text = $_POST ["submit_text"];
+        $article_id = $_POST ["article_id"];
+        
+        // NGワードチェック
+        $response = BaseController::checkNgWords($submit_text);
+        if ($response[0] == '1') {
+            return $response;
+        }
+        
+        // friendsテーブルに登録
+        DB::beginTransaction ();
+        $comments = new comment();
+        $comments->article_id = $article_id;
+        $comments->comment = $submit_text;
+        $comments->user_id = $user_id;
+        $comments->save();
+        DB::commit ();
+    }
+    
+    /**
+     * 記事更新処理
+     */
+    public function updateArticle() {
+        $article_id = $_POST ["article_id"];
+        $submit_text = $_POST ["submit_text"];
+    
+        // NGワードチェック
+        $response = BaseController::checkNgWords($submit_text);
+        if ($response[0] == '1') {
+            return $response;
+        }
+        
+        // 対象のarticlesテーブルを更新
+        DB::beginTransaction ();
+//         $articles = new Article();
+//         $articles->article = $submit_text;
+//         ->where ( 'id', '=', $article_id )
+        
+        DB::table('articles')
+        ->where('id', $article_id)
+        ->update(array('article' => $submit_text));
+        
+//         ->update ();
+        DB::commit ();
+    }
+    
+    /**
+     * 記事削除処理
+     */
+    public function deleteArticle() {
+        $article_id = $_POST ["article_id"];
+    
+        // 対象のarticlesテーブルを削除
+        DB::beginTransaction ();
+        DB::table ( 'articles' )
+        ->where ( 'id', '=', $article_id )
+        ->delete ();
+        DB::commit ();
+    }
+    
+    /**
+     * 記事修正画面呼出時
+     */
+    public function getArticleOneObj() {
+        $article = Article::where('id', '=', Input::get('id'))->get();
+        return Response::json($article);
     }
 }
 ?>
