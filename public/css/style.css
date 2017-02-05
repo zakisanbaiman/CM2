@@ -173,6 +173,8 @@ input[type=search] {
 }
 
 .submit-textbox {
+	height:34px;
+	width:380px;
 	border:1;
 	padding: 3px 3px 3px 3px;
 	font-size:1.0em;
@@ -180,7 +182,6 @@ input[type=search] {
 	color:#000000;
 	margin:0 0 0px;
 	height:110px;
-	width:380px;
 	border-radius: 3px;
 	box-shadow: inner 0 0 4px rgba(0, 0, 0, 0.2);
 	box-shadow: inset 1px 4px 9px -6px rgba(0,0,0,0.5);

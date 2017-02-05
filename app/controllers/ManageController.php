@@ -46,6 +46,22 @@ class ManageController extends BaseController
 				'buy_date' => Input::get('buy_date'),
 				'etc' => Input::get('etc'),
 			));
+			
+		// タイムラインに反映
+		$user_id = Sentry::getUser()->id;
+		
+		$users = DB::table ( 'users' )
+            ->select ( 'users.nickname')
+		    ->where('users.id', '=', $user_id)
+		    ->get ();
+		$user_nickname = $users[0]->nickname;
+		
+        DB::beginTransaction ();
+        $article = new article ();
+        $article->article = $user_nickname . 'さんがアイテムを更新しました。';
+        $article->user_id = $user_id;
+        $article->save ();
+        DB::commit ();
 	}
 
 	public function deleteManageObj() {
@@ -87,6 +103,7 @@ class ManageController extends BaseController
 				->update(array(
 					'model_image' => $fileName,
 				));
+				
 			echo "";
 		} catch (Exception $e) {
 			echo $e->getMessage();
