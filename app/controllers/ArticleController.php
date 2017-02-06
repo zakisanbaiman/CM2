@@ -51,7 +51,8 @@ class ArticleController extends BaseController {
         $submit_text = $_POST ["submit_text"];
        
         // NGワードチェック
-        $response = BaseController::checkNgWords($submit_text);
+        $obj = new CommonCheckController();
+        $response = $obj->checkNgWords($submit_text);
         if ($response[0] == '1') {
             return $response;
         }
@@ -273,7 +274,8 @@ class ArticleController extends BaseController {
         $article_id = $_POST ["article_id"];
         
         // NGワードチェック
-        $response = BaseController::checkNgWords($submit_text);
+        $obj = new CommonCheckController();
+        $response = $obj->checkNgWords($submit_text);
         if ($response[0] == '1') {
             return $response;
         }
@@ -296,7 +298,8 @@ class ArticleController extends BaseController {
         $submit_text = $_POST ["submit_text"];
     
         // NGワードチェック
-        $response = BaseController::checkNgWords($submit_text);
+        $obj = new CommonCheckController();
+        $response = $obj->checkNgWords($submit_text);
         if ($response[0] == '1') {
             return $response;
         }
