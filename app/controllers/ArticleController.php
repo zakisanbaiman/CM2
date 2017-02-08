@@ -1,7 +1,7 @@
 <?php
 class ArticleController extends BaseController {
     
-    function getArticle() {
+    public function getArticle() {
         return View::make ( 'frontend.article.index' );
     }
     public function getTimeLine() {
@@ -51,7 +51,7 @@ class ArticleController extends BaseController {
         $submit_text = $_POST ["submit_text"];
        
         // NGワードチェック
-        $obj = new CommonCheckController();
+        $obj = new NgWordCheck();
         $response = $obj->checkNgWords($submit_text);
         if ($response[0] == '1') {
             return $response;
@@ -114,7 +114,7 @@ class ArticleController extends BaseController {
      * @param 取得行数 $take
      * @return 取得結果
      */
-    public function getArticles($user_id, $skip, $take) {
+    protected function getArticles($user_id, $skip, $take) {
         $articles = DB::table ( 'articles' )
             ->select ( 'articles.id', 'articles.user_id', 'articles.article', 'articles.like',
                     'articles.created_at', 'likes.id as likesID', 'users.user_image',
@@ -206,7 +206,7 @@ class ArticleController extends BaseController {
      *
      * @return 取得結果
      */
-    public function getFriendCommonObj($user_id,$submit_text) {
+    protected  function getFriendCommonObj($user_id,$submit_text) {
                 
         $users = DB::table ( 'users' )
         ->select ( 'users.id','users.first_name','users.last_name','users.nickname'
@@ -274,7 +274,7 @@ class ArticleController extends BaseController {
         $article_id = $_POST ["article_id"];
         
         // NGワードチェック
-        $obj = new CommonCheckController();
+        $obj = new NgWordCheck();
         $response = $obj->checkNgWords($submit_text);
         if ($response[0] == '1') {
             return $response;
@@ -298,7 +298,7 @@ class ArticleController extends BaseController {
         $submit_text = $_POST ["submit_text"];
     
         // NGワードチェック
-        $obj = new CommonCheckController();
+        $obj = new NgWordCheck();
         $response = $obj->checkNgWords($submit_text);
         if ($response[0] == '1') {
             return $response;
@@ -306,15 +306,9 @@ class ArticleController extends BaseController {
         
         // 対象のarticlesテーブルを更新
         DB::beginTransaction ();
-//         $articles = new Article();
-//         $articles->article = $submit_text;
-//         ->where ( 'id', '=', $article_id )
-        
         DB::table('articles')
         ->where('id', $article_id)
         ->update(array('article' => $submit_text));
-        
-//         ->update ();
         DB::commit ();
     }
     
