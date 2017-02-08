@@ -58,6 +58,7 @@ if {
 12.$_POSTを使わない
 
 laravelのInput::get('ポスト値')とかを使う
+
 js
 
 その他
