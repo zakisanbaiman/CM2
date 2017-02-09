@@ -7,17 +7,7 @@ class ManageController extends BaseController
 {
 
 	public function getManage() {
-/*
-		$manages = DB::table('manages')->paginate(2);
-
-		return View::make('manage.index')->;
-
-		return View::make('pagination', [
-				'manages' => Manage::paginate(3)
-		]);
-	*/
 		$manages = DB::table('manages')->paginate(3);
-
 		return View::make('manage.index')->with('manages', $manages);
 	}
 

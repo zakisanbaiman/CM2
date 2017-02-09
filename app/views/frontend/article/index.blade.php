@@ -169,11 +169,11 @@
                       submit_text : submit_text
                       },
                   success: function(data) {
-                      if (data[0] != '1') {
+                      if (data['status'] != '1') {
                           document.getElementById("submit_text").value="";
                           getArticleObj();
                       }else{
-                    	  alert(data[1]);
+                    	  alert(data['message']);
                       }
 				  },
                   error: function(data) {
@@ -196,11 +196,11 @@
                       article_id : article_id
                       },
                     success: function(data) {
-                        if (data[0] != '1') {
+                        if (data['status'] != '1') {
                             $(controlId).val("");
                             getArticleObj();
                         }else{
-                    	    alert(data[1]);
+                    	    alert(data['message']);
                         }
                     },
                     error: function(data) {
@@ -216,9 +216,7 @@
           			url: '/article/getArticleAppendObj',
                     type:'POST',
                     data : {
-                        user_id : '12',
                         skip : $scope.articles.length,
-                        take : 10
                     },
                     success: function(data) {
                 		var len = data.length;
@@ -237,17 +235,13 @@
 
 			//いいねボタン押下時
             $scope.setLike = function(article_id){
-                //一旦固定値でユーザIDを持たせてます
-                var user_id = '12';
 
              	// Ajax処理
                 $.ajax({
                   url: '/article/setLikeObj',
                   type:'POST',
                   data : {
-                      user_id : user_id,
                 	  article_id : article_id,
-                	  skip : 0,
                       take : $scope.articles.length
                       },
                   success: function(data) {
@@ -282,13 +276,13 @@
                         article_id : article_id
                         },
 				    success: function(data) {
-                        if (data[0] != '1') {
+                        if (data['status'] != '1') {
                             getArticleObj();
                             $(article_label).toggle();
                         	$(submit_update).toggle();
                         	$(btn_update).toggle();
                         }else{
-                  	        alert(data[1]);
+                  	        alert(data['message']);
                   	      	$(submit_update).val() = "";
                         }
                     },
@@ -306,8 +300,6 @@
                   type:'POST',
                   data : {
                 	  article_id : article_id,
-                	  skip : 0,
-                      take : $scope.articles.length
                       },
                   success: function(data) {
                 	  getArticleObj();

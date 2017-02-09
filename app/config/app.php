@@ -193,7 +193,7 @@ return array(
 		'Sentry'            => 'Cartalyst\Sentry\Facades\Laravel\Sentry',
 		'Upload' 			=> 'app\lib\Image\Upload',
 		'OAuth' 			=> 'Artdarek\OAuth\Facade\OAuth',
-
+// 	    'ArticlesRepository' => 'app/Repository/ArticlesRepository',
 	),
 
 );
