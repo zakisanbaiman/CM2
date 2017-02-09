@@ -8,7 +8,7 @@ class FriendsRepository {
      * @param 検索文字列
      * @return 取得結果
      */
-    public function selectFriendByUserIdWithSubmitText($user_id,$submit_text) {
+    public function findByUserIdWithSubmitText($user_id,$submit_text) {
                 
         $users = DB::table ( 'users' )
         ->select ( 'users.id','users.first_name','users.last_name','users.nickname'
@@ -23,9 +23,12 @@ class FriendsRepository {
                     ->where ( 'f2.friend_id', '=', $user_id ); // f2:自分にリクエスト
                 } )
                 ->where('users.id', '<>', $user_id)
-                ->where('users.nickname', 'LIKE', '%'.$submit_text.'%')
-                ->orWhere('users.first_name', 'LIKE', '%'.$submit_text.'%')
-                ->orWhere('users.last_name', 'LIKE', '%'.$submit_text.'%')
+                ->Where(function($query) use ($submit_text)
+                {
+                    $query->where('users.nickname', 'LIKE', '%'.$submit_text.'%')
+                        ->orWhere('users.first_name', 'LIKE', '%'.$submit_text.'%')
+                        ->orWhere('users.last_name', 'LIKE', '%'.$submit_text.'%');
+                })
                 ->orderBy ( 'users.id', 'asc' )
                 ->get ();
                 
@@ -35,7 +38,7 @@ class FriendsRepository {
     /**
      * friendsテーブルに登録
      */
-    public function insertByUserIdWithFriendId($user_id, $friend_id) {
+    public function insertFotRequest($user_id, $friend_id) {
         DB::beginTransaction ();
         $friend = new friend ();
         $friend->user_id = $user_id;

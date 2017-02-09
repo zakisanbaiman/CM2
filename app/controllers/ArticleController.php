@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 // use Request;
 
 class ArticleController extends BaseController {
@@ -28,7 +29,7 @@ class ArticleController extends BaseController {
 
         // articlesを取得
         $articlesRepository = new ArticlesRepository();
-        $articles = $articlesRepository->selectArticlesByUserId ( $user_id, self::SKIP_DEFAULT, self::TAKE_DEFAULT );
+        $articles = $articlesRepository->findByUserId ( $user_id, self::SKIP_DEFAULT, self::TAKE_DEFAULT );
 
         return Response::json ( $articles );
     }
@@ -42,19 +43,19 @@ class ArticleController extends BaseController {
 
     // 無限スクロール　リスト追加用
     public function getArticleAppendObj() {
-        $skip = $_POST ["skip"];
+        $skip = Input::get('skip');
         $user_id = Sentry::getUser()->id;
 
         // ページに追加するarticlesを取得
         $articlesRepository = new ArticlesRepository;
-        $articles = $articlesRepository->selectArticlesByUserId ( $user_id, $skip, self::TAKE_DEFAULT );
+        $articles = $articlesRepository->findByUserId ( $user_id, $skip, self::TAKE_DEFAULT );
             
         return Response::json ( $articles );
     }
 
     // 記事投稿機能
     public function setArticleObj() {
-        $submit_text = $_POST ["submit_text"];
+        $submit_text = Input::get('submit_text');
        
         // NGワードチェック
         $ngWordCheck = new NgWordCheck();
@@ -67,16 +68,16 @@ class ArticleController extends BaseController {
 
         // 記事登録処理
         $articlesRepository = new ArticlesRepository();
-        $articlesRepository->insertArticles($submit_text, $user_id);
+        $articlesRepository->insertForSubmit($submit_text, $user_id);
 
         $this->getArticle ();
     }
 
     // いいねボタン押下時
     public function setLikeObj() {
-        $article_id = $_POST ["article_id"];
+        $article_id = Input::get('article_id');
         $user_id = Sentry::getUser()->id;
-        $take = $_POST ["take"];
+        $take = Input::get('take');
 
         // すでに同じ記事およびコメントに対していいねを押していないか検索
         $count_like = DB::table ( 'likes' )->select ( DB::raw ( 'count(*) as like_count' ) )->where ( 'user_id', '=', $user_id )->where ( 'article_id', '=', $article_id )->get ();
@@ -87,13 +88,13 @@ class ArticleController extends BaseController {
         
         if ($count_like [0]->like_count == 0) {
             // いいね未実行の場合、likesテーブルに登録
-            $likesRepository->insertLikes($user_id, $article_id);
+            $likesRepository->insertForArticles($user_id, $article_id);
 
             // articlesテーブルのlike（いいね件数）をインクリメント
             $articlesRepository->incrementLikes($article_id);
         } else {
             // いいね済みの場合、likesテーブルから削除
-            $likesRepository->deleteLikes($user_id, $article_id);
+            $likesRepository->deleteFotArticles($user_id, $article_id);
 
             // articlesテーブルのlike（いいね件数）をデクリメント
             $articlesRepository->decrementLikes($article_id);
@@ -103,7 +104,7 @@ class ArticleController extends BaseController {
 
         // 最新のarticlesを再取得
         $articlesRepository = new ArticlesRepository;
-        $articles = $articlesRepository->selectArticlesByUserId ( $user_id, self::SKIP_DEFAULT, $take );
+        $articles = $articlesRepository->findByUserId ( $user_id, self::SKIP_DEFAULT, $take );
 
         return Response::json ( $articles );
     }
@@ -120,7 +121,7 @@ class ArticleController extends BaseController {
         $submit_text = '';
         
         $friendsRepository = new FriendsRepository;
-        $users = $friendsRepository->selectFriendByUserIdWithSubmitText($user_id,$submit_text);
+        $users = $friendsRepository->findByUserIdWithSubmitText($user_id,$submit_text);
         
         return Response::json ( $users );
     }
@@ -134,10 +135,10 @@ class ArticleController extends BaseController {
         
         // ログインセッションからユーザIDを取得
         $user_id = Sentry::getUser()->id;
-        $submit_text = $_POST ["submit_text"];
+        $submit_text = Input::get('submit_text');
         
         $friendsRepository = new FriendsRepository;
-        $users = $friendsRepository->selectFriendByUserIdWithSubmitText($user_id,$submit_text);
+        $users = $friendsRepository->findByUserIdWithSubmitText($user_id,$submit_text);
         
         return Response::json ( $users );
     }
@@ -149,11 +150,11 @@ class ArticleController extends BaseController {
      */
     public function setFriendRequestObj() {
         $user_id = Sentry::getUser()->id;
-        $friend_id = $_POST ["friend_id"];
+        $friend_id = Input::get('friend_id');
         
         // friendsテーブルに登録
         $friendsRepository = new FriendsRepository;
-        $friendsRepository->insertByUserIdWithFriendId($user_id, $friend_id);
+        $friendsRepository->insertFotRequest($user_id, $friend_id);
     }
     
     /**
@@ -161,7 +162,7 @@ class ArticleController extends BaseController {
      */
     public function cancelRequest() {
         $user_id = Sentry::getUser()->id;
-        $friend_id = $_POST ["friend_id"];
+        $friend_id = Input::get('friend_id');
     
         // 対象のfriendsテーブルを削除
         $friendsRepository = new FriendsRepository;
@@ -173,8 +174,8 @@ class ArticleController extends BaseController {
      */
     public function setCommentObj() {
         $user_id = Sentry::getUser()->id;
-        $submit_text = $_POST ["submit_text"];
-        $article_id = $_POST ["article_id"];
+        $submit_text = Input::get('submit_text');
+        $article_id = Input::get('article_id');
         
         // NGワードチェック
         $ngWordCheck = new NgWordCheck();
@@ -192,8 +193,8 @@ class ArticleController extends BaseController {
      * 記事更新処理
      */
     public function updateArticle() {
-        $article_id = $_POST ["article_id"];
-        $submit_text = $_POST ["submit_text"];
+        $submit_text = Input::get('submit_text');
+        $article_id = Input::get('article_id');
     
         // NGワードチェック
         $ngWordCheck = new NgWordCheck();
@@ -211,7 +212,7 @@ class ArticleController extends BaseController {
      * 記事削除処理
      */
     public function deleteArticle() {
-        $article_id = $_POST ["article_id"];
+        $article_id = Input::get('article_id');
     
         // 対象のarticlesテーブルを削除
         $articlesRepository = new ArticlesRepository;
@@ -226,4 +227,4 @@ class ArticleController extends BaseController {
         return Response::json($article);
     }
 }
-?>
+

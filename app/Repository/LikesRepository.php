@@ -7,7 +7,7 @@ class LikesRepository {
      * @param ユーザID
      * @param 記事ID
      */
-    public function insertLikes($user_id, $article_id) {
+    public function insertForArticles($user_id, $article_id) {
         DB::table ( 'likes' )
             ->insert ( array (
                 'user_id' => $user_id,
@@ -20,7 +20,7 @@ class LikesRepository {
      * @param ユーザID
      * @param 記事ID
      */
-    public function deleteLikes($user_id, $article_id) {
+    public function deleteFotArticles($user_id, $article_id) {
         DB::table ( 'likes' )
             ->where ( 'user_id', '=', $user_id )
             ->where ( 'article_id', '=', $article_id )

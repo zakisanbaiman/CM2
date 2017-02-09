@@ -28,14 +28,14 @@ class ManageController extends BaseController
 
 	public function updateManageObj() {
 		Manage::where('id', '=', Input::get('id'))
-			->update(array(
+			->update([
 				'model_name' => Input::get('model_name'),
 				'maker' => Input::get('maker'),
 				'size' => Input::get('size'),
 				'color' => Input::get('color'),
 				'buy_date' => Input::get('buy_date'),
 				'etc' => Input::get('etc'),
-			));
+			]);
 			
 		// タイムラインに反映
 		$user_id = Sentry::getUser()->id;
@@ -59,7 +59,7 @@ class ManageController extends BaseController
 	}
 
 	public function insertManageObj() {
-		Manage::insert(array());
+		Manage::insert([]);
 	}
 
 	// 画像
@@ -90,9 +90,9 @@ class ManageController extends BaseController
 
 			// DB登録
 			Manage::where('id', '=', Input::get('id'))
-				->update(array(
+				->update([
 					'model_image' => $fileName,
-				));
+				]);
 				
 			echo "";
 		} catch (Exception $e) {

@@ -9,7 +9,7 @@ class ArticlesRepository {
      * @param 取得行数
      * @return 取得結果
      */
-    public function selectArticlesByUserId($user_id, $skip, $take) {
+    public function findByUserId($user_id, $skip, $take) {
         $articles = DB::table ( 'articles' )
             ->select ( 'articles.id', 'articles.user_id', 'articles.article', 'articles.like',
                     'articles.created_at', 'likes.id as likesID', 'users.user_image',
@@ -69,7 +69,7 @@ class ArticlesRepository {
      * @param 記事内容
      * @param ユーザID
      */
-    public function insertArticles($submit_text, $user_id) {
+    public function insertForSubmit($submit_text, $user_id) {
         DB::beginTransaction ();
         $article = new article ();
         $article->article = $submit_text;
@@ -85,7 +85,7 @@ class ArticlesRepository {
         DB::beginTransaction ();
         DB::table('articles')
         ->where('id', $article_id)
-        ->update(array('article' => $submit_text));
+        ->update(['article' => $submit_text]);
         DB::commit ();
     }
     
