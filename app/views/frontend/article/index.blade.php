@@ -20,14 +20,14 @@
 	<article id="fixed" when-scrolled="loadMore()">
         <!-- 記事投稿フォーム -->
 		<form id="submit-form" method="post" class="submit-box"
-			onsubmit="return setArticleObj()" style="display: inline-flex">
+			onsubmit="return setArticleObj()">
 			<table>
 				<tr>
 					<td>
     					<textarea id="submit_text" placeholder='今なにしてる？' class="form-control"
     							rows="2" cols="50" onkeydown="textareaResize(event)" class="display:inline;"/></textarea>
     	        	</td>
-    	        	<td valign="bottom" style="padding-left: 10px;">
+    	        	<td valign="bottom" class="button">
     	        		<button class="btn btn-primary" type="submit" class="display:inline;">投稿</button>
     	        	</td>
     	        </tr>
@@ -54,8 +54,8 @@
     							<textarea id="submit-update@{{ article.id }}" name="submit-update" class="form-control"
                         				rows="2" cols="50">@{{ article.article }}</textarea>
                         	</td>
-                        	<td valign="bottom" style="padding-left: 10px;">
-                                <button name="btn_update" id="btn_update@{{ article.id }}" class="btn btn-primary" type="submit" style="height: 34px;"
+                        	<td valign="bottom" class="button">
+                                <button name="btn_update" id="btn_update@{{ article.id }}" class="btn btn-primary" type="submit"
                                         ng-click="updateArticle(article.id)"
                                         >更新</button>
                             </td>
@@ -72,15 +72,13 @@
 					<button class="btn btn-default"
 						ng-click="openDeleteArticleDialog(article.id)"
 						ng-show="article.my_article">削除</button>
-					
 				</p>
 				<!--コメント入力フォーム-->
-    		    <form id="comment-form" method="post" class="input-group"
-                        style="width:360px; height: 34px; margin:10px 5px;">
+    		    <form id="comment-form" method="post" class="input-group comment">
                     <input type="text" id="submit-comment@{{ article.id }}" name="submit-comment@{{ article.id }}"
                     		class="form-control" placeholder='コメントを入力してください。' />
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit" style="height: 34px;"
+                        <button class="btn btn-default submit_button" type="submit"
                                 ng-click="addComment(article.id)">
                             <i class='glyphicon glyphicon-pencil'></i>
                         </button>

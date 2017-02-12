@@ -18,14 +18,8 @@
 			"app/database/seeds",
 			"app/tests/TestCase.php",
 		  	"app/lib",
-		  	"app/service/NgWordCheck.php",
-		  	"app/Repository/ArticlesRepository.php",
-		  	"app/Repository/CommentsRepository.php",
-		  	"app/Repository/FriendsRepository.php",
-		  	"app/Repository/LikesRepository.php",
-		  	"app/Repository/ManagesRepository.php",
-		  	"app/Repository/UsersRepository.php",
-		  	"app/Repository/UsersGroupsRepository.php"
+		  	"app/service",
+		  	"app/Repository"
 		]
 	},
 	"scripts": {

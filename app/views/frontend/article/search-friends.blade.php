@@ -1,5 +1,6 @@
 <h1></h1>
-@extends('frontend/layouts/default') @section('content')
+@extends('frontend/layouts/default')
+@section('content')
 <body>
 	<main>
 	<div class="col-md-3">
@@ -16,17 +17,16 @@
 	</div>
 
 	<!-- 検索フォーム -->
-	<form id="submit-form" method="post" class="input-group"
-		style="width: 50%; height: 34px;">
+	<form id="submit-form" method="post" class="input-group search">
 		<input id="submit_text" type="text" class="form-control"
 			placeholder='フレンドを検索'> <span class="input-group-btn">
-			<button class="btn btn-default" type="submit" style="height: 34px;">
+			<button class="btn btn-default submit_button" type="submit">
 				<i class='glyphicon glyphicon-search'></i>
 			</button>
 		</span>
 	</form>
 
-	<div style="float: left;" ng-controller="ArticleController">
+	<div class="float_left" ng-controller="ArticleController">
 		<table class="table table-bordered table-striped table-hover">
 			<thead>
 				<tr>
@@ -38,8 +38,7 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="friend in friends">
-					<td><img src="/images/users/@{{ friend.user_image }}"
-						style="width: 50px; height: 50px;"></td>
+					<td><img src="/images/users/@{{ friend.user_image }}" class="user_img"></td>
 					<td>@{{ friend.nickname }}</td>
 					<td>@{{ friend.first_name }} @{{ friend.last_name }}</td>
 					<!--     				<td>@{{ friend.approval_1 }}</td> -->

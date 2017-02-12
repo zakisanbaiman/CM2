@@ -60,7 +60,7 @@ class ArticleController extends BaseController {
         // NGワードチェック
         $ngWordCheck = new NgWordCheck();
         $response = $ngWordCheck->checkNgWords($submit_text);
-        if ($response['status'] == '1') {
+        if ($response['status'] == $ngWordCheck::FAILD_CODE) {
             return $response;
         }
         
@@ -180,7 +180,7 @@ class ArticleController extends BaseController {
         // NGワードチェック
         $ngWordCheck = new NgWordCheck();
         $response = $ngWordCheck->checkNgWords($submit_text);
-        if ($response['status'] == '1') {
+        if ($response['status'] == $ngWordCheck::FAILD_CODE) {
             return $response;
         }
         
@@ -199,7 +199,7 @@ class ArticleController extends BaseController {
         // NGワードチェック
         $ngWordCheck = new NgWordCheck();
         $response = $ngWordCheck->checkNgWords($submit_text);
-        if ($response['status'] == '1') {
+        if ($response['status'] == $ngWordCheck::FAILD_CODE) {
             return $response;
         }
         
