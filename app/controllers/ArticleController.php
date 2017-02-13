@@ -240,4 +240,3 @@ class ArticleController extends BaseController {
         return Response::json($article);
     }
 }
-
