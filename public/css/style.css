@@ -28,7 +28,7 @@ body {
     margin-bottom: 0;
     width: 100%;
 
-    /* フッタの高さ */
+    /* footer's height */
     height: 60px;
 }
 
@@ -276,4 +276,32 @@ input[type=search] {
 
 .setting-table {
 	max-width: 50%;
+}
+
+footer.footer {
+	clear: both;
+}
+
+td.button {
+	padding-left: 10px;
+}
+
+form.comment {
+	width:360px; height: 34px; margin:10px 5px;
+}
+
+.search {
+	width: 50%; height: 34px;
+}
+
+button.submit_button {
+	height: 34px;
+}
+
+div.float_left {
+	float: left;
+}
+
+img.user_img {
+	width: 50px; height: 50px;
 }

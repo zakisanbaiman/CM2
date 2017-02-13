@@ -6,73 +6,85 @@ use Cartalyst\Sentry\Users\Eloquent\User;
 class ManageController extends BaseController
 {
 
+    /**
+     * 構成管理画面に遷移
+     * @return 構成管理画面VIEW
+     */
 	public function getManage() {
-/*
-		$manages = DB::table('manages')->paginate(2);
-
-		return View::make('manage.index')->;
-
-		return View::make('pagination', [
-				'manages' => Manage::paginate(3)
-		]);
-	*/
-		$manages = DB::table('manages')->paginate(3);
-
+		$manages = DB::table('manages');
 		return View::make('manage.index')->with('manages', $manages);
 	}
 
-	// manage list
+    /**
+     * 構成管理一覧画面に遷移
+     * @return 構成管理一覧画面VIEW
+     */
 	public function getManageList() {
 		return View::make('manage.list');
 	}
 
+	/**
+	 * アイテムを取得
+	 * @return 取得結果
+	 */
 	public function getManageObj() {
 		$manage = Manage::all();
 		return Response::json($manage);
 	}
 
+    /**
+     * アイテムを取得
+     * @return 取得結果
+     */
 	public function getManageOneObj() {
 		$manage = Manage::where('id', '=', Input::get('id'))->get();
 		return Response::json($manage);
 	}
 
+	/**
+	 * アイテム更新
+	 */
 	public function updateManageObj() {
 		Manage::where('id', '=', Input::get('id'))
-			->update(array(
+			->update([
 				'model_name' => Input::get('model_name'),
 				'maker' => Input::get('maker'),
 				'size' => Input::get('size'),
 				'color' => Input::get('color'),
 				'buy_date' => Input::get('buy_date'),
 				'etc' => Input::get('etc'),
-			));
+			]);
 			
 		// タイムラインに反映
-		$user_id = Sentry::getUser()->id;
+		$userId = Sentry::getUser()->id;
 		
 		$users = DB::table ( 'users' )
             ->select ( 'users.nickname')
-		    ->where('users.id', '=', $user_id)
+		    ->where('users.id', '=', $userId)
 		    ->get ();
-		$user_nickname = $users[0]->nickname;
+		$userNickname = $users[0]->nickname;
 		
-        DB::beginTransaction ();
-        $article = new article ();
-        $article->article = $user_nickname . 'さんがアイテムを更新しました。';
-        $article->user_id = $user_id;
-        $article->save ();
-        DB::commit ();
+		$articleRepository = new ArticlesRepository();
+		$articleRepository->insertChangeItem($userId, $userNickname);
 	}
 
+	/**
+	 * アイテム削除
+	 */
 	public function deleteManageObj() {
 		Manage::where('id', '=', Input::get('id'))->delete();
 	}
 
+	/**
+	 * アイテム追加
+	 */
 	public function insertManageObj() {
-		Manage::insert(array());
+		Manage::insert([]);
 	}
 
-	// 画像
+	/**
+	 * イメージ画像更新
+	 */
 	public function updateModelImage() {
 
 		try{
@@ -100,9 +112,9 @@ class ManageController extends BaseController
 
 			// DB登録
 			Manage::where('id', '=', Input::get('id'))
-				->update(array(
+				->update([
 					'model_image' => $fileName,
-				));
+				]);
 				
 			echo "";
 		} catch (Exception $e) {
@@ -111,13 +123,11 @@ class ManageController extends BaseController
 
 	}
 
+	/**
+	 * アイテム詳細を表示
+	 * @return アイテム詳細VIEW
+	 */
 	public function getManageDetail() {
 		return View::make('manage.detail');
 	}
-
-	public function getManageDetailObj() {
-		$manage = Manage::where('id', '=', Input::get('id'))->get();
-		return Response::json($manage);
-	}
-
 }

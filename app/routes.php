@@ -188,9 +188,6 @@ Route::group(array('prefix' => 'admin'), function()
 
 // article
 Route::get('/article', 'ArticleController@getArticle');
-Route::get('/article/timeline', 'ArticleController@getTimeline');
-Route::get('/timeline/', 'ArticleController@getTimeLine');
-Route::get('/setting-profile/', 'ArticleController@getSettingProfile');
 Route::get('/search-friends/', 'ArticleController@getSearchFriends');
 
 Route::post('/article/getArticleObj', 'ArticleController@getArticleObj');
@@ -228,11 +225,8 @@ Route::post('/manage/updateManageObj', 'ManageController@updateManageObj');
 Route::post('/manage/deleteManageObj', 'ManageController@deleteManageObj');
 Route::post('/manage/insertManageObj', 'ManageController@insertManageObj');
 Route::post('/manage/updateModelImage', 'ManageController@updateModelImage');
-
 Route::post('/manage/getManageOrderObj', 'ManageController@getManageOrderObj');
-
 Route::get('/manage/detail', 'ManageController@getManageDetail');
-Route::get('/manage/getManageDetailObj', 'ManageController@getManageDetailObj');
 
 /*
 // profile

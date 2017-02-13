@@ -1,12 +1,13 @@
 <h1></h1>
-@extends('frontend/layouts/default') @section('content')
+@extends('frontend/layouts/default')
+@section('content')
 <body>
 	<main>
 	<div class="col-md-3">
 		<div class="panel panel-default">
 			<div class="panel-heading">Menu</div>
 			<ul class="nav nav-pills nav-stacked">
-				<li><a href="/timeline/"><i class="glyphicon glyphicon-list-alt"></i>
+				<li><a href="/article"><i class="glyphicon glyphicon-list-alt"></i>
 						タイムライン</a></li>
 				<li class="active"><a><i class="glyphicon glyphicon-user"></i>
 						フレンド検索</a></li>
@@ -16,17 +17,16 @@
 	</div>
 
 	<!-- 検索フォーム -->
-	<form id="submit-form" method="post" class="input-group"
-		style="width: 50%; height: 34px;">
-		<input id="submit_text" type="text" class="form-control"
+	<form id="submit-form" method="post" class="input-group search">
+		<input id="submitText" type="text" class="form-control"
 			placeholder='フレンドを検索'> <span class="input-group-btn">
-			<button class="btn btn-default" type="submit" style="height: 34px;">
+			<button class="btn btn-default submit_button" type="submit">
 				<i class='glyphicon glyphicon-search'></i>
 			</button>
 		</span>
 	</form>
 
-	<div style="float: left;" ng-controller="ArticleController">
+	<div class="float_left" ng-controller="ArticleController">
 		<table class="table table-bordered table-striped table-hover">
 			<thead>
 				<tr>
@@ -38,12 +38,9 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="friend in friends">
-					<td><img src="/images/users/@{{ friend.user_image }}"
-						style="width: 50px; height: 50px;"></td>
+					<td><img src="/images/users/@{{ friend.user_image }}" class="user_img"></td>
 					<td>@{{ friend.nickname }}</td>
 					<td>@{{ friend.first_name }} @{{ friend.last_name }}</td>
-					<!--     				<td>@{{ friend.approval_1 }}</td> -->
-					<!--     				<td>@{{ friend.approval_2 }}</td> -->
 					<td ng-if="friend.approval_1 == '1' && friend.approval_2 == '1'">
 						<button type="button" class="btn btn-success">
 							<i class="glyphicon glyphicon-ok"></i> フレンド
@@ -69,7 +66,6 @@
 							<i class="glyphicon glyphicon-plus"></i> フレンド申請
 						</button>
 					</td>
-			
 			</tbody>
 		</table>
 	</div>
@@ -95,7 +91,6 @@
         $scope.friends = [];
         getFriendObj = function() {
         	var dataObj = {};
-            dataObj.user_id = '12';
         	$http({
                	method : 'post',
                	url : '/friend/getFriendObj',
@@ -109,14 +104,14 @@
         getFriendObj();
 
         // 検索処理
-        submit_text = '';
+        submitText = '';
         getSearchFriendObj = function() {
             // Ajax処理
             $.ajax({
               url: '/friend/getSearchFriendObj',
               type:'POST',
               data : {
-                  submit_text : submit_text
+                  submitText : submitText
                   },
               success: function(data) {
                       $scope.friends = data;
@@ -128,12 +123,12 @@
         }
 
      	// friendテーブルに追加
-     	addFriend = function(friend_id) {
+     	addFriend = function(friendId) {
             $.ajax({
               url: '/friend/setFriendRequestObj',
               type:'POST',
               data : {
-            	  friend_id : friend_id
+            	  friendId : friendId
                   },
               success: function(data) {
             	  getSearchFriendObj();
@@ -144,12 +139,12 @@
      	}
 
      	// friendsテーブルから削除
-     	deleteFriend = function(friend_id) {
+     	deleteFriend = function(friendId) {
             $.ajax({
               url: '/friend/cancelRequest',
               type:'POST',
               data : {
-            	  friend_id : friend_id
+            	  friendId : friendId
                   },
               success: function(data) {
             	  getSearchFriendObj();
@@ -164,29 +159,29 @@
             // ここでsubmitをキャンセルします。
             event.preventDefault();
 
-            submit_text = $('#submit_text').val();
+            submitText = $('#submitText').val();
 
             getSearchFriendObj();
         });
         
         // 「フレンド申請」押下時
-        $scope.request = function(friend_id){
-        	addFriend(friend_id);
+        $scope.request = function(friendId){
+        	addFriend(friendId);
         };
 
         // 「リクエストを取消」押下時
-        $scope.cancelRequest = function(friend_id){
-        	deleteFriend(friend_id);
+        $scope.cancelRequest = function(friendId){
+        	deleteFriend(friendId);
         };
 
         // 「リクエストを承認」押下時
-        $scope.approvalRequest = function(friend_id){
-        	addFriend(friend_id);
+        $scope.approvalRequest = function(friendId){
+        	addFriend(friendId);
         };
 
         // 「フレンドを解消」押下時
-        $scope.cancelFriend = function(friend_id){
-        	deleteFriend(friend_id);
+        $scope.cancelFriend = function(friendId){
+        	deleteFriend(friendId);
         };
 	}]);
 
