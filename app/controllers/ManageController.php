@@ -56,20 +56,16 @@ class ManageController extends BaseController
 			]);
 			
 		// タイムラインに反映
-		$user_id = Sentry::getUser()->id;
+		$userId = Sentry::getUser()->id;
 		
 		$users = DB::table ( 'users' )
             ->select ( 'users.nickname')
-		    ->where('users.id', '=', $user_id)
+		    ->where('users.id', '=', $userId)
 		    ->get ();
-		$user_nickname = $users[0]->nickname;
+		$userNickname = $users[0]->nickname;
 		
-        DB::beginTransaction ();
-        $article = new article ();
-        $article->article = $user_nickname . 'さんがアイテムを更新しました。';
-        $article->user_id = $user_id;
-        $article->save ();
-        DB::commit ();
+		$articleRepository = new ArticlesRepository();
+		$articleRepository->insertChangeItem($userId, $userNickname);
 	}
 
 	/**

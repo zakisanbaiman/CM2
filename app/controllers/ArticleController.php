@@ -31,24 +31,13 @@ class ArticleController extends BaseController {
      * @return 取得結果
      */
     public function getArticleObj() {
-        $user_id = Sentry::getUser()->id;
+        $userId = Sentry::getUser()->id;
 
         // articlesを取得
         $articlesRepository = new ArticlesRepository();
-        $articles = $articlesRepository->findByUserId ( $user_id, self::SKIP_DEFAULT, self::TAKE_DEFAULT );
+        $articles = $articlesRepository->findByUserId ( $userId, self::SKIP_DEFAULT, self::TAKE_DEFAULT );
 
         return Response::json ( $articles );
-    }
-
-    /**
-     * いいね件数取得
-     * @param String $article_id
-     */
-    public function getCountLikes($article_id) {
-        $likesRepository = new LikesRepository();
-        $like_count = $likesRepository->countLikes($user_id, $article_id);
-
-        return Response::json ( $like_count );
     }
 
     /**
@@ -57,11 +46,11 @@ class ArticleController extends BaseController {
      */
     public function getArticleAppendObj() {
         $skip = Input::get('skip');
-        $user_id = Sentry::getUser()->id;
+        $userId = Sentry::getUser()->id;
 
         // ページに追加するarticlesを取得
         $articlesRepository = new ArticlesRepository;
-        $articles = $articlesRepository->findByUserId ( $user_id, $skip, self::TAKE_DEFAULT );
+        $articles = $articlesRepository->findByUserId ( $userId, $skip, self::TAKE_DEFAULT );
             
         return Response::json ( $articles );
     }
@@ -71,20 +60,20 @@ class ArticleController extends BaseController {
      * @return 実行結果
      */
     public function setArticleObj() {
-        $submit_text = Input::get('submit_text');
+        $submitText = Input::get('submitText');
        
         // NGワードチェック
         $ngWordCheck = new NgWordCheck();
-        $response = $ngWordCheck->checkNgWords($submit_text);
+        $response = $ngWordCheck->checkNgWords($submitText);
         if ($response['status'] == $ngWordCheck::FAILD_CODE) {
             return $response;
         }
         
-        $user_id = Sentry::getUser()->id;
+        $userId = Sentry::getUser()->id;
 
         // 記事登録処理
         $articlesRepository = new ArticlesRepository();
-        $articlesRepository->insertForSubmit($submit_text, $user_id);
+        $articlesRepository->insertForSubmit($submitText, $userId);
 
         $this->getArticle ();
         
@@ -96,36 +85,36 @@ class ArticleController extends BaseController {
      * @return 記事
      */
     public function setLikeObj() {
-        $article_id = Input::get('article_id');
-        $user_id = Sentry::getUser()->id;
+        $articleId = Input::get('articleId');
+        $userId = Sentry::getUser()->id;
         $take = Input::get('take');
 
         // すでに同じ記事およびコメントに対していいねを押していないか検索
-        $count_like = DB::table ( 'likes' )->select ( DB::raw ( 'count(*) as like_count' ) )->where ( 'user_id', '=', $user_id )->where ( 'article_id', '=', $article_id )->get ();
+        $likesRepository = new LikesRepository();
+        $countLikes = $likesRepository->countLikes($userId, $articleId);
 
         DB::beginTransaction ();
-        $likesRepository = new LikesRepository();
         $articlesRepository = new ArticlesRepository();
         
-        if ($count_like [0]->like_count == 0) {
+        if ($countLikes [0]->like_count == 0) {
             // いいね未実行の場合、likesテーブルに登録
-            $likesRepository->insertForArticles($user_id, $article_id);
+            $likesRepository->insertForArticles($userId, $articleId);
 
             // articlesテーブルのlike（いいね件数）をインクリメント
-            $articlesRepository->incrementLikes($article_id);
+            $articlesRepository->incrementLikes($articleId);
         } else {
             // いいね済みの場合、likesテーブルから削除
-            $likesRepository->deleteFotArticles($user_id, $article_id);
+            $likesRepository->deleteFotArticles($userId, $articleId);
 
             // articlesテーブルのlike（いいね件数）をデクリメント
-            $articlesRepository->decrementLikes($article_id);
+            $articlesRepository->decrementLikes($articleId);
         }
 
         DB::commit ();
 
         // 最新のarticlesを再取得
         $articlesRepository = new ArticlesRepository;
-        $articles = $articlesRepository->findByUserId ( $user_id, self::SKIP_DEFAULT, $take );
+        $articles = $articlesRepository->findByUserId ( $userId, self::SKIP_DEFAULT, $take );
 
         return Response::json ( $articles );
     }
@@ -137,11 +126,11 @@ class ArticleController extends BaseController {
     public function getFriendObj() {
         
         // ログインセッションからユーザIDを取得
-        $user_id = Sentry::getUser()->id;
-        $submit_text = '';
+        $userId = Sentry::getUser()->id;
+        $submitText = '';
         
         $friendsRepository = new FriendsRepository;
-        $users = $friendsRepository->findByUserIdWithSubmitText($user_id,$submit_text);
+        $users = $friendsRepository->findByUserIdWithSubmitText($userId,$submitText);
         
         return Response::json ( $users );
     }
@@ -153,11 +142,11 @@ class ArticleController extends BaseController {
     public function getSearchFriendObj() {
         
         // ログインセッションからユーザIDを取得
-        $user_id = Sentry::getUser()->id;
-        $submit_text = Input::get('submit_text');
+        $userId = Sentry::getUser()->id;
+        $submitText = Input::get('submitText');
         
         $friendsRepository = new FriendsRepository;
-        $users = $friendsRepository->findByUserIdWithSubmitText($user_id,$submit_text);
+        $users = $friendsRepository->findByUserIdWithSubmitText($userId,$submitText);
         
         return Response::json ( $users );
     }
@@ -167,24 +156,24 @@ class ArticleController extends BaseController {
      * @return 取得結果
      */
     public function setFriendRequestObj() {
-        $user_id = Sentry::getUser()->id;
-        $friend_id = Input::get('friend_id');
+        $userId = Sentry::getUser()->id;
+        $friendId = Input::get('friendId');
         
         // friendsテーブルに登録
         $friendsRepository = new FriendsRepository;
-        $friendsRepository->insertFotRequest($user_id, $friend_id);
+        $friendsRepository->insertFotRequest($userId, $friendId);
     }
     
     /**
      * リクエスト取消、フレンド解消処理
      */
     public function cancelRequest() {
-        $user_id = Sentry::getUser()->id;
-        $friend_id = Input::get('friend_id');
+        $userId = Sentry::getUser()->id;
+        $friendId = Input::get('friendId');
     
         // 対象のfriendsテーブルを削除
         $friendsRepository = new FriendsRepository;
-        $friendsRepository->deleteByUserIdWithFriendId($user_id, $friend_id);
+        $friendsRepository->deleteByUserIdWithFriendId($userId, $friendId);
     }
     
     /**
@@ -192,20 +181,20 @@ class ArticleController extends BaseController {
      * @return 実行結果
      */
     public function setCommentObj() {
-        $user_id = Sentry::getUser()->id;
-        $submit_text = Input::get('submit_text');
-        $article_id = Input::get('article_id');
+        $userId = Sentry::getUser()->id;
+        $submitText = Input::get('submitText');
+        $articleId = Input::get('articleId');
         
         // NGワードチェック
         $ngWordCheck = new NgWordCheck();
-        $response = $ngWordCheck->checkNgWords($submit_text);
+        $response = $ngWordCheck->checkNgWords($submitText);
         if ($response['status'] == $ngWordCheck::FAILD_CODE) {
             return $response;
         }
         
         // commentsテーブルに登録
         $commentsRepository = new CommentsRepository;
-        $commentsRepository->insertByUserIdWithArticleId($article_id, $submit_text, $user_id);
+        $commentsRepository->insertByUserIdWithArticleId($articleId, $submitText, $userId);
         
         return $response;
     }
@@ -215,19 +204,19 @@ class ArticleController extends BaseController {
      * @return 実行結果
      */
     public function updateArticle() {
-        $submit_text = Input::get('submit_text');
-        $article_id = Input::get('article_id');
+        $submitText = Input::get('submitText');
+        $articleId = Input::get('articleId');
     
         // NGワードチェック
         $ngWordCheck = new NgWordCheck();
-        $response = $ngWordCheck->checkNgWords($submit_text);
+        $response = $ngWordCheck->checkNgWords($submitText);
         if ($response['status'] == $ngWordCheck::FAILD_CODE) {
             return $response;
         }
         
         // 対象のarticlesテーブルを更新
         $articlesRepository = new ArticlesRepository;
-        $articlesRepository->updateArticle($article_id, $submit_text);
+        $articlesRepository->updateArticle($articleId, $submitText);
         
         return $response;
     }
@@ -236,11 +225,11 @@ class ArticleController extends BaseController {
      * 記事削除処理
      */
     public function deleteArticle() {
-        $article_id = Input::get('article_id');
+        $articleId = Input::get('articleId');
     
         // 対象のarticlesテーブルを削除
         $articlesRepository = new ArticlesRepository;
-        $articlesRepository->deleteByKey($article_id);
+        $articlesRepository->deleteByKey($articleId);
     }
     
     /**

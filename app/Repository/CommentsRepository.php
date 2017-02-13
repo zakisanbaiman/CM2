@@ -6,12 +6,12 @@ class CommentsRepository {
      * commentsテーブルに登録
      */
     public function insertByUserIdWithArticleId(
-            $article_id, $submit_text, $user_id) {
+            $articleId, $submitText, $userId) {
         DB::beginTransaction ();
         $comments = new comment();
-        $comments->article_id = $article_id;
-        $comments->comment = $submit_text;
-        $comments->user_id = $user_id;
+        $comments->article_id = $articleId;
+        $comments->comment = $submitText;
+        $comments->user_id = $userId;
         $comments->save();
         DB::commit ();
     }

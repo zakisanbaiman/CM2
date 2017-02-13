@@ -24,7 +24,7 @@
 			<table>
 				<tr>
 					<td>
-    					<textarea id="submit_text" placeholder='今なにしてる？' class="form-control"
+    					<textarea id="submitText" placeholder='今なにしてる？' class="form-control"
     							rows="2" cols="50" onkeydown="textareaResize(event)" class="display:inline;"/></textarea>
     	        	</td>
     	        	<td valign="bottom" class="button">
@@ -50,12 +50,12 @@
 					<table>
         				<tr>
         					<td>
-        						<article id="article_label@{{ article.id }}">@{{ article.article }}</article>
+        						<article id="articleLabel@{{ article.id }}">@{{ article.article }}</article>
     							<textarea id="submit-update@{{ article.id }}" name="submit-update" class="form-control"
                         				rows="2" cols="50">@{{ article.article }}</textarea>
                         	</td>
                         	<td valign="bottom" class="button">
-                                <button name="btn_update" id="btn_update@{{ article.id }}" class="btn btn-primary" type="submit"
+                                <button name="btnUpdate" id="btnUpdate@{{ article.id }}" class="btn btn-primary" type="submit"
                                         ng-click="updateArticle(article.id)"
                                         >更新</button>
                             </td>
@@ -126,7 +126,7 @@
 	// 初期化
 	$("#loading").hide();
 	$("textarea[name=submit-update]").hide();
-	$("button[name=btn_update]").hide();
+	$("button[name=btnUpdate]").hide();
 
     angular.module('myApp', ['ui.bootstrap','ngFileUpload'])
         .config(function() {
@@ -137,6 +137,9 @@
             .controller('ArticleController',
             ['$scope','$modal','$http','$timeout', function($scope,$modal,$http,$timeout) {
 
+            const SUCCESS_CODE = '0';
+            const FAILD_CODE= '1';
+            	
             // 初期表示分の記事を取得
             $scope.articles = [];
             getArticleObj = function() {
@@ -157,18 +160,18 @@
                 // ここでsubmitをキャンセルします。
                 event.preventDefault();
 
-                var submit_text = $('#submit_text').val();
+                var submitText = $('#submitText').val();
 
                 // Ajax処理
                 $.ajax({
                   url: '/article/setArticleObj',
                   type:'POST',
                   data : {
-                      submit_text : submit_text
+                      submitText : submitText
                       },
                   success: function(data) {
-                      if (data['status'] == '0') {
-                          document.getElementById("submit_text").value="";
+                      if (data['status'] == SUCCESS_CODE) {
+                          document.getElementById("submitText").value="";
                           getArticleObj();
                       }else{
                     	  alert(data['message']);
@@ -181,20 +184,20 @@
             });
 
 			// コメント追加
-            $scope.addComment = function(article_id){
+            $scope.addComment = function(articleId){
 
-				var controlId = "#submit-comment" + article_id;
-            	var submit_text = $(controlId).val();
+				var controlId = "#submit-comment" + articleId;
+            	var submitText = $(controlId).val();
 				
                 $.ajax({
                     url: '/article/setCommentObj',
                     type:'POST',
                     data : {
-                      submit_text : submit_text,
-                      article_id : article_id
+                      submitText : submitText,
+                      articleId : articleId
                       },
                     success: function(data) {
-                    	if (data['status'] == '0') {
+                    	if (data['status'] == SUCCESS_CODE) {
                             $(controlId).val("");
                             getArticleObj();
                         }else{
@@ -232,14 +235,14 @@
 			};
 
 			//いいねボタン押下時
-            $scope.setLike = function(article_id){
+            $scope.setLike = function(articleId){
 
              	// Ajax処理
                 $.ajax({
                   url: '/article/setLikeObj',
                   type:'POST',
                   data : {
-                	  article_id : article_id,
+                	  articleId : articleId,
                       take : $scope.articles.length
                       },
                   success: function(data) {
@@ -259,29 +262,29 @@
             }
 
 			// 記事を更新
-            $scope.updateArticle = function(article_id){
+            $scope.updateArticle = function(articleId){
 
-            	var article_label = "#article_label" + article_id;
-            	var submit_update = "#submit-update" + article_id;
-            	var btn_update = "#btn_update" + article_id;
-            	var submit_text = $(submit_update).val();
+            	var articleLabel = "#articleLabel" + articleId;
+            	var submitUpdate = "#submit-update" + articleId;
+            	var btnUpdate = "#btnUpdate" + articleId;
+            	var submitText = $(submitUpdate).val();
 				
                 $.ajax({
                 	url: '/article/updateArticle',
                     type:'POST',
                     data : {
-                        submit_text : submit_text,
-                        article_id : article_id
+                        submitText : submitText,
+                        articleId : articleId
                         },
 				    success: function(data) {
-				    	if (data['status'] == '0') {
+				    	if (data['status'] == SUCCESS_CODE) {
                             getArticleObj();
-                            $(article_label).toggle();
-                        	$(submit_update).toggle();
-                        	$(btn_update).toggle();
+                            $(articleLabel).toggle();
+                        	$(submitUpdate).toggle();
+                        	$(btnUpdate).toggle();
                         }else{
                   	        alert(data['message']);
-                  	      	$(submit_update).val() = "";
+                  	      	$(submitUpdate).val() = "";
                         }
                     },
                     error: function(data) {
@@ -291,13 +294,13 @@
             };
             
             // 記事を削除
-            $scope.deleteArticle = function(article_id){
+            $scope.deleteArticle = function(articleId){
             	
                 $.ajax({
                   url: '/article/deleteArticle',
                   type:'POST',
                   data : {
-                	  article_id : article_id,
+                	  articleId : articleId,
                       },
                   success: function(data) {
                 	  getArticleObj();
@@ -308,22 +311,22 @@
             }
 
             // 編集モード切り替え
-            $scope.changeEditMode = function(article_id){
-            	var article_label = "#article_label" + article_id;
-            	var submit_update = "#submit-update" + article_id;
-            	var btn_update = "#btn_update" + article_id;
+            $scope.changeEditMode = function(articleId){
+            	var articleLabel = "#articleLabel" + articleId;
+            	var submitUpdate = "#submit-update" + articleId;
+            	var btnUpdate = "#btnUpdate" + articleId;
             	
-            	$(article_label).toggle();
-            	$(submit_update).toggle();
-            	$(btn_update).toggle();
+            	$(articleLabel).toggle();
+            	$(submitUpdate).toggle();
+            	$(btnUpdate).toggle();
             }
 
             $scope.animationsEnabled = true;
             
             // 削除ダイアログ表示
-            $scope.openDeleteArticleDialog = function (article_id) {
+            $scope.openDeleteArticleDialog = function (articleId) {
                 var dataObj = {};
-                dataObj.id = article_id;
+                dataObj.id = articleId;
                     var modalInstance = $modal.open({
                         animation: $scope.animationsEnabled,
                         templateUrl: 'deleteArticleModal.html',
@@ -373,7 +376,7 @@
                 url: '/article/deleteArticle',
                 type:'POST',
                 data : {
-              	  article_id : article.id,
+              	  articleId : article.id,
                     },
                 success: function(data) {
               	  getArticleObj();

@@ -5,42 +5,42 @@ class LikesRepository
 
     /**
      * likes登録
-     * @param string $user_id ユーザID
-     * @param string $article_id 記事ID
+     * @param string $userId ユーザID
+     * @param string $articleId 記事ID
      */
-    public function insertForArticles($user_id, $article_id)
+    public function insertForArticles($userId, $articleId)
     {
         DB::table('likes')->insert(array(
-            'user_id' => $user_id,
-            'article_id' => $article_id
+            'user_id' => $userId,
+            'article_id' => $articleId
         ));
     }
 
     /**
      * likes削除
-     * @param string $user_id ユーザID
-     * @param string $article_id 記事ID
+     * @param string $userId ユーザID
+     * @param string $articleId 記事ID
      */
-    public function deleteFotArticles($user_id, $article_id)
+    public function deleteFotArticles($userId, $articleId)
     {
-        DB::table('likes')->where('user_id', '=', $user_id)
-            ->where('article_id', '=', $article_id)
+        DB::table('likes')->where('user_id', '=', $userId)
+            ->where('article_id', '=', $articleId)
             ->delete();
     }
 
     /**
      * likes件数カウント
-     * @param string $user_id ユーザID
-     * @param string $article_id 記事ID
+     * @param string $userId ユーザID
+     * @param string $articleId 記事ID
      * @return いいね件数
      */
     
-    public function countLikes($user_id, $article_id)
+    public function countLikes($userId, $articleId)
     {
-        return DB::table('like')
+        return DB::table('likes')
             ->select(DB::raw('count(*) as like_count'))
-            ->where('article_id', '=', $article_id)
-            ->groupBy('like_count')
+            ->where('user_id', '=', $userId)
+            ->where('article_id', '=', $articleId)
             ->get();
     }
 }

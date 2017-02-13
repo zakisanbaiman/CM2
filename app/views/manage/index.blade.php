@@ -89,10 +89,14 @@
             controller('ManageController',
             ['$scope','$modal','$http','$timeout', function($scope,$modal,$http,$timeout) {
 
+            const pagingBegin = 0;
+			const quantityPerPage = 5;
+			const firstPageNumber = 1;
+            	
             $scope.paging = {
-                                 num: 5,
-                                 begin: 0,
-                                 currentPage: 1
+                                 num: quantityPerPage,
+                                 begin: pagingBegin,
+                                 currentPage: firstPageNumber
                             }
 
             getManageObj = function() {
@@ -176,9 +180,9 @@
             $scope.animationsEnabled = true;
 
             // dialog更新
-            $scope.openUpdateManageDialog = function (manage_id) {
+            $scope.openUpdateManageDialog = function (manageId) {
                 var dataObj = {};
-                dataObj.id = manage_id;
+                dataObj.id = manageId;
                 $http({
                     method : 'get',
                     url : '/manage/getManageOneObj',
@@ -198,9 +202,9 @@
                 });
             };
 
-            $scope.openDeleteManageDialog = function (manage_id) {
+            $scope.openDeleteManageDialog = function (manageId) {
                 var dataObj = {};
-                dataObj.id = manage_id;
+                dataObj.id = manageId;
                     var modalInstance = $modal.open({
                         animation: $scope.animationsEnabled,
                         templateUrl: 'deleteManageModal.html',
