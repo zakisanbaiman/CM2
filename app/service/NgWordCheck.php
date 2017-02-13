@@ -18,6 +18,8 @@ class NgWordCheck {
             $errors['status'] = self::FAILD_CODE;
             $errors['message'] = '不適切な表現が含まれています。';
             return $errors;
+        }else{
+            $errors['status'] = self::SUCCESS_CODE;
         }
         return $errors;
     }

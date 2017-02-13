@@ -7,7 +7,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Menu</div>
 			<ul class="nav nav-pills nav-stacked">
-				<li><a href="/timeline/"><i class="glyphicon glyphicon-list-alt"></i>
+				<li><a href="/article"><i class="glyphicon glyphicon-list-alt"></i>
 						タイムライン</a></li>
 				<li class="active"><a><i class="glyphicon glyphicon-user"></i>
 						フレンド検索</a></li>

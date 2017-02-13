@@ -10,20 +10,26 @@ class ArticleController extends BaseController {
     /** 取得行数 */
     const TAKE_DEFAULT = 10;
     
+    /**
+     * 記事一覧画面に遷移
+     * @return 記事画面VIEW
+     */
     public function getArticle() {
         return View::make ( 'frontend.article.index' );
     }
-    public function getTimeLine() {
-        return View::make ( 'frontend.article.index' );
-    }
-    public function getSettingProfile() {
-        return View::make ( 'frontend.article.setting-profile' );
-    }
+
+    /**
+     * フレンド検索画面に遷移
+     * @return フレンド検索画面VIEW
+     */
     public function getSearchFriends() {
         return View::make ( 'frontend.article.search-friends' );
     }
 
-    // 初期表示分の記事を取得
+    /**
+     * 初期表示分の記事を取得
+     * @return 取得結果
+     */
     public function getArticleObj() {
         $user_id = Sentry::getUser()->id;
 
@@ -34,14 +40,21 @@ class ArticleController extends BaseController {
         return Response::json ( $articles );
     }
 
-    // いいね件数取得
+    /**
+     * いいね件数取得
+     * @param String $article_id
+     */
     public function getCountLikes($article_id) {
-        $like_count = DB::table ( 'like' )->select ( DB::raw ( 'count(*) as like_count' ) )->where ( 'article_id', '=', $article_id )->groupBy ( 'like_count' )->get ();
+        $likesRepository = new LikesRepository();
+        $like_count = $likesRepository->countLikes($user_id, $article_id);
 
         return Response::json ( $like_count );
     }
 
-    // 無限スクロール　リスト追加用
+    /**
+     * 無限スクロール　リスト追加用
+     * @return スクロール分の記事
+     */
     public function getArticleAppendObj() {
         $skip = Input::get('skip');
         $user_id = Sentry::getUser()->id;
@@ -53,7 +66,10 @@ class ArticleController extends BaseController {
         return Response::json ( $articles );
     }
 
-    // 記事投稿機能
+    /**
+     * 記事投稿機能
+     * @return 実行結果
+     */
     public function setArticleObj() {
         $submit_text = Input::get('submit_text');
        
@@ -71,9 +87,14 @@ class ArticleController extends BaseController {
         $articlesRepository->insertForSubmit($submit_text, $user_id);
 
         $this->getArticle ();
+        
+        return $response;
     }
 
-    // いいねボタン押下時
+    /**
+     * いいねボタン押下時
+     * @return 記事
+     */
     public function setLikeObj() {
         $article_id = Input::get('article_id');
         $user_id = Sentry::getUser()->id;
@@ -111,7 +132,6 @@ class ArticleController extends BaseController {
     
     /**
      * 初期表示時フレンド取得用SQL
-     *
      * @return 取得結果
      */
     public function getFriendObj() {
@@ -128,7 +148,6 @@ class ArticleController extends BaseController {
     
     /**
      * 検索時フレンド取得用SQL
-     *
      * @return 取得結果
      */
     public function getSearchFriendObj() {
@@ -145,7 +164,6 @@ class ArticleController extends BaseController {
         
     /**
      * フレンド申請、リクエスト承認処理
-     *
      * @return 取得結果
      */
     public function setFriendRequestObj() {
@@ -171,6 +189,7 @@ class ArticleController extends BaseController {
     
     /**
      * コメント追加処理
+     * @return 実行結果
      */
     public function setCommentObj() {
         $user_id = Sentry::getUser()->id;
@@ -187,10 +206,13 @@ class ArticleController extends BaseController {
         // commentsテーブルに登録
         $commentsRepository = new CommentsRepository;
         $commentsRepository->insertByUserIdWithArticleId($article_id, $submit_text, $user_id);
+        
+        return $response;
     }
     
     /**
      * 記事更新処理
+     * @return 実行結果
      */
     public function updateArticle() {
         $submit_text = Input::get('submit_text');
@@ -206,6 +228,8 @@ class ArticleController extends BaseController {
         // 対象のarticlesテーブルを更新
         $articlesRepository = new ArticlesRepository;
         $articlesRepository->updateArticle($article_id, $submit_text);
+        
+        return $response;
     }
     
     /**

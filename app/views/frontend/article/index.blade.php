@@ -167,7 +167,7 @@
                       submit_text : submit_text
                       },
                   success: function(data) {
-                      if (data['status'] != '1') {
+                      if (data['status'] == '0') {
                           document.getElementById("submit_text").value="";
                           getArticleObj();
                       }else{
@@ -194,7 +194,7 @@
                       article_id : article_id
                       },
                     success: function(data) {
-                        if (data['status'] != '1') {
+                    	if (data['status'] == '0') {
                             $(controlId).val("");
                             getArticleObj();
                         }else{
@@ -274,7 +274,7 @@
                         article_id : article_id
                         },
 				    success: function(data) {
-                        if (data['status'] != '1') {
+				    	if (data['status'] == '0') {
                             getArticleObj();
                             $(article_label).toggle();
                         	$(submit_update).toggle();

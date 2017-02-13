@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
         
         /**
          * improper_words
@@ -14,5 +14,5 @@ return array(
                 '基地外','糞','死ね','殺す',
                 'shit','piss','fuck','cunt','cocksucker','motherfucker','tits',
         ]
-);
+];
 ?>
