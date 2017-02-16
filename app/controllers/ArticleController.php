@@ -222,14 +222,47 @@ class ArticleController extends BaseController {
     }
     
     /**
+     * コメント更新処理
+     * @return 実行結果
+     */
+    public function updateComment() {
+        $submitText = Input::get('submitText');
+        $commentId = Input::get('commentId');
+    
+        // NGワードチェック
+        $ngWordCheck = new NgWordCheck();
+        $response = $ngWordCheck->checkNgWords($submitText);
+        if ($response['status'] == $ngWordCheck::FAILD_CODE) {
+            return $response;
+        }
+    
+        // 対象のcommentsテーブルを更新
+        $commentsRepository = new CommentsRepository();
+        $commentsRepository->updateComment($commentId, $submitText);
+    
+        return $response;
+    }
+    
+    /**
      * 記事削除処理
      */
     public function deleteArticle() {
-        $articleId = Input::get('articleId');
+        $articleId = Input::get('id');
     
         // 対象のarticlesテーブルを削除
         $articlesRepository = new ArticlesRepository;
         $articlesRepository->deleteByKey($articleId);
+    }
+    
+    /**
+     * コメント削除処理
+     */
+    public function deleteComment() {
+        $commentId = Input::get('id');
+    
+        // 対象のcommentsテーブルを削除
+        $commentsRepository = new CommentsRepository;
+        $commentsRepository->deleteByKey($commentId);
     }
     
     /**
@@ -240,3 +273,4 @@ class ArticleController extends BaseController {
         return Response::json($article);
     }
 }
+

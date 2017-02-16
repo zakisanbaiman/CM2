@@ -27,7 +27,7 @@
     					<textarea id="submitText" placeholder='今なにしてる？' class="form-control"
     							rows="2" cols="50" onkeydown="textareaResize(event)" class="display:inline;"/></textarea>
     	        	</td>
-    	        	<td valign="bottom" class="button">
+    	        	<td valign="top" class="td_button">
     	        		<button class="btn btn-primary" type="submit" class="display:inline;">投稿</button>
     	        	</td>
     	        </tr>
@@ -51,13 +51,13 @@
         				<tr>
         					<td>
         						<article id="articleLabel@{{ article.id }}">@{{ article.article }}</article>
-    							<textarea id="submit-update@{{ article.id }}" name="submit-update" class="form-control"
+    							<textarea id="articleText@{{ article.id }}" name="articleText" class="form-control"
                         				rows="2" cols="50">@{{ article.article }}</textarea>
                         	</td>
-                        	<td valign="bottom" class="button">
-                                <button name="btnUpdate" id="btnUpdate@{{ article.id }}" class="btn btn-primary" type="submit"
+                        	<td valign="top" class="td_button">
+                                <button name="btnUpdateArticle" id="btnUpdateArticle@{{ article.id }}" class="btn btn-primary" type="submit"
                                         ng-click="updateArticle(article.id)"
-                                        >更新</button>
+                                        >投稿</button>
                             </td>
             	        </tr>
         			</table>
@@ -66,11 +66,11 @@
 					<button id="btn_like" class="btn btn-default"
 						ng-click="setLike(article.id)" ng-class="(isLiked(article))">いいね！(@{{ article.like }})</button>
 					<button class="btn btn-default"
-						ng-click="changeEditMode(article.id)"
+						ng-click="changeEditMode(article.id, '0')"
 						ng-show="article.my_article">更新
 					</button>
 					<button class="btn btn-default"
-						ng-click="openDeleteArticleDialog(article.id)"
+						ng-click="openDeleteDialog(article.id, '0')"
 						ng-show="article.my_article">削除</button>
 				</p>
 				<!--コメント入力フォーム-->
@@ -93,9 +93,30 @@
 								<img src="/images/users/@{{ comment.user_image }}" alt=""
 									class="commenter-img">
 							</p>
-							<p class="box-p">@{{ comment.nickname }}</p>
+							<p class="comment-text">@{{ comment.nickname }}</p>
 						</div>
-						<p class="comment-text">@{{ comment.comment }}</p>
+						<table>
+            				<tr>
+            					<td>
+            						<article id="commentLabel@{{ comment.id }}">@{{ comment.comment }}</article>
+        							<textarea id="commentText@{{ comment.id }}" name="commentText" class="form-control"
+                            				rows="1" cols="45">@{{ comment.comment }}</textarea>
+                            	</td>
+                            	<td valign="top" class="td_button">
+                                    <button name="btnUpdateComment" id="btnUpdateComment@{{ comment.id }}" class="btn btn-primary" type="submit"
+                                            ng-click="updateComment(comment.id)"
+                                            >投稿</button>
+                                </td>
+                	        </tr>
+            			</table>
+            			<p class="box-p">
+                            <button class="btn btn-default"
+        						ng-click="changeEditMode(comment.id, '1')"
+        						ng-show="comment.my_comment">更新</button>
+        					<button class="btn btn-default"
+        						ng-click="openDeleteDialog(comment.id, '1')"
+        						ng-show="comment.my_comment">削除</button>
+        				</p>
 					</div>
 				</div>
 			</li>
@@ -106,14 +127,14 @@
 	</article>
 	</main>
 	
-	    <!-- 削除ダイアログ -->
-    <div ng-controller="DeleteArticleModalController">
-        <script type="text/ng-template" id="deleteArticleModal.html">
+	<!-- 削除ダイアログ -->
+    <div ng-controller="DeleteModalController">
+        <script type="text/ng-template" id="deleteModal.html">
             <div class="manageModalBox">
                 <p>本当に削除しますか？</p>
-                <div class="articleModalBoxFooter">
-                    <a class="btn btn-default" ng-click="deleteArticleModalOk()">Ok</a>
-                    <a class="btn btn-default" ng-click="deleteArticleModalCancel()">Cancel</a>
+                <div class="manageModalBoxFooter">
+                    <a class="btn btn-default" ng-click="deleteModalOk()">Ok</a>
+                    <a class="btn btn-default" ng-click="deleteModalCancel()">Cancel</a>
                 </div>
             </div>
         </script>
@@ -123,11 +144,16 @@
 <script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 <script>
+	const IS_ARTICLE = '0';
+	const IS_COMMENT = '1';
+
 	// 初期化
 	$("#loading").hide();
-	$("textarea[name=submit-update]").hide();
-	$("button[name=btnUpdate]").hide();
-
+	$("button[name=btnUpdateArticle]").hide();
+	$("button[name=btnUpdateComment]").hide();
+	$("textarea[name=articleText]").hide();
+	$("textarea[name=commentText]").hide();
+	
     angular.module('myApp', ['ui.bootstrap','ngFileUpload'])
         .config(function() {
             //...
@@ -138,7 +164,7 @@
             ['$scope','$modal','$http','$timeout', function($scope,$modal,$http,$timeout) {
 
             const SUCCESS_CODE = '0';
-            const FAILD_CODE= '1';
+            const FAILD_CODE = '1';
             	
             // 初期表示分の記事を取得
             $scope.articles = [];
@@ -265,8 +291,8 @@
             $scope.updateArticle = function(articleId){
 
             	var articleLabel = "#articleLabel" + articleId;
-            	var submitUpdate = "#submit-update" + articleId;
-            	var btnUpdate = "#btnUpdate" + articleId;
+            	var submitUpdate = "#articleText" + articleId;
+            	var btnUpdate = "#btnUpdateArticle" + articleId;
             	var submitText = $(submitUpdate).val();
 				
                 $.ajax({
@@ -292,47 +318,72 @@
                     }
                 });
             };
-            
-            // 記事を削除
-            $scope.deleteArticle = function(articleId){
-            	
-                $.ajax({
-                  url: '/article/deleteArticle',
-                  type:'POST',
-                  data : {
-                	  articleId : articleId,
-                      },
-                  success: function(data) {
-                	  getArticleObj();
-				  },
-                  error: function(XMLHttpRequest, textStatus, errorThrown) {
-                  }
-            	});
-            }
 
+			// コメントを更新
+            $scope.updateComment = function(commentId){
+
+            	var label = "#commentLabel" + commentId;
+            	var text = "#commentText" + commentId;
+            	var btnUpdate = "#btnUpdateComment" + commentId;
+            	var submitText = $(text).val();
+				
+                $.ajax({
+                	url: '/article/updateComment',
+                    type:'POST',
+                    data : {
+                        submitText : submitText,
+                        commentId : commentId
+                        },
+				    success: function(data) {
+				    	if (data['status'] == SUCCESS_CODE) {
+                            getArticleObj();
+                            $(label).toggle();
+                        	$(text).toggle();
+                        	$(btnUpdate).toggle();
+                        }else{
+                  	        alert(data['message']);
+                  	      	$(text).val() = "";
+                        }
+                    },
+                    error: function(data) {
+                        alert(data);
+                    }
+                });
+            };
+            
             // 編集モード切り替え
-            $scope.changeEditMode = function(articleId){
-            	var articleLabel = "#articleLabel" + articleId;
-            	var submitUpdate = "#submit-update" + articleId;
-            	var btnUpdate = "#btnUpdate" + articleId;
+            $scope.changeEditMode = function(id, type){
+
+            	if (type == IS_ARTICLE) {
+                	// 記事の更新ボタン押下時
+                	var label = "#articleLabel" + id;
+                	var text = "#articleText" + id;
+                	var btnUpdate = "#btnUpdateArticle" + id;
+            	}else{
+                	// コメントの更新ボタン押下時
+            		var label = "#commentLabel" + id;
+                	var text = "#commentText" + id;
+                	var btnUpdate = "#btnUpdateComment" + id;
+            	}
             	
-            	$(articleLabel).toggle();
-            	$(submitUpdate).toggle();
+            	$(label).toggle();
+            	$(text).toggle();
             	$(btnUpdate).toggle();
             }
 
             $scope.animationsEnabled = true;
             
             // 削除ダイアログ表示
-            $scope.openDeleteArticleDialog = function (articleId) {
+            $scope.openDeleteDialog = function (id, type) {
                 var dataObj = {};
-                dataObj.id = articleId;
+                dataObj.id = id;
+                dataObj.type = type;
                     var modalInstance = $modal.open({
                         animation: $scope.animationsEnabled,
-                        templateUrl: 'deleteArticleModal.html',
-                        controller: 'DeleteArticleModalController',
+                        templateUrl: 'deleteModal.html',
+                        controller: 'DeleteModalController',
                         resolve: {
-                            article: function () {
+                        	rec: function () {
                                 return dataObj;
                             }
                         }
@@ -365,18 +416,25 @@
 
 	// 削除用ディレクティブ
     angular.module('myApp').
-		    controller('DeleteArticleModalController', function ($scope, $modalInstance, $http, article) {
+		    controller('DeleteModalController', function ($scope, $modalInstance, $http, rec) {
 
-        $scope.article = article;
+        $scope.rec = rec;
     
         // OKボタン押下時
-        $scope.deleteArticleModalOk = function () {
-        	var testlogic = '36';
+        $scope.deleteModalOk = function () {
+
+        	wUrl = '';
+			if (rec.type == IS_ARTICLE) {
+				wUrl = '/article/deleteArticle';
+        	}else{
+        		wUrl = '/article/deleteComment';
+        	}
+        	
             $.ajax({
-                url: '/article/deleteArticle',
+                url: wUrl,
                 type:'POST',
                 data : {
-              	  articleId : article.id,
+              	  id : rec.id,
                     },
                 success: function(data) {
               	  getArticleObj();
@@ -388,7 +446,7 @@
         };
     
         // Cancelボタン押下時
-        $scope.deleteArticleModalCancel = function () {
+        $scope.deleteModalCancel = function () {
             $modalInstance.dismiss('cancel');
         };
     });
