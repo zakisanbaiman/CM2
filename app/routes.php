@@ -208,6 +208,8 @@ Route::post('/friend/approvalRequest', 'ArticleController@approvalRequest');
 Route::post('/article/setCommentObj', 'ArticleController@setCommentObj');
 Route::post('/article/updateArticle', 'ArticleController@updateArticle');
 Route::post('/article/deleteArticle', 'ArticleController@deleteArticle');
+Route::post('/article/updateComment', 'ArticleController@updateComment');
+Route::post('/article/deleteComment', 'ArticleController@deleteComment');
 
 // manage
 Route::get('/manage', 'ManageController@getManage');

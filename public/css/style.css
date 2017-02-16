@@ -282,8 +282,8 @@ footer.footer {
 	clear: both;
 }
 
-td.button {
-	padding-left: 10px;
+td.td_button {
+	padding: 5px 5px;
 }
 
 form.comment {

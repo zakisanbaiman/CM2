@@ -4,9 +4,9 @@ class ArticlesRepository {
 
     /**
      * articles取得用
-     * @param ユーザID
-     * @param 取得開始行
-     * @param 取得行数
+     * @param int $userId ユーザID
+     * @param int $skip 取得開始行
+     * @param int $take 取得行数
      * @return 取得結果
      */
     public function findByUserId($userId, $skip, $take) {
@@ -48,14 +48,24 @@ class ArticlesRepository {
         for($i = 0; $i < $countArticles; $i ++) {
 
             // コメントを取得
-            $comments = DB::table ( 'comments' )->select ( '*' )->leftjoin ( 'users', 'comments.user_id', '=', 'users.id' )->where ( 'comments.article_id', '=', $articles [$i]->id )->get ();
+            $comments = DB::table ( 'comments' )
+                ->select ( 'comments.*', 'users.nickname', 'users.user_image' )
+                ->leftjoin ( 'users', 'comments.user_id', '=', 'users.id' )
+                ->where ( 'comments.article_id', '=', $articles [$i]->id )
+                ->get ();
 
             $countComments = count ( $comments );
-            $articles [$i]->commentArray = array ();
+            $articles [$i]->commentArray = [];
 
             // コメントを追加
             for($k = 0; $k < $countComments; $k ++) {
                 if ($articles [$i]->id == $comments [$k]->article_id) {
+                    
+                    $comments[$k]->my_comment = false;
+                    if ($comments[$k]->user_id == $userId) {
+                        $comments[$k]->my_comment = true;
+                    }
+                    
                     array_push ( $articles [$i]->commentArray, $comments [$k] );
                 }
             }
@@ -65,9 +75,8 @@ class ArticlesRepository {
     
     /**
      * articles登録用
-     * @param ユーザID
-     * @param 記事内容
-     * @param ユーザID
+     * @param string $submitText 記事内容
+     * @param int $userId ユーザID
      */
     public function insertForSubmit($submitText, $userId) {
         DB::beginTransaction ();
@@ -80,6 +89,8 @@ class ArticlesRepository {
     
     /**
      * articles更新用
+     * @param int $articleId 記事ID
+     * @param int $submitText 記事内容
      */
     public function updateArticle( $articleId, $submitText) {
         DB::beginTransaction ();
@@ -91,6 +102,7 @@ class ArticlesRepository {
     
     /**
      * articles削除用
+     * @param int $articleId 記事ID
      */
     public function deleteByKey( $articleId) {
         DB::beginTransaction ();
@@ -102,7 +114,7 @@ class ArticlesRepository {
     
     /**
      * いいねをインクリメント
-     * @param 記事ID
+     * @param int $articleId 記事ID
      */
     public function incrementLikes($articleId) {
         DB::table ( 'articles' )
@@ -112,7 +124,7 @@ class ArticlesRepository {
     
     /**
      * いいねをデクリメント
-     * @param 記事ID
+     * @param int $articleId 記事ID
      */
     public function decrementLikes($articleId) {
         DB::table ( 'articles' )
