@@ -188,9 +188,7 @@ Route::group(array('prefix' => 'admin'), function()
 
 // article
 Route::get('/article', 'ArticleController@getArticle');
-Route::get('/article/timeline', 'ArticleController@getTimeline');
-Route::get('/timeline/', 'ArticleController@getTimeLine');
-Route::get('/setting-profile/', 'ArticleController@getSettingProfile');
+Route::get('/search-friends/', 'ArticleController@getSearchFriends');
 
 Route::post('/article/getArticleObj', 'ArticleController@getArticleObj');
 Route::post('/article/updateArticleObj', 'ArticleController@updateArticleObj');
@@ -202,6 +200,16 @@ Route::post('/article/loadmore', 'ArticleController@loadmore');
 Route::post('/article/getArticleAppendObj', 'ArticleController@getArticleAppendObj');
 Route::post('/article/setLikeObj', 'ArticleController@setLikeObj');
 Route::post('/article/getCommentObj', 'ArticleController@getCommentObj');
+Route::post('/friend/getFriendObj', 'ArticleController@getFriendObj');
+Route::post('/friend/getSearchFriendObj', 'ArticleController@getSearchFriendObj');
+Route::post('/friend/setFriendRequestObj', 'ArticleController@setFriendRequestObj');
+Route::post('/friend/cancelRequest', 'ArticleController@cancelRequest');
+Route::post('/friend/approvalRequest', 'ArticleController@approvalRequest');
+Route::post('/article/setCommentObj', 'ArticleController@setCommentObj');
+Route::post('/article/updateArticle', 'ArticleController@updateArticle');
+Route::post('/article/deleteArticle', 'ArticleController@deleteArticle');
+Route::post('/article/updateComment', 'ArticleController@updateComment');
+Route::post('/article/deleteComment', 'ArticleController@deleteComment');
 
 // manage
 Route::get('/manage', 'ManageController@getManage');
@@ -219,11 +227,8 @@ Route::post('/manage/updateManageObj', 'ManageController@updateManageObj');
 Route::post('/manage/deleteManageObj', 'ManageController@deleteManageObj');
 Route::post('/manage/insertManageObj', 'ManageController@insertManageObj');
 Route::post('/manage/updateModelImage', 'ManageController@updateModelImage');
-
 Route::post('/manage/getManageOrderObj', 'ManageController@getManageOrderObj');
-
 Route::get('/manage/detail', 'ManageController@getManageDetail');
-Route::get('/manage/getManageDetailObj', 'ManageController@getManageDetailObj');
 
 /*
 // profile
