@@ -42,6 +42,8 @@ if {
 
 //
 
+関数なんかにコメントをつけたい場合は、/* エンターを押して保管されるヘッダーを利用する（その際のみ/*のコメントは許可する)
+
 9.新しいファイルの追加
 
 長いSQLはRepositoryに記述
@@ -58,6 +60,30 @@ if {
 12.$_POSTを使わない
 
 laravelのInput::get('ポスト値')とかを使う
+
+13.Repository
+
+検索
+
+findNameByUserIdWithMemberIdAndGroupId(find + select文(複数の場合は何も入れない) + 検索文字(2つの場合はWith、3つ以上の場合はAndで続ける)）
+
+更新
+
+updateByUserId(update + あとは検索と一緒)
+
+削除
+
+deleteByUserId(delete + ソフトDELETEの場合では、deleteByを使う)
+
+挿入
+
+insertByUserId(insert + あとは検索と一緒)
+
+14.クラス
+
+Repository(SQL文をここに書く）
+
+Service(ビジネスロジックなんかをControllerから切り出したい場合とか、ライブラリっぽいのとかはServiceに記述する（ここは曖昧でいいっぽい）
 
 js
 
