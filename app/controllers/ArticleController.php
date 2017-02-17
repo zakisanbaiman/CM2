@@ -165,10 +165,10 @@ class ArticleController extends BaseController {
         
         // リクエスト元情報取得
         $usersRepository = new UsersRepository;
-        $userFrom = $usersRepository->findByKey($userId);
+        $userFrom = $usersRepository->findByUserId($userId);
         
         // リクエスト先メールアドレス取得
-        $userTo = $usersRepository->findForEmail($friendId);
+        $userTo = $usersRepository->findEmailByUserId($friendId);
         $email = $userTo[0]->email;
         
         // メール本文に使用するビューに渡されるデータを連想配列で定義する。
@@ -223,10 +223,10 @@ class ArticleController extends BaseController {
     
         // 送信元情報取得
         $usersRepository = new UsersRepository;
-        $userFrom = $usersRepository->findByKey($userId);
+        $userFrom = $usersRepository->findByUserId($userId);
     
         // 送信先メールアドレス取得
-        $userTo = $usersRepository->findForEmail($friendId);
+        $userTo = $usersRepository->findEmailByUserId($friendId);
         $email = $userTo[0]->email;
     
         // メール本文に使用するビューに渡されるデータを連想配列で定義する。

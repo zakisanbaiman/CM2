@@ -4,9 +4,9 @@ class UsersRepository {
 
     /**
      * usersテーブルを検索
-     * @param int $friendId フレンドID
+     * @param int $userId ユーザID
      */
-    public function findByKey($userId) {
+    public function findByUserId($userId) {
     
         $users = DB::table('users')
             ->select('*')
@@ -18,14 +18,14 @@ class UsersRepository {
     
     /**
      * usersテーブルを検索
-     * @param int $friendId フレンドID
+     * @param int $userId ユーザID
      */
-    public function findForEmail($friendId) {
+    public function findEmailByUserId($userId) {
     
         $users = DB::table('users')
-        ->select('email')
-        ->where('users.id', '=', $friendId)
-        ->get();
+            ->select('email')
+            ->where('users.id', '=', $userId)
+            ->get();
     
         return $users;
     }
