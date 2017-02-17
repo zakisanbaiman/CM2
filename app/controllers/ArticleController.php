@@ -152,13 +152,47 @@ class ArticleController extends BaseController {
     }
         
     /**
-     * フレンド申請、リクエスト承認処理
+     * フレンド申請
      * @return 取得結果
      */
-    public function setFriendRequestObj() {
+    public function setRequestFriend() {
         $userId = Sentry::getUser()->id;
         $friendId = Input::get('friendId');
         
+        // friendsテーブルに登録
+        $friendsRepository = new FriendsRepository;
+        $friendsRepository->insertFotRequest($userId, $friendId);
+        
+        // リクエスト元情報取得
+        $usersRepository = new UsersRepository;
+        $userFrom = $usersRepository->findByKey($userId);
+        
+        // リクエスト先メールアドレス取得
+        $userTo = $usersRepository->findForEmail($friendId);
+        $email = $userTo[0]->email;
+        
+        // メール本文に使用するビューに渡されるデータを連想配列で定義する。
+        $data = array(
+            'userFrom'          => $userFrom,
+            'urlSearchFriends' => 'http://cm.app/search-friends/',
+        );
+        
+        // メール送信
+        Mail::send('emails.FriendRequest', $data, function($m) use ($userFrom, $email)
+        {
+            $m->to($email);
+            $m->subject($userFrom[0]->nickname . 'さんからフレンドリクエストが届きました！');
+        });
+    }
+    
+    /**
+     * フレンド承認
+     * @return 取得結果
+     */
+    public function setApprovalRequest() {
+        $userId = Sentry::getUser()->id;
+        $friendId = Input::get('friendId');
+    
         // friendsテーブルに登録
         $friendsRepository = new FriendsRepository;
         $friendsRepository->insertFotRequest($userId, $friendId);
@@ -174,6 +208,39 @@ class ArticleController extends BaseController {
         // 対象のfriendsテーブルを削除
         $friendsRepository = new FriendsRepository;
         $friendsRepository->deleteByUserIdWithFriendId($userId, $friendId);
+    }
+    
+    /**
+     * フレンド申請却下
+     */
+    public function setRejectRequest() {
+        $userId = Sentry::getUser()->id;
+        $friendId = Input::get('friendId');
+    
+        // friendsテーブルを削除
+        $friendsRepository = new FriendsRepository;
+        $friendsRepository->deleteByUserIdWithFriendId($friendId, $userId);
+    
+        // 送信元情報取得
+        $usersRepository = new UsersRepository;
+        $userFrom = $usersRepository->findByKey($userId);
+    
+        // 送信先メールアドレス取得
+        $userTo = $usersRepository->findForEmail($friendId);
+        $email = $userTo[0]->email;
+    
+        // メール本文に使用するビューに渡されるデータを連想配列で定義する。
+        $data = array(
+            'userFrom'          => $userFrom,
+            'urlSearchFriends' => 'http://cm.app/search-friends/',
+        );
+    
+        // メール送信
+        Mail::send('emails.RejectRequest', $data, function($m) use ($userFrom, $email)
+        {
+            $m->to($email);
+            $m->subject($userFrom[0]->nickname . 'さんからフレンドリクエストが却下されました');
+        });
     }
     
     /**
