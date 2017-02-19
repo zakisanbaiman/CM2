@@ -15,8 +15,10 @@
                     <p class="box-p"><span class="box-label">その他</span>@{{ manage.etc }}</p>
                     <p class="box-p">
                         <a class="btn btn-default" ng-click="openManageDetail(manage.id)">詳細</a>
-                        <a class="btn btn-default" ng-click="openUpdateManageDialog(manage.id)">更新</a>
-                        <a class="btn btn-default" ng-click="openDeleteManageDialog(manage.id)">削除</a>
+                        <a class="btn btn-default" ng-click="openUpdateManageDialog(manage.id)"
+                        		ng-show="manage.my_item">更新</a>
+                        <a class="btn btn-default" ng-click="openDeleteManageDialog(manage.id)"
+                        		ng-show="manage.my_item">削除</a>
                     </p>
                 </li>
             </ul>

@@ -28,7 +28,14 @@ class ManageController extends BaseController
 	 * @return 取得結果
 	 */
 	public function getManageObj() {
-		$manage = Manage::all();
+		
+	    // ユーザID取得
+	    $userId = Sentry::getUser()->id;
+	    
+	    // managesテーブルを検索
+		$managesRepository = new ManagesRepository();
+		$manage = $managesRepository->findByUserId($userId);
+		
 		return Response::json($manage);
 	}
 
@@ -79,7 +86,11 @@ class ManageController extends BaseController
 	 * アイテム追加
 	 */
 	public function insertManageObj() {
-		Manage::insert([]);
+		
+	    $userId = Sentry::getUser()->id;
+	    
+		$managesRepository = new ManagesRepository();
+		$manage = $managesRepository->insertUserId($userId);
 	}
 
 	/**
