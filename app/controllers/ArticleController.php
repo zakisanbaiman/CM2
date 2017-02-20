@@ -1,7 +1,6 @@
 <?php
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-// use Request;
 
 class ArticleController extends BaseController {
     
@@ -34,8 +33,7 @@ class ArticleController extends BaseController {
         $userId = Sentry::getUser()->id;
 
         // articlesを取得
-        $articlesRepository = new ArticlesRepository();
-        $articles = $articlesRepository->findByUserId ( $userId, self::SKIP_DEFAULT, self::TAKE_DEFAULT );
+        $articles = self::getArticleList ( $userId, self::SKIP_DEFAULT, self::TAKE_DEFAULT );
 
         return Response::json ( $articles );
     }
@@ -49,8 +47,7 @@ class ArticleController extends BaseController {
         $userId = Sentry::getUser()->id;
 
         // ページに追加するarticlesを取得
-        $articlesRepository = new ArticlesRepository;
-        $articles = $articlesRepository->findByUserId ( $userId, $skip, self::TAKE_DEFAULT );
+        $articles = self::getArticleList( $userId, $skip, self::TAKE_DEFAULT );
             
         return Response::json ( $articles );
     }
@@ -113,8 +110,7 @@ class ArticleController extends BaseController {
         DB::commit ();
 
         // 最新のarticlesを再取得
-        $articlesRepository = new ArticlesRepository;
-        $articles = $articlesRepository->findByUserId ( $userId, self::SKIP_DEFAULT, $take );
+        $articles = self::getArticleList( $userId, self::SKIP_DEFAULT, $take );
 
         return Response::json ( $articles );
     }
@@ -318,7 +314,7 @@ class ArticleController extends BaseController {
     
         // 対象のarticlesテーブルを削除
         $articlesRepository = new ArticlesRepository;
-        $articlesRepository->deleteByKey($articleId);
+        $articlesRepository->deleteByArticleId($articleId);
     }
     
     /**
@@ -329,7 +325,7 @@ class ArticleController extends BaseController {
     
         // 対象のcommentsテーブルを削除
         $commentsRepository = new CommentsRepository;
-        $commentsRepository->deleteByKey($commentId);
+        $commentsRepository->deleteByCommentId($commentId);
     }
     
     /**
@@ -339,5 +335,56 @@ class ArticleController extends BaseController {
         $article = Article::where('id', '=', Input::get('id'))->get();
         return Response::json($article);
     }
+    
+    /**
+     * 記事一覧を取得
+     * @param int $userId ユーザID
+     * @param int $skip 取得開始行
+     * @param int $take 取得行数
+     * @return 取得結果
+     */
+    protected function getArticleList($userId, $skip, $take) {
+    
+        // articlesを取得
+        $articlesRepository = new ArticlesRepository();
+        $articles = $articlesRepository->findByUserId ( $userId, $skip, $take );
+    
+        $countArticles = count ( $articles );
+        for($i = 0; $i < $countArticles; $i++) {
+            $articles[$i]->my_article = false;
+            if ($articles[$i]->user_id == $userId) {
+                $articles [$i]->my_article = true;
+            }
+        }
+    
+        $countArticles = count ( $articles );
+        $commentRepository = new CommentsRepository();
+    
+        // 各記事にコメントを追加
+        for($i = 0; $i < $countArticles; $i ++) {
+    
+            // コメントを取得
+            $articleId = $articles [$i]->id;
+            $comments = $commentRepository->findByCommentId($articleId);
+    
+            $countComments = count ( $comments );
+            $articles [$i]->commentArray = [];
+    
+            // コメントを追加
+            for($k = 0; $k < $countComments; $k ++) {
+                if ($articles [$i]->id == $comments [$k]->article_id) {
+    
+                    $comments[$k]->my_comment = false;
+                    if ($comments[$k]->user_id == $userId) {
+                        $comments[$k]->my_comment = true;
+                    }
+    
+                    array_push ( $articles [$i]->commentArray, $comments [$k] );
+                }
+            }
+        }
+        return $articles;
+    }
+    
 }
 

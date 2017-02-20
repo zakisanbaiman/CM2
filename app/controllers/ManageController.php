@@ -33,12 +33,31 @@ class ManageController extends BaseController
 	    $userId = Sentry::getUser()->id;
 	    
 	    // managesテーブルを検索
-		$managesRepository = new ManagesRepository();
-		$manage = $managesRepository->findByUserId($userId);
+		$manages = self::getManageByUserId($userId);
 		
-		return Response::json($manage);
+		return Response::json($manages);
 	}
 
+	/**
+	 * managesテーブルを検索
+	 * @param int $userId ユーザID
+	 * @return 取得結果
+	 */
+	protected function getManageByUserId($userId) {
+	
+	    $managesRepository = new ManagesRepository();
+	    $manages = $managesRepository->findByUserId($userId);
+	
+	    $countManages = count ( $manages );
+	    for($i = 0; $i < $countManages; $i++) {
+	        $manages[$i]->my_item = false;
+	        if ($manages[$i]->create_user_id == $userId) {
+	            $manages [$i]->my_item = true;
+	        }
+	    }
+	    return $manages;
+	}
+	
     /**
      * アイテムを取得
      * @return 取得結果

@@ -21,14 +21,6 @@ class ManagesRepository {
         ->orWhere('manages.create_user_id', '=', $userId)
         ->orderBy('manages.updated_at', 'desc')
         ->get();
-            
-        $countManages = count ( $manages );
-        for($i = 0; $i < $countManages; $i++) {
-            $manages[$i]->my_item = false;
-            if ($manages[$i]->create_user_id == $userId) {
-                $manages [$i]->my_item = true;
-            }
-        }
     
         return $manages;
     }
