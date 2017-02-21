@@ -34,42 +34,6 @@ class ArticlesRepository {
             ->take ( $take )
             ->get ();
 
-        $countArticles = count ( $articles );
-        for($i = 0; $i < $countArticles; $i++) {
-            $articles[$i]->my_article = false;
-            if ($articles[$i]->user_id == $userId) {
-                $articles [$i]->my_article = true;
-            }
-        }
-
-        $countArticles = count ( $articles );
-
-        // 各記事にコメントを追加
-        for($i = 0; $i < $countArticles; $i ++) {
-
-            // コメントを取得
-            $comments = DB::table ( 'comments' )
-                ->select ( 'comments.*', 'users.nickname', 'users.user_image' )
-                ->leftjoin ( 'users', 'comments.user_id', '=', 'users.id' )
-                ->where ( 'comments.article_id', '=', $articles [$i]->id )
-                ->get ();
-
-            $countComments = count ( $comments );
-            $articles [$i]->commentArray = [];
-
-            // コメントを追加
-            for($k = 0; $k < $countComments; $k ++) {
-                if ($articles [$i]->id == $comments [$k]->article_id) {
-                    
-                    $comments[$k]->my_comment = false;
-                    if ($comments[$k]->user_id == $userId) {
-                        $comments[$k]->my_comment = true;
-                    }
-                    
-                    array_push ( $articles [$i]->commentArray, $comments [$k] );
-                }
-            }
-        }
         return $articles;
     }
     
@@ -104,7 +68,7 @@ class ArticlesRepository {
      * articles削除用
      * @param int $articleId 記事ID
      */
-    public function deleteByKey( $articleId) {
+    public function deleteByArticleId( $articleId) {
         DB::beginTransaction ();
         DB::table ( 'articles' )
         ->where ( 'id', '=', $articleId )

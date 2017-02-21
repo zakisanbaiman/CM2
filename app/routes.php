@@ -202,7 +202,7 @@ Route::post('/article/setLikeObj', 'ArticleController@setLikeObj');
 Route::post('/article/getCommentObj', 'ArticleController@getCommentObj');
 Route::post('/friend/getFriendObj', 'ArticleController@getFriendObj');
 Route::post('/friend/getSearchFriendObj', 'ArticleController@getSearchFriendObj');
-Route::post('/friend/setFriendRequestObj', 'ArticleController@setFriendRequestObj');
+Route::post('/friend/setRequestFriend', 'ArticleController@setRequestFriend');
 Route::post('/friend/cancelRequest', 'ArticleController@cancelRequest');
 Route::post('/friend/approvalRequest', 'ArticleController@approvalRequest');
 Route::post('/article/setCommentObj', 'ArticleController@setCommentObj');
@@ -210,6 +210,8 @@ Route::post('/article/updateArticle', 'ArticleController@updateArticle');
 Route::post('/article/deleteArticle', 'ArticleController@deleteArticle');
 Route::post('/article/updateComment', 'ArticleController@updateComment');
 Route::post('/article/deleteComment', 'ArticleController@deleteComment');
+Route::post('/friend/setApprovalRequest', 'ArticleController@setApprovalRequest');
+Route::post('/friend/setRejectRequest', 'ArticleController@setRejectRequest');
 
 // manage
 Route::get('/manage', 'ManageController@getManage');

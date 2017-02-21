@@ -59,10 +59,13 @@
 							ng-click="approvalRequest(friend.id)">
 							<i class="glyphicon glyphicon-plus"></i> リクエストを承認
 						</button>
+						<button id="button" type="button" class="btn btn-default"
+							ng-click="rejectRequest(friend.id)">却下
+						</button>
 					</td>
 					<td ng-if="friend.approval_1 != '1' && friend.approval_2 != '1'">
 						<button type="button" class="btn btn-primary"
-							ng-click="request(friend.id)">
+							ng-click="requestFriend(friend.id)">
 							<i class="glyphicon glyphicon-plus"></i> フレンド申請
 						</button>
 					</td>
@@ -122,22 +125,6 @@
             });
         }
 
-     	// friendテーブルに追加
-     	addFriend = function(friendId) {
-            $.ajax({
-              url: '/friend/setFriendRequestObj',
-              type:'POST',
-              data : {
-            	  friendId : friendId
-                  },
-              success: function(data) {
-            	  getSearchFriendObj();
-    		  },
-              error: function(XMLHttpRequest, textStatus, errorThrown) {
-              }
-        	});
-     	}
-
      	// friendsテーブルから削除
      	deleteFriend = function(friendId) {
             $.ajax({
@@ -165,8 +152,20 @@
         });
         
         // 「フレンド申請」押下時
-        $scope.request = function(friendId){
-        	addFriend(friendId);
+        $scope.requestFriend = function(friendId){
+
+            $.ajax({
+              url: '/friend/setRequestFriend',
+              type:'POST',
+              data : {
+            	  friendId : friendId
+                  },
+              success: function(data) {
+            	  getSearchFriendObj();
+    		  },
+              error: function(XMLHttpRequest, textStatus, errorThrown) {
+              }
+        	});
         };
 
         // 「リクエストを取消」押下時
@@ -176,9 +175,37 @@
 
         // 「リクエストを承認」押下時
         $scope.approvalRequest = function(friendId){
-        	addFriend(friendId);
+
+            $.ajax({
+              url: '/friend/setApprovalRequest',
+              type:'POST',
+              data : {
+            	  friendId : friendId
+                  },
+              success: function(data) {
+            	  getSearchFriendObj();
+    		  },
+              error: function(XMLHttpRequest, textStatus, errorThrown) {
+              }
+        	});
         };
 
+		$scope.rejectRequest = function(friendId) {
+
+			$.ajax({
+	              url: '/friend/setRejectRequest',
+	              type:'POST',
+	              data : {
+	            	  friendId : friendId
+	                  },
+	              success: function(data) {
+	            	  getSearchFriendObj();
+	    		  },
+	              error: function(XMLHttpRequest, textStatus, errorThrown) {
+	              }
+	        	});
+		}
+        
         // 「フレンドを解消」押下時
         $scope.cancelFriend = function(friendId){
         	deleteFriend(friendId);

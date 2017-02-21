@@ -36,11 +36,25 @@ class CommentsRepository {
      * comments削除用
      * @param int $commentId コメントID
      */
-    public function deleteByKey($commentId) {
+    public function deleteByCommentId($commentId) {
         DB::beginTransaction ();
         DB::table ( 'comments' )
         ->where ( 'id', '=', $commentId )
         ->delete ();
         DB::commit ();
+    }
+    
+    /**
+     * comments検索用
+     * @param int $commentId コメントID
+     */
+    public function findByCommentId($articleId) {
+        $comments = DB::table ( 'comments' )
+            ->select ( 'comments.*', 'users.nickname', 'users.user_image' )
+            ->leftjoin ( 'users', 'comments.user_id', '=', 'users.id' )
+            ->where ( 'comments.article_id', '=', $articleId )
+            ->get ();
+        
+        return $comments;
     }
 }
