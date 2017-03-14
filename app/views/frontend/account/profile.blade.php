@@ -11,7 +11,7 @@
 <h3>プロフィール</h3>
 
 
-<form method="post" action="" class="" autocomplete="off" role="form">
+<form method="post" action="" class="" autocomplete="off" role="form" enctype="multipart/form-data">
 	<!-- CSRF Token -->
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
@@ -27,6 +27,22 @@
 		<label for="last_name">お苗字</label>
 		<input class="form-control" type="text" name="last_name" id="last_name" value="{{ Input::old('last_name', $user->last_name) }}" />
 		{{ $errors->first('last_name', '<span class="help-block">:message</span>') }}
+	</div>
+	
+	<!-- Nick Name -->
+	<div class="form-group{{ $errors->first('nickname', ' error') }}">
+		<label for="nickname">ニックネーム</label>
+		<input class="form-control" type="text" name="nickname" id="nickname" value="{{ Input::old('nickname', $user->nickname) }}" />
+		{{ $errors->first('last_name', '<span class="help-block">:message</span>') }}
+	</div>
+	
+	<!-- user_image -->
+	<div class="form-group{{ $errors->first('user_image', ' error') }}">
+		<label for="user_image">プロフィール写真</label>
+		<br>
+		<img src="/images/users/{{ $user->user_image }}" alt="" class="user-img">
+        {{Form::file('image')}}
+		{{ $errors->first('user_image', '<span class="help-block">:message</span>') }}
 	</div>
 {{--
 	<!-- Website URL -->
@@ -53,7 +69,6 @@
 			<img src="//secure.gravatar.com/avatar/{{ md5(strtolower(trim($user->gravatar))) }}" width="30" height="30" />
 			<a href="http://gravatar.com" target="_blank">Change your avatar at Gravatar.com</a>.
 		</p>
-
 	</div>
 --}}
 	<!-- Form actions -->
